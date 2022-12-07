@@ -1,11 +1,14 @@
 import { DEFAULT_TESTNET_LIST, RawCoinInfo } from "@manahippo/coin-list";
 import { FlexCol } from "components/FlexCol";
+import { FlexRow } from "components/FlexRow";
 import { TradeActions } from "pages/Trade/TradeActions";
 import { TradeHeader } from "pages/Trade/TradeHeader";
 
 import React from "react";
 
 import { css } from "@emotion/react";
+
+import { TradeChart } from "./TradeChart";
 
 export const Trade: React.FC = () => {
   const marketCoin: RawCoinInfo = DEFAULT_TESTNET_LIST[0];
@@ -17,13 +20,20 @@ export const Trade: React.FC = () => {
       `}
     >
       <TradeHeader marketCoin={marketCoin} quoteCoin={quoteCoin} />
-      <TradeActions
+      <FlexRow
         css={css`
           flex-grow: 1;
         `}
-        marketCoin={marketCoin}
-        quoteCoin={quoteCoin}
-      />
+      >
+        <TradeActions marketCoin={marketCoin} quoteCoin={quoteCoin} />
+        <TradeChart
+          css={css`
+            flex-grow: 1;
+          `}
+          marketCoin={marketCoin}
+          quoteCoin={quoteCoin}
+        />
+      </FlexRow>
     </FlexCol>
   );
 };
