@@ -1,17 +1,31 @@
+import { FlexCol } from "components/FlexCol";
 import { Header } from "layout/Header";
 
 import React from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 
+import { css } from "@emotion/react";
+
 import { AppRoutes } from "./AppRoutes";
 
 export const App: React.FC = () => {
   return (
-    <div id="approot">
+    <FlexCol
+      css={css`
+        height: 100vh;
+      `}
+      id="approot"
+    >
       <Router basename="/">
         <Header />
-        <AppRoutes />
+        <div
+          css={css`
+            flex-grow: 1;
+          `}
+        >
+          <AppRoutes />
+        </div>
       </Router>
-    </div>
+    </FlexCol>
   );
 };

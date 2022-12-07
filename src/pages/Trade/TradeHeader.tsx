@@ -1,4 +1,5 @@
 import { RawCoinInfo } from "@manahippo/coin-list";
+import { Label } from "components/Label";
 import { DefaultContainer } from "layout/DefaultContainer";
 import { DefaultWrapper } from "layout/DefaultWrapper";
 
@@ -13,15 +14,17 @@ export const TradeHeader: React.FC<{
 }> = ({ marketCoin, quoteCoin }) => {
   return (
     <DefaultWrapper
-      css={css`
-        border-bottom: 1px solid #565656;
+      css={(theme) => css`
+        border-bottom: 1px solid ${theme.colors.grey[700]};
+        border-left: 1px solid ${theme.colors.grey[700]};
+        border-right: 1px solid ${theme.colors.grey[700]};
+        padding: 8px 36px;
       `}
     >
       <DefaultContainer
         css={css`
           display: flex;
           justify-content: space-between;
-          margin: 8px 0;
         `}
       >
         <MarketWrapper>
@@ -56,7 +59,7 @@ export const TradeHeader: React.FC<{
 };
 
 const HeaderItemWrapper = styled.div`
-  border-right: 1px solid #565656;
+  border-right: 1px solid ${({ theme }) => theme.colors.grey[700]};
   padding: 0 16px;
 `;
 
@@ -87,11 +90,7 @@ const TradesWrapper = styled(HeaderItemWrapper)`
   flex-direction: column;
 `;
 
-const Label = styled.span`
-  font-size: 12px;
-  color: #dadada;
-`;
-
 const ColoredValue = styled.span<{ color: "green" | "red" }>`
-  color: ${({ color }) => (color === "green" ? "#6ED5A3" : "#F86C6B")};
+  color: ${({ color, theme }) =>
+    color === "green" ? theme.colors.green.primary : "#F86C6B"};
 `;

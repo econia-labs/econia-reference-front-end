@@ -11,8 +11,8 @@ import { css } from "@emotion/react";
 export const Header: React.FC = () => {
   return (
     <DefaultWrapper
-      css={css`
-        border-bottom: 1px solid #565656;
+      css={(theme) => css`
+        border-bottom: 1px solid ${theme.colors.grey[700]};
       `}
     >
       <DefaultContainer
