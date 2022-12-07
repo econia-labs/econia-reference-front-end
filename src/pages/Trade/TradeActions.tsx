@@ -65,7 +65,13 @@ export const TradeActions: React.FC<{
             >
               Amount
             </Label>
-            <Input placeholder="0.0000" type="number" />
+            <Input
+              css={css`
+                width: 100%;
+              `}
+              placeholder="0.0000"
+              type="number"
+            />
           </InputContainer>
           <InputContainer>
             <Label
@@ -75,7 +81,13 @@ export const TradeActions: React.FC<{
             >
               Price
             </Label>
-            <Input placeholder="0.0000" type="number" />
+            <Input
+              css={css`
+                width: 100%;
+              `}
+              placeholder="0.0000"
+              type="number"
+            />
           </InputContainer>
         </div>
         <Button
