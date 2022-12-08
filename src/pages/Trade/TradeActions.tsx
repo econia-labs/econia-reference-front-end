@@ -67,7 +67,7 @@ export const TradeActions: React.FC<{
             </Label>
             <Input
               css={css`
-                width: 100%;
+                width: 218px;
               `}
               placeholder="0.0000"
               type="number"
@@ -83,7 +83,7 @@ export const TradeActions: React.FC<{
             </Label>
             <Input
               css={css`
-                width: 100%;
+                width: 218px;
               `}
               placeholder="0.0000"
               type="number"
