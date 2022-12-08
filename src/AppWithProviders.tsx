@@ -1,4 +1,10 @@
-import { WalletProvider } from "@manahippo/aptos-wallet-adapter";
+import {
+  AptosWalletAdapter,
+  MartianWalletAdapter,
+  PontemWalletAdapter,
+  WalletProvider,
+} from "@manahippo/aptos-wallet-adapter";
+import { AptosContextProvider } from "hooks/useAptos";
 import { theme } from "themes";
 
 import React from "react";
@@ -18,8 +24,17 @@ export const AppWithProviders: React.FC = () => {
         <ReactQueryDevtools initialIsOpen={false} />
         <ThemeProvider theme={theme}>
           <Global styles={GlobalStyles} />
-          <WalletProvider wallets={[]}>
-            <App />
+          <WalletProvider
+            wallets={[
+              new AptosWalletAdapter(),
+              new MartianWalletAdapter(),
+              new PontemWalletAdapter(),
+            ]}
+            autoConnect={true}
+          >
+            <AptosContextProvider>
+              <App />
+            </AptosContextProvider>
           </WalletProvider>
         </ThemeProvider>
       </QueryClientProvider>
