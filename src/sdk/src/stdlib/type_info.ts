@@ -18,7 +18,7 @@ export const moduleName = "type_info";
 export const E_NATIVE_FUN_NOT_AVAILABLE : U64 = u64("1");
 
 
-export class TypeInfo 
+export class TypeInfo
 {
   static moduleAddress = moduleAddress;
   static moduleName = moduleName;
@@ -82,7 +82,8 @@ export function chain_id_ (
 export function chain_id_internal_ (
   $c: AptosDataCache,
 ): U8 {
-  return $.aptos_std_type_info_chain_id_internal($c);
+  throw $.abortCode(Error.invalid_state_($.copy(E_NATIVE_FUN_NOT_AVAILABLE), $c));
+  // return $.aptos_std_type_info_chain_id_internal($c);
 
 }
 export function module_name_ (
