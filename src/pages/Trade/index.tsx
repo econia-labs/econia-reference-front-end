@@ -11,8 +11,8 @@ import { css } from "@emotion/react";
 import { TradeChart } from "./TradeChart";
 
 export const Trade: React.FC = () => {
-  const marketCoin: RawCoinInfo = DEFAULT_TESTNET_LIST[0];
-  const quoteCoin: RawCoinInfo = DEFAULT_TESTNET_LIST[1];
+  const marketCoin: RawCoinInfo = DEFAULT_TESTNET_LIST[2];
+  const quoteCoin: RawCoinInfo = DEFAULT_TESTNET_LIST[4];
   return (
     <FlexCol
       css={css`

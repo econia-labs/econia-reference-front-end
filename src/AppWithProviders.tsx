@@ -5,7 +5,7 @@ import React from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 
-import { Global, ThemeProvider, css } from "@emotion/react";
+import { Global, Theme, ThemeProvider, css } from "@emotion/react";
 
 import { App } from "./App";
 
@@ -27,7 +27,7 @@ export const AppWithProviders: React.FC = () => {
   );
 };
 
-const GlobalStyles = css`
+const GlobalStyles = (theme: Theme) => css`
   * {
   }
   html,
@@ -38,7 +38,7 @@ const GlobalStyles = css`
     font-family: Roboto Mono, sans-serif;
     margin: 0;
 
-    font-size: 20px;
+    font-size: 16px;
     font-weight: 400;
     max-width: 100%;
     min-height: 100vh;
@@ -46,7 +46,7 @@ const GlobalStyles = css`
     #approot {
       overflow-x: hidden;
     }
-    background-color: #020202;
+    background-color: ${theme.colors.grey[800]};
   }
   a {
     text-decoration: none;
