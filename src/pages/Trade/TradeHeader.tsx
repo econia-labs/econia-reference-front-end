@@ -28,17 +28,19 @@ export const TradeHeader: React.FC<{
         `}
       >
         <MarketWrapper>
-          <img
-            css={css`
-              margin-right: 8px;
-              width: 32px;
-              height: 32px;
-            `}
-            src={marketCoin.logo_url}
-          />
-          <span>
-            {marketCoin.symbol}-{quoteCoin.symbol}
-          </span>
+          <MarketContainer>
+            <img
+              css={css`
+                margin-right: 8px;
+                width: 32px;
+                height: 32px;
+              `}
+              src={marketCoin.logo_url}
+            />
+            <span>
+              {marketCoin.symbol}-{quoteCoin.symbol}
+            </span>
+          </MarketContainer>
         </MarketWrapper>
         <PriceWrapper>$16,257</PriceWrapper>
         <PriceChangeWrapper>
@@ -65,9 +67,16 @@ const HeaderItemWrapper = styled.div`
 
 const MarketWrapper = styled(HeaderItemWrapper)`
   flex-grow: 1;
+`;
+
+const MarketContainer = styled.div`
+  width: fit-content;
   display: flex;
   align-items: center;
   padding-left: 0px;
+  background: ${({ theme }) => theme.colors.grey[700]};
+  padding: 2px 8px 2px 4px;
+  border-radius: 4px;
 `;
 
 const PriceWrapper = styled(HeaderItemWrapper)`
