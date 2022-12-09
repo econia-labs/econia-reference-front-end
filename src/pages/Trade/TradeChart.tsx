@@ -1,4 +1,4 @@
-import { RawCoinInfo } from "@manahippo/coin-list";
+import { StructTag } from "@manahippo/move-to-ts";
 import { FlexCol } from "components/FlexCol";
 import { RadioGroup } from "components/RadioGroup";
 import { ColorType, CrosshairMode, createChart } from "lightweight-charts";
@@ -11,8 +11,8 @@ import { MOCK_DATA } from "./mockData";
 
 export const TradeChart: React.FC<{
   className?: string;
-  marketCoin: RawCoinInfo;
-  quoteCoin: RawCoinInfo;
+  marketCoin: StructTag;
+  quoteCoin: StructTag;
 }> = ({ className, marketCoin, quoteCoin }) => {
   const ref = useRef<HTMLDivElement>(null);
   const theme = useTheme();

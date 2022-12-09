@@ -1,17 +1,27 @@
-import { RawCoinInfo } from "@manahippo/coin-list";
+import { StructTag } from "@manahippo/move-to-ts";
+import { DropdownMenu } from "components/DropdownMenu";
+import { FlexRow } from "components/FlexRow";
 import { Label } from "components/Label";
+import { useOnClickawayRef } from "hooks/useOnClickawayRef";
+import { RegisteredMarket } from "hooks/useRegisteredMarkets";
 import { DefaultContainer } from "layout/DefaultContainer";
 import { DefaultWrapper } from "layout/DefaultWrapper";
 
-import React from "react";
+import React, { useState } from "react";
 
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 
 export const TradeHeader: React.FC<{
-  marketCoin: RawCoinInfo;
-  quoteCoin: RawCoinInfo;
-}> = ({ marketCoin, quoteCoin }) => {
+  marketCoin: StructTag;
+  quoteCoin: StructTag;
+  setSelectedMarket: (market: RegisteredMarket) => void;
+  markets: RegisteredMarket[];
+}> = ({ marketCoin, quoteCoin, setSelectedMarket, markets }) => {
+  const [showMarketMenu, setShowMarketMenu] = useState(false);
+  const marketMenuClickawayRef = useOnClickawayRef(() =>
+    setShowMarketMenu(false),
+  );
   return (
     <DefaultWrapper
       css={(theme) => css`
@@ -28,19 +38,47 @@ export const TradeHeader: React.FC<{
         `}
       >
         <MarketWrapper>
-          <MarketContainer>
-            <img
+          {/* <img
               css={css`
                 margin-right: 8px;
                 width: 32px;
                 height: 32px;
               `}
               src={marketCoin.logo_url}
-            />
+            /> */}
+          <FlexRow
+            css={css`
+              justify-content: space-between;
+              align-items: center;
+              width: 100%;
+            `}
+          >
             <span>
-              {marketCoin.symbol}-{quoteCoin.symbol}
+              {marketCoin.name}-{quoteCoin.name}
             </span>
-          </MarketContainer>
+            <div ref={marketMenuClickawayRef}>
+              <MarketSelector
+                onClick={() => setShowMarketMenu(!showMarketMenu)}
+              >
+                All markets ▼
+              </MarketSelector>
+              <DropdownMenu
+                css={css`
+                  margin-top: 4px;
+                `}
+                show={showMarketMenu}
+              >
+                {markets.map((market, i) => (
+                  <MarketMenuItem
+                    onClick={() => setSelectedMarket(market)}
+                    key={i}
+                  >
+                    {market.baseType.name}-{market.quoteType.name}
+                  </MarketMenuItem>
+                ))}
+              </DropdownMenu>
+            </div>
+          </FlexRow>
         </MarketWrapper>
         <PriceWrapper>$16,257</PriceWrapper>
         <PriceChangeWrapper>
@@ -67,16 +105,21 @@ const HeaderItemWrapper = styled.div`
 
 const MarketWrapper = styled(HeaderItemWrapper)`
   flex-grow: 1;
+  display: flex;
 `;
 
-const MarketContainer = styled.div`
-  width: fit-content;
-  display: flex;
-  align-items: center;
-  padding-left: 0px;
-  background: ${({ theme }) => theme.colors.grey[700]};
-  padding: 2px 8px 2px 4px;
-  border-radius: 4px;
+const MarketSelector = styled.span`
+  color: ${({ theme }) => theme.colors.grey[600]};
+  padding: 4px 8px;
+  cursor: pointer;
+  :hover {
+    background-color: ${({ theme }) => theme.colors.grey[700]};
+  }
+`;
+
+const MarketMenuItem = styled.div`
+  background-color: ${({ theme }) => theme.colors.grey[800]};
+  padding: 8px;
 `;
 
 const PriceWrapper = styled(HeaderItemWrapper)`

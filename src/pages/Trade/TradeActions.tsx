@@ -1,4 +1,4 @@
-import { RawCoinInfo } from "@manahippo/coin-list";
+import { StructTag } from "@manahippo/move-to-ts";
 import { Button } from "components/Button";
 import { FlexCol } from "components/FlexCol";
 import { Input } from "components/Input";
@@ -15,8 +15,8 @@ const OPTIONS = ["Limit", "Market"];
 
 export const TradeActions: React.FC<{
   className?: string;
-  marketCoin: RawCoinInfo;
-  quoteCoin: RawCoinInfo;
+  marketCoin: StructTag;
+  quoteCoin: StructTag;
 }> = ({ className, marketCoin, quoteCoin }) => {
   const [selectedOption, setSelectedOption] = useState(OPTIONS[0]);
   const [buy, setBuy] = useState(true);

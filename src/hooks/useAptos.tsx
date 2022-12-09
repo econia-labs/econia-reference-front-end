@@ -1,4 +1,5 @@
 import { useWallet } from "@manahippo/aptos-wallet-adapter";
+import { AptosClient } from "aptos";
 import { Button } from "components/Button";
 import { FlexCol } from "components/FlexCol";
 
@@ -9,9 +10,11 @@ import { css, useTheme } from "@emotion/react";
 
 interface IAptosContext {
   connect: () => void;
+  aptosClient: AptosClient;
 }
 
 export const AptosContext = createContext<IAptosContext | undefined>(undefined);
+const aptosClient = new AptosClient("https://fullnode.testnet.aptoslabs.com");
 
 export const AptosContextProvider: React.FC<PropsWithChildren> = (props) => {
   const { connect: connectToWallet, wallets } = useWallet();
@@ -75,7 +78,7 @@ export const AptosContextProvider: React.FC<PropsWithChildren> = (props) => {
         </FlexCol>
       </Modal>
       <AptosContext.Provider
-        value={{ connect: () => setShowConnectModal(true) }}
+        value={{ connect: () => setShowConnectModal(true), aptosClient }}
       >
         {props.children}
       </AptosContext.Provider>

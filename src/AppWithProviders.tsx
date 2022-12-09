@@ -5,6 +5,7 @@ import {
   WalletProvider,
 } from "@manahippo/aptos-wallet-adapter";
 import { AptosContextProvider } from "hooks/useAptos";
+import { EconiaSDKContextProvider } from "hooks/useEconiaSDK";
 import { theme } from "themes";
 
 import React from "react";
@@ -33,7 +34,9 @@ export const AppWithProviders: React.FC = () => {
             autoConnect={true}
           >
             <AptosContextProvider>
-              <App />
+              <EconiaSDKContextProvider>
+                <App />
+              </EconiaSDKContextProvider>
             </AptosContextProvider>
           </WalletProvider>
         </ThemeProvider>

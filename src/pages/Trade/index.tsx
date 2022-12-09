@@ -1,25 +1,51 @@
 import { DEFAULT_TESTNET_LIST, RawCoinInfo } from "@manahippo/coin-list";
 import { FlexCol } from "components/FlexCol";
 import { FlexRow } from "components/FlexRow";
+import {
+  RegisteredMarket,
+  useRegisteredMarkets,
+} from "hooks/useRegisteredMarkets";
+import { DefaultWrapper } from "layout/DefaultWrapper";
 import { TradeActions } from "pages/Trade/TradeActions";
 import { TradeHeader } from "pages/Trade/TradeHeader";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { css } from "@emotion/react";
 
 import { TradeChart } from "./TradeChart";
 
 export const Trade: React.FC = () => {
-  const marketCoin: RawCoinInfo = DEFAULT_TESTNET_LIST[2];
-  const quoteCoin: RawCoinInfo = DEFAULT_TESTNET_LIST[4];
+  const registeredMarkets = useRegisteredMarkets();
+  const [market, setMarket] = useState<RegisteredMarket>();
+  useEffect(() => {
+    if (registeredMarkets.data !== undefined) {
+      setMarket(registeredMarkets.data[0]);
+    }
+  }, [registeredMarkets.data]);
+
+  if (
+    registeredMarkets.isLoading ||
+    market === undefined ||
+    registeredMarkets.data === undefined
+  ) {
+    return <DefaultWrapper>Loading...</DefaultWrapper>;
+  }
+  const marketCoin = market.baseType;
+  const quoteCoin = market.quoteType;
+
   return (
     <FlexCol
       css={css`
         height: 100%;
       `}
     >
-      <TradeHeader marketCoin={marketCoin} quoteCoin={quoteCoin} />
+      <TradeHeader
+        marketCoin={marketCoin}
+        quoteCoin={quoteCoin}
+        setSelectedMarket={setMarket}
+        markets={registeredMarkets.data}
+      />
       <FlexRow
         css={css`
           flex-grow: 1;
