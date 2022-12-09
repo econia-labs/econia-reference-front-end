@@ -70,7 +70,10 @@ export const TradeHeader: React.FC<{
               >
                 {markets.map((market, i) => (
                   <MarketMenuItem
-                    onClick={() => setSelectedMarket(market)}
+                    onClick={() => {
+                      setSelectedMarket(market);
+                      setShowMarketMenu(false);
+                    }}
                     key={i}
                   >
                     {market.baseType.name}-{market.quoteType.name}
