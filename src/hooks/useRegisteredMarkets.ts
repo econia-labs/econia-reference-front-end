@@ -20,7 +20,7 @@ export type RegisteredMarket = {
 export const useRegisteredMarkets = () => {
   const { aptosClient } = useAptos()
 
-  return useQuery([], async () => {
+  return useQuery(["useRegisteredMarkets"], async () => {
     const events = await aptosClient.getEventsByEventHandle(moduleAddress, Registry.getTag().getFullname(), "market_registration_events")
     return events.map(({ data }) => ({
       baseNameGeneric: data.base_name_generic,

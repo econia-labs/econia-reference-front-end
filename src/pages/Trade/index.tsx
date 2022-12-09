@@ -41,8 +41,7 @@ export const Trade: React.FC = () => {
       `}
     >
       <TradeHeader
-        marketCoin={marketCoin}
-        quoteCoin={quoteCoin}
+        market={market}
         setSelectedMarket={setMarket}
         markets={registeredMarkets.data}
       />
@@ -51,13 +50,12 @@ export const Trade: React.FC = () => {
           flex-grow: 1;
         `}
       >
-        <TradeActions marketCoin={marketCoin} quoteCoin={quoteCoin} />
+        <TradeActions market={market} />
         <TradeChart
           css={css`
             flex-grow: 1;
           `}
-          marketCoin={marketCoin}
-          quoteCoin={quoteCoin}
+          market={market}
         />
       </FlexRow>
     </FlexCol>

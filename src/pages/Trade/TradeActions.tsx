@@ -4,6 +4,7 @@ import { FlexCol } from "components/FlexCol";
 import { Input } from "components/Input";
 import { Label } from "components/Label";
 import { RadioGroup } from "components/RadioGroup";
+import { RegisteredMarket } from "hooks/useRegisteredMarkets";
 import { DefaultContainer } from "layout/DefaultContainer";
 
 import React, { useState } from "react";
@@ -15,9 +16,8 @@ const OPTIONS = ["Limit", "Market"];
 
 export const TradeActions: React.FC<{
   className?: string;
-  marketCoin: StructTag;
-  quoteCoin: StructTag;
-}> = ({ className, marketCoin, quoteCoin }) => {
+  market: RegisteredMarket;
+}> = ({ className, market }) => {
   const [selectedOption, setSelectedOption] = useState(OPTIONS[0]);
   const [buy, setBuy] = useState(true);
   return (

@@ -1,8 +1,9 @@
-import { StructTag } from "@manahippo/move-to-ts";
+import { parseTypeTagOrThrow } from "@manahippo/move-to-ts";
 import { DropdownMenu } from "components/DropdownMenu";
 import { FlexRow } from "components/FlexRow";
 import { Label } from "components/Label";
 import { useOnClickawayRef } from "hooks/useOnClickawayRef";
+import { useRegisterMarket } from "hooks/useRegisterMarket";
 import { RegisteredMarket } from "hooks/useRegisteredMarkets";
 import { DefaultContainer } from "layout/DefaultContainer";
 import { DefaultWrapper } from "layout/DefaultWrapper";
@@ -13,15 +14,16 @@ import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 
 export const TradeHeader: React.FC<{
-  marketCoin: StructTag;
-  quoteCoin: StructTag;
+  market: RegisteredMarket;
   setSelectedMarket: (market: RegisteredMarket) => void;
   markets: RegisteredMarket[];
-}> = ({ marketCoin, quoteCoin, setSelectedMarket, markets }) => {
+}> = ({ market, setSelectedMarket, markets }) => {
+  const { baseType: marketCoin, quoteType: quoteCoin } = market;
   const [showMarketMenu, setShowMarketMenu] = useState(false);
   const marketMenuClickawayRef = useOnClickawayRef(() =>
     setShowMarketMenu(false),
   );
+  const registerMarket = useRegisterMarket();
   return (
     <DefaultWrapper
       css={(theme) => css`
@@ -79,6 +81,28 @@ export const TradeHeader: React.FC<{
                     {market.baseType.name}-{market.quoteType.name}
                   </MarketMenuItem>
                 ))}
+                <MarketMenuItem
+                  onClick={async () => {
+                    const baseCoin = prompt("Enter base coin address");
+                    const quoteCoin = prompt("Enter quote coin address");
+                    if (baseCoin === null) {
+                      alert("Base coin address is required");
+                      return;
+                    } else if (quoteCoin === null) {
+                      alert("Quote coin address is required");
+                      return;
+                    }
+                    await registerMarket(
+                      parseTypeTagOrThrow(baseCoin),
+                      parseTypeTagOrThrow(quoteCoin),
+                    ).catch((e) =>
+                      console.error("Error registering market", e),
+                    );
+                    setShowMarketMenu(false);
+                  }}
+                >
+                  New market
+                </MarketMenuItem>
               </DropdownMenu>
             </div>
           </FlexRow>

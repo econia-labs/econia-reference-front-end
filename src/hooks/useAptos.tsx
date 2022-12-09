@@ -1,9 +1,15 @@
 import { useWallet } from "@manahippo/aptos-wallet-adapter";
-import { AptosClient } from "aptos";
+import { AptosClient, TxnBuilderTypes } from "aptos";
+import { TransactionPayload_EntryFunctionPayload } from "aptos/src/generated";
 import { Button } from "components/Button";
 import { FlexCol } from "components/FlexCol";
 
-import React, { PropsWithChildren, createContext, useContext } from "react";
+import React, {
+  PropsWithChildren,
+  createContext,
+  useCallback,
+  useContext,
+} from "react";
 import Modal from "react-modal";
 
 import { css, useTheme } from "@emotion/react";
@@ -11,15 +17,32 @@ import { css, useTheme } from "@emotion/react";
 interface IAptosContext {
   connect: () => void;
   aptosClient: AptosClient;
+  sendTx: (
+    payload:
+      | TxnBuilderTypes.TransactionPayloadEntryFunction
+      | TransactionPayload_EntryFunctionPayload,
+  ) => Promise<void>;
 }
 
 export const AptosContext = createContext<IAptosContext | undefined>(undefined);
 const aptosClient = new AptosClient("https://fullnode.testnet.aptoslabs.com");
 
 export const AptosContextProvider: React.FC<PropsWithChildren> = (props) => {
-  const { connect: connectToWallet, wallets } = useWallet();
+  const {
+    connect: connectToWallet,
+    wallets,
+    signAndSubmitTransaction,
+  } = useWallet();
   const [showConnectModal, setShowConnectModal] = React.useState(false);
   const theme = useTheme();
+
+  const sendTx = useCallback(
+    async (payload: TransactionPayload_EntryFunctionPayload) => {
+      const tx = await signAndSubmitTransaction(payload);
+      console.log("tx", tx);
+    },
+    [signAndSubmitTransaction],
+  );
 
   return (
     <>
@@ -78,7 +101,11 @@ export const AptosContextProvider: React.FC<PropsWithChildren> = (props) => {
         </FlexCol>
       </Modal>
       <AptosContext.Provider
-        value={{ connect: () => setShowConnectModal(true), aptosClient }}
+        value={{
+          connect: () => setShowConnectModal(true),
+          aptosClient,
+          sendTx,
+        }}
       >
         {props.children}
       </AptosContext.Provider>

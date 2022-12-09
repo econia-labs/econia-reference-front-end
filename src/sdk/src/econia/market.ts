@@ -71,7 +71,7 @@ export const SHIFT_COUNTER : U8 = u8("64");
 export const UNKNOWN_TAKER : HexString = new HexString("0x0");
 
 
-export class MakerEvent 
+export class MakerEvent
 {
   static moduleAddress = moduleAddress;
   static moduleName = moduleName;
@@ -124,7 +124,7 @@ export class MakerEvent
 
 }
 
-export class Order 
+export class Order
 {
   static moduleAddress = moduleAddress;
   static moduleName = moduleName;
@@ -168,7 +168,7 @@ export class Order
 
 }
 
-export class OrderBook 
+export class OrderBook
 {
   static moduleAddress = moduleAddress;
   static moduleName = moduleName;
@@ -240,7 +240,7 @@ export class OrderBook
 
 }
 
-export class OrderBooks 
+export class OrderBooks
 {
   static moduleAddress = moduleAddress;
   static moduleName = moduleName;
@@ -282,7 +282,7 @@ export class OrderBooks
 
 }
 
-export class Orders 
+export class Orders
 {
   static moduleAddress = moduleAddress;
   static moduleName = moduleName;
@@ -326,7 +326,7 @@ export class Orders
 
 }
 
-export class TakerEvent 
+export class TakerEvent
 {
   static moduleAddress = moduleAddress;
   static moduleName = moduleName;

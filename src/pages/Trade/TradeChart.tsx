@@ -1,6 +1,8 @@
 import { StructTag } from "@manahippo/move-to-ts";
 import { FlexCol } from "components/FlexCol";
 import { RadioGroup } from "components/RadioGroup";
+import { useOrderBook } from "hooks/useOrderBook";
+import { RegisteredMarket } from "hooks/useRegisteredMarkets";
 import { ColorType, CrosshairMode, createChart } from "lightweight-charts";
 
 import React, { useEffect, useRef } from "react";
@@ -11,9 +13,9 @@ import { MOCK_DATA } from "./mockData";
 
 export const TradeChart: React.FC<{
   className?: string;
-  marketCoin: StructTag;
-  quoteCoin: StructTag;
-}> = ({ className, marketCoin, quoteCoin }) => {
+  market: RegisteredMarket;
+}> = ({ className, market }) => {
+  const orderBook = useOrderBook(market.marketId);
   const ref = useRef<HTMLDivElement>(null);
   const theme = useTheme();
   useEffect(() => {
