@@ -14,3 +14,8 @@ export const ECONIA_SIMULATION_KEYS: SimulationKeys = {
   ),
   address: econiaAddr,
 };
+
+// NOTE: Change this address to receive fees
+export const INTEGRATOR_ADDR = new HexString(
+  "0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9",
+);
