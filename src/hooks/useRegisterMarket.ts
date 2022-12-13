@@ -6,19 +6,23 @@ import { useCallback } from "react";
 
 import { useAptos } from "./useAptos";
 
-const DEFAULT_LOT_SIZE = u64(1);
-const DEFAULT_TICK_SIZE = u64(1);
-const DEFAULT_MIN_SIZE = u64(1);
 const DEFAULT_UTILITY_COIN_TYPE = AptosCoin.getTag();
 
 export const useRegisterMarket = () => {
   const { sendTx } = useAptos();
   return useCallback(
     async (baseCoin: TypeTag, quoteCoin: TypeTag) => {
+      const lotSize = prompt("Enter lot size");
+      const tickSize = prompt("Enter tick size");
+      const minSize = prompt("Enter min size");
+      if (!lotSize || !tickSize || !minSize) {
+        alert("Invalid input");
+        return;
+      }
       const payload = buildPayload_register_market_base_coin_from_coinstore(
-        DEFAULT_LOT_SIZE,
-        DEFAULT_TICK_SIZE,
-        DEFAULT_MIN_SIZE,
+        u64(parseInt(lotSize)),
+        u64(parseInt(tickSize)),
+        u64(parseInt(minSize)),
         [baseCoin, quoteCoin, DEFAULT_UTILITY_COIN_TYPE],
       );
       await sendTx(payload);
