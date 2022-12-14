@@ -1,4 +1,4 @@
-import { TypeTag, U64, u64 } from "@manahippo/move-to-ts";
+import { TypeTag, U64 } from "@manahippo/move-to-ts";
 import { NO_RESTRICTION } from "sdk/src/econia/market";
 import { buildPayload_place_limit_order_user_entry } from "sdk/src/econia_wrappers/wrappers";
 
@@ -19,16 +19,6 @@ export const usePlaceLimitOrder = () => {
       baseCoin: TypeTag,
       quoteCoin: TypeTag,
     ) => {
-      console.log(
-        depositAmount.toJsNumber(),
-        marketId.toJsNumber(),
-        INTEGRATOR_ADDR.toString(),
-        isBuyOrder,
-        size.toJsNumber(),
-        price.toJsNumber(),
-        NO_RESTRICTION, // TODO: Restrictions
-        [baseCoin, quoteCoin],
-      );
       const payload = buildPayload_place_limit_order_user_entry(
         depositAmount,
         marketId,

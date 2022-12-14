@@ -141,13 +141,11 @@ export const TradeActions: React.FC<{
             // AKA pricePerLot
             const price = pricePerUnit.div(lotsPerUnit);
             let depositAmount;
-            if (side) {
+            if (side === BID) {
               depositAmount = size.mul(price).mul(u64(market.tickSize));
             } else {
               depositAmount = size.mul(u64(market.lotSize));
             }
-            console.log(depositAmount);
-            console.log(market);
             await placeLimitOrder(
               depositAmount,
               u64(market.marketId),
