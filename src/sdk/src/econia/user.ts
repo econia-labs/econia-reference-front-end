@@ -19,6 +19,7 @@ export const E_ACCESS_KEY_MISMATCH : U64 = u64("17");
 export const E_ASSET_NOT_IN_PAIR : U64 = u64("4");
 export const E_CHANGE_ORDER_NO_CHANGE : U64 = u64("14");
 export const E_COIN_AMOUNT_MISMATCH : U64 = u64("16");
+export const E_COIN_TYPE_IS_GENERIC_ASSET : U64 = u64("18");
 export const E_DEPOSIT_OVERFLOW_ASSET_CEILING : U64 = u64("5");
 export const E_EXISTS_MARKET_ACCOUNT : U64 = u64("0");
 export const E_INVALID_MARKET_ORDER_ID : U64 = u64("15");
@@ -404,6 +405,11 @@ export function deposit_coins_ (
   $c: AptosDataCache,
   $p: TypeTag[], /* <CoinType>*/
 ): void {
+  let coin_type_is_generic_asset;
+  coin_type_is_generic_asset = $.deep_eq(Stdlib.Type_info.type_of_($c, [$p[0]]), Stdlib.Type_info.type_of_($c, [new StructTag(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), "registry", "GenericAsset", [])]));
+  if (!!coin_type_is_generic_asset) {
+    throw $.abortCode($.copy(E_COIN_TYPE_IS_GENERIC_ASSET));
+  }
   deposit_asset_($.copy(user_address), $.copy(market_id), $.copy(custodian_id), Stdlib.Coin.value_(coins, $c, [$p[0]]), Stdlib.Option.some_(coins, $c, [new StructTag(new HexString("0x1"), "coin", "Coin", [$p[0]])]), $.copy(NO_UNDERWRITER), $c, [$p[0]]);
   return;
 }

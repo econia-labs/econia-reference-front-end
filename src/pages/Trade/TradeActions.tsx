@@ -1,25 +1,43 @@
-import { StructTag } from "@manahippo/move-to-ts";
+import { StructTag, u64 } from "@manahippo/move-to-ts";
 import { Button } from "components/Button";
 import { FlexCol } from "components/FlexCol";
 import { Input } from "components/Input";
 import { Label } from "components/Label";
 import { RadioGroup } from "components/RadioGroup";
+import { useCoinInfo } from "hooks/useCoinInfo";
+import { usePlaceLimitOrder } from "hooks/usePlaceLimitOrder";
 import { RegisteredMarket } from "hooks/useRegisteredMarkets";
 import { DefaultContainer } from "layout/DefaultContainer";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 
 const OPTIONS = ["Limit", "Market"];
+const ASK = true;
+const BID = false;
 
 export const TradeActions: React.FC<{
   className?: string;
   market: RegisteredMarket;
 }> = ({ className, market }) => {
+  const [side, setSide] = useState(BID);
   const [selectedOption, setSelectedOption] = useState(OPTIONS[0]);
-  const [buy, setBuy] = useState(true);
+  const amountRef = useRef<HTMLInputElement>(null);
+  const priceRef = useRef<HTMLInputElement>(null);
+  const placeLimitOrder = usePlaceLimitOrder();
+  const baseCoinInfo = useCoinInfo(market.baseType);
+  const quoteCoinInfo = useCoinInfo(market.quoteType);
+
+  if (baseCoinInfo.isLoading || quoteCoinInfo.isLoading) {
+    // TODO: Better loading state.
+    return <div>Loading...</div>;
+  } else if (!baseCoinInfo.data || !quoteCoinInfo.data) {
+    // TODO: Better error state.
+    return <div>Failed to load coin info.</div>;
+  }
+
   return (
     <DefaultContainer
       className={className}
@@ -52,9 +70,9 @@ export const TradeActions: React.FC<{
               width: 240px;
             `}
             options={["Buy", "Sell"]}
-            value={buy ? "Buy" : "Sell"}
+            value={side === BID ? "Buy" : "Sell"}
             onChange={(value) =>
-              value === "Buy" ? setBuy(true) : setBuy(false)
+              value === "Buy" ? setSide(BID) : setSide(ASK)
             }
           />
           <InputContainer>
@@ -69,6 +87,7 @@ export const TradeActions: React.FC<{
               css={css`
                 width: 218px;
               `}
+              ref={amountRef}
               placeholder="0.0000"
               type="number"
             />
@@ -85,12 +104,60 @@ export const TradeActions: React.FC<{
               css={css`
                 width: 218px;
               `}
+              ref={priceRef}
               placeholder="0.0000"
               type="number"
             />
           </InputContainer>
         </div>
         <Button
+          onClick={async () => {
+            if (!amountRef.current) {
+              alert("Amount is required");
+              return;
+            } else if (!priceRef.current) {
+              alert("Price is required");
+              return;
+            }
+            // TODO: Work out the correct lot size and price
+            const size = u64(
+              Math.floor(
+                (parseFloat(amountRef.current.value) *
+                  10 ** baseCoinInfo.data.decimals) /
+                  market.lotSize,
+              ),
+            );
+            const pricePerUnit = u64(
+              Math.floor(
+                (parseFloat(priceRef.current.value) *
+                  10 ** quoteCoinInfo.data.decimals) /
+                  market.tickSize,
+              ),
+            );
+            // TODO: This only works if the lotSize is <= 1 unit
+            const lotsPerUnit = u64(10 ** baseCoinInfo.data.decimals).div(
+              u64(market.lotSize),
+            );
+            // AKA pricePerLot
+            const price = pricePerUnit.div(lotsPerUnit);
+            let depositAmount;
+            if (side) {
+              depositAmount = size.mul(price).mul(u64(market.tickSize));
+            } else {
+              depositAmount = size.mul(u64(market.lotSize));
+            }
+            console.log(depositAmount);
+            console.log(market);
+            await placeLimitOrder(
+              depositAmount,
+              u64(market.marketId),
+              side,
+              size,
+              price,
+              market.baseType,
+              market.quoteType,
+            );
+          }}
           css={css`
             margin-top: 32px;
           `}

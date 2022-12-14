@@ -11,7 +11,7 @@ import { useOrderBooks } from "./useOrderBooks";
 export const useOrderBook = (marketId: string | number) => {
   const { aptosClient } = useAptos();
   const orderBooks = useOrderBooks();
-  const sdk = useEconiaSDK();
+  const { econia } = useEconiaSDK();
 
   return useQuery({
     queryKey: ["useOrderBook", marketId],
@@ -19,22 +19,11 @@ export const useOrderBook = (marketId: string | number) => {
       const orders = await query_index_orders_sdk(
         aptosClient,
         ECONIA_SIMULATION_KEYS,
-        sdk.repo,
+        econia.repo,
         u64(marketId),
         [],
       );
-      console.log(orders);
-      // const orderBook = await aptosClient
-      //   .getTableItem(orderBooks.data!.map.table.inner.handle.toString(), {
-      //     key: marketId.toString(),
-      //     key_type: "u64",
-      //     value_type: Node.makeTag([
-      //       AtomicTypeTag.U64,
-      //       OrderBook.getTag(),
-      //     ]).getFullname(),
-      //   })
-      //   .then(({ value }) => value);
-      // console.log(orderBook);
+      return orders;
     },
     enabled: !!orderBooks.data,
   });

@@ -1,5 +1,4 @@
 import { App } from "sdk/src";
-import { App as EconiaApp } from "sdk/src/econia";
 
 import React, {
   PropsWithChildren,
@@ -10,13 +9,13 @@ import React, {
 
 import { useAptos } from "./useAptos";
 
-export const EconiaSDKContext = createContext<EconiaApp | undefined>(undefined);
+export const EconiaSDKContext = createContext<App | undefined>(undefined);
 
 export const EconiaSDKContextProvider: React.FC<PropsWithChildren> = (
   props,
 ) => {
   const { aptosClient } = useAptos();
-  const sdk = useMemo(() => new App(aptosClient).econia, [aptosClient]);
+  const sdk = useMemo(() => new App(aptosClient), [aptosClient]);
   return (
     <EconiaSDKContext.Provider value={sdk}>
       {props.children}

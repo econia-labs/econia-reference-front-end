@@ -11,6 +11,7 @@ import React, {
   useContext,
 } from "react";
 import Modal from "react-modal";
+import { useQueryClient } from "react-query";
 
 import { css, useTheme } from "@emotion/react";
 
@@ -35,11 +36,13 @@ export const AptosContextProvider: React.FC<PropsWithChildren> = (props) => {
   } = useWallet();
   const [showConnectModal, setShowConnectModal] = React.useState(false);
   const theme = useTheme();
+  const queryClient = useQueryClient();
 
   const sendTx = useCallback(
     async (payload: TransactionPayload_EntryFunctionPayload) => {
       const tx = await signAndSubmitTransaction(payload);
       console.log("tx", tx);
+      queryClient.invalidateQueries();
     },
     [signAndSubmitTransaction],
   );

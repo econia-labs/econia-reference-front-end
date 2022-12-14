@@ -38,8 +38,7 @@ export function ripemd160_internal_ (
   bytes: U8[],
   $c: AptosDataCache,
 ): U8[] {
-  throw $.abortCode(Error.invalid_state_($.copy(E_NATIVE_FUN_NOT_AVAILABLE), $c));
-  // return $.aptos_std_aptos_hash_ripemd160_internal(bytes, $c);
+  return $.aptos_std_aptos_hash_ripemd160_internal(bytes, $c);
 
 }
 export function sha2_512_ (
@@ -58,8 +57,7 @@ export function sha2_512_internal_ (
   bytes: U8[],
   $c: AptosDataCache,
 ): U8[] {
-  throw $.abortCode(Error.invalid_state_($.copy(E_NATIVE_FUN_NOT_AVAILABLE), $c));
-  // return $.aptos_std_aptos_hash_sha2_512_internal(bytes, $c);
+  return $.aptos_std_aptos_hash_sha2_512_internal(bytes, $c);
 
 }
 export function sha3_512_ (
@@ -78,8 +76,7 @@ export function sha3_512_internal_ (
   bytes: U8[],
   $c: AptosDataCache,
 ): U8[] {
-  throw $.abortCode(Error.invalid_state_($.copy(E_NATIVE_FUN_NOT_AVAILABLE), $c));
-  // return $.aptos_std_aptos_hash_sha3_512_internal(bytes, $c);
+  return $.aptos_std_aptos_hash_sha3_512_internal(bytes, $c);
 
 }
 export function sip_hash_ (

@@ -1,3 +1,15 @@
+import {
+  CategoryScale,
+  Chart,
+  Filler,
+  Legend,
+  LineController,
+  LineElement,
+  LinearScale,
+  PointElement,
+  Title,
+  Tooltip,
+} from "chart.js";
 import { FlexCol } from "components/FlexCol";
 import { Header } from "layout/Header";
 
@@ -9,6 +21,16 @@ import { css } from "@emotion/react";
 
 import { AppRoutes } from "./AppRoutes";
 
+Chart.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Filler,
+  Legend,
+);
 Modal.setAppElement("#react-modal");
 
 export const App: React.FC = () => {
