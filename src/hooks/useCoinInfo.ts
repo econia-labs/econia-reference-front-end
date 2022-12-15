@@ -4,7 +4,7 @@ import { useQuery } from "react-query";
 
 import { useEconiaSDK } from "./useEconiaSDK";
 
-type CoinInfo = {
+export type CoinInfo = {
   name: string;
   symbol: string;
   decimals: number;

@@ -3,14 +3,16 @@ import { Line } from "react-chartjs-2";
 
 import { useTheme } from "@emotion/react";
 
+import { CoinInfo } from "../../../hooks/useCoinInfo";
 import { useOrderBook } from "../../../hooks/useOrderBook";
 import { RegisteredMarket } from "../../../hooks/useRegisteredMarkets";
-
-const convert0ToUndefined = (x: number) => (x === 0 ? undefined : x);
+import { toDecimalPrice } from "../../../utils/price";
 
 export const DepthChart: React.FC<{
   market: RegisteredMarket;
-}> = ({ market }) => {
+  baseCoinInfo: CoinInfo;
+  quoteCoinInfo: CoinInfo;
+}> = ({ market, baseCoinInfo, quoteCoinInfo }) => {
   const theme = useTheme();
   const orderBook = useOrderBook(market.marketId);
   const labels = [];
@@ -31,7 +33,15 @@ export const DepthChart: React.FC<{
     const start = minPrice - 1;
     const end = maxPrice + 1;
     for (let price = start; price <= end; price += 1) {
-      labels.push(price);
+      labels.push(
+        toDecimalPrice({
+          price,
+          lotSize: market.lotSize,
+          tickSize: market.tickSize,
+          baseCoinDecimals: baseCoinInfo.decimals,
+          quoteCoinDecimals: quoteCoinInfo.decimals,
+        }).toFixed(2),
+      );
       bidData.push(undefined);
       askData.push(undefined);
     }

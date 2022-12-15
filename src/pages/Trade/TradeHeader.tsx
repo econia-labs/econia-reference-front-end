@@ -121,7 +121,7 @@ export const TradeHeader: React.FC<{
         </MarketWrapper>
         <PriceWrapper>
           <Label>Price</Label>
-          {marketPrice.data.bestAskPrice?.toPrecision(3)} {quoteCoin.name}
+          {marketPrice.data.bestAskPrice?.toFixed(2)} {quoteCoin.name}
         </PriceWrapper>
         <PriceChangeWrapper>
           <Label>24h Change</Label>

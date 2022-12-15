@@ -4,6 +4,7 @@ import { css } from "@emotion/react";
 
 import { FlexCol } from "../../components/FlexCol";
 import { RadioGroup } from "../../components/RadioGroup";
+import { useCoinInfo } from "../../hooks/useCoinInfo";
 import { RegisteredMarket } from "../../hooks/useRegisteredMarkets";
 import { DepthChart } from "./charts/DepthChart";
 
@@ -12,6 +13,17 @@ export const TradeChart: React.FC<{
   market: RegisteredMarket;
 }> = ({ market }) => {
   const [mode, setMode] = React.useState<string>("Depth");
+  const baseCoinInfo = useCoinInfo(market.baseType);
+  const quoteCoinInfo = useCoinInfo(market.quoteType);
+
+  if (baseCoinInfo.isLoading || quoteCoinInfo.isLoading) {
+    // TODO: Better loading state
+    return <div>Loading...</div>;
+  } else if (!baseCoinInfo.data || !quoteCoinInfo.data) {
+    // TODO: Better error state
+    return <div>Error loading coin info</div>;
+  }
+
   return (
     <FlexCol
       css={css`
@@ -38,7 +50,11 @@ export const TradeChart: React.FC<{
           // <PriceChart market={market} />
           <div>Price chart TODO</div>
         ) : (
-          <DepthChart market={market} />
+          <DepthChart
+            market={market}
+            baseCoinInfo={baseCoinInfo.data}
+            quoteCoinInfo={quoteCoinInfo.data}
+          />
         )}
       </div>
     </FlexCol>

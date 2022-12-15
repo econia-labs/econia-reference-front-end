@@ -1,26 +1,9 @@
 import { useQuery } from "react-query";
 
+import { toDecimalPrice } from "../utils/price";
 import { useCoinInfo } from "./useCoinInfo";
 import { useOrderBook } from "./useOrderBook";
 import { RegisteredMarket } from "./useRegisteredMarkets";
-
-const toDecimalPrice = ({
-  price,
-  lotSize,
-  tickSize,
-  baseCoinDecimals,
-  quoteCoinDecimals,
-}: {
-  price: number;
-  lotSize: number;
-  tickSize: number;
-  baseCoinDecimals: number;
-  quoteCoinDecimals: number;
-}) => {
-  const lotsPerUnit = 10 ** baseCoinDecimals / lotSize;
-  const pricePerLot = (price * tickSize) / 10 ** quoteCoinDecimals;
-  return pricePerLot * lotsPerUnit;
-};
 
 export const useMarketPrice = (market: RegisteredMarket) => {
   const orderBook = useOrderBook(market.marketId);
