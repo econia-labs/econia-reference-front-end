@@ -20,3 +20,8 @@ export const ECONIA_SIMULATION_KEYS: SimulationKeys = {
 export const INTEGRATOR_ADDR = new HexString(
   "0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9",
 );
+
+export const ASK = true;
+export const BID = false;
+export const BUY = true;
+export const SELL = false;

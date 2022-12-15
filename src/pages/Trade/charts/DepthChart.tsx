@@ -6,7 +6,7 @@ import { useTheme } from "@emotion/react";
 import { CoinInfo } from "../../../hooks/useCoinInfo";
 import { useOrderBook } from "../../../hooks/useOrderBook";
 import { RegisteredMarket } from "../../../hooks/useRegisteredMarkets";
-import { toDecimalPrice } from "../../../utils/price";
+import { toDecimalPrice } from "../../../utils/units";
 
 export const DepthChart: React.FC<{
   market: RegisteredMarket;
