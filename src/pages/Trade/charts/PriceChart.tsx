@@ -1,7 +1,7 @@
-import { FlexCol } from "components/FlexCol";
-import { RadioGroup } from "components/RadioGroup";
-import { useOrderBook } from "hooks/useOrderBook";
-import { RegisteredMarket } from "hooks/useRegisteredMarkets";
+import { FlexCol } from "../components/FlexCol";
+import { RadioGroup } from "../components/RadioGroup";
+import { useOrderBook } from "../hooks/useOrderBook";
+import { RegisteredMarket } from "../hooks/useRegisteredMarkets";
 import { ColorType, CrosshairMode, createChart } from "lightweight-charts";
 
 import React, { useEffect, useRef } from "react";

@@ -10,8 +10,6 @@ import {
   Title,
   Tooltip,
 } from "chart.js";
-import { FlexCol } from "components/FlexCol";
-import { Header } from "layout/Header";
 
 import React from "react";
 import Modal from "react-modal";
@@ -20,6 +18,8 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { css } from "@emotion/react";
 
 import { AppRoutes } from "./AppRoutes";
+import { FlexCol } from "./components/FlexCol";
+import { Header } from "./layout/Header";
 
 Chart.register(
   CategoryScale,

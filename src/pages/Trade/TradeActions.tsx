@@ -1,19 +1,10 @@
-import { StructTag, u64 } from "@manahippo/move-to-ts";
-import { Button } from "components/Button";
-import { FlexCol } from "components/FlexCol";
-import { Input } from "components/Input";
-import { Label } from "components/Label";
-import { RadioGroup } from "components/RadioGroup";
-import { useCoinInfo } from "hooks/useCoinInfo";
-import { usePlaceLimitOrder } from "hooks/usePlaceLimitOrder";
-import { RegisteredMarket } from "hooks/useRegisteredMarkets";
-import { DefaultContainer } from "layout/DefaultContainer";
-
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 
 import { css } from "@emotion/react";
-import styled from "@emotion/styled";
 
+import { RadioGroup } from "../../components/RadioGroup";
+import { RegisteredMarket } from "../../hooks/useRegisteredMarkets";
+import { DefaultContainer } from "../../layout/DefaultContainer";
 import { LimitOrderForm } from "./orderPlacement/LimitOrderForm";
 import { MarketOrderForm } from "./orderPlacement/MarketOrderForm";
 

@@ -1,5 +1,3 @@
-import { App } from "sdk/src";
-
 import React, {
   PropsWithChildren,
   createContext,
@@ -7,6 +5,7 @@ import React, {
   useMemo,
 } from "react";
 
+import { App } from "../sdk/src";
 import { useAptos } from "./useAptos";
 
 export const EconiaSDKContext = createContext<App | undefined>(undefined);

@@ -1,18 +1,19 @@
 import { useWallet } from "@manahippo/aptos-wallet-adapter";
 import { HexString } from "aptos";
-import { EconiaLogo } from "assets/EconiaLogo";
-import { Button } from "components/Button";
-import { DropdownMenu } from "components/DropdownMenu";
-import { useAptos } from "hooks/useAptos";
-import { useOnClickawayRef } from "hooks/useOnClickawayRef";
-import { DefaultContainer } from "layout/DefaultContainer";
-import { DefaultWrapper } from "layout/DefaultWrapper";
-import { shortenAddress } from "utils/address";
 
 import React from "react";
 import { Link } from "react-router-dom";
 
 import { css } from "@emotion/react";
+
+import { EconiaLogo } from "../assets/EconiaLogo";
+import { Button } from "../components/Button";
+import { DropdownMenu } from "../components/DropdownMenu";
+import { useAptos } from "../hooks/useAptos";
+import { useOnClickawayRef } from "../hooks/useOnClickawayRef";
+import { shortenAddress } from "../utils/address";
+import { DefaultContainer } from "./DefaultContainer";
+import { DefaultWrapper } from "./DefaultWrapper";
 
 export const Header: React.FC = () => {
   const { connected, account, disconnect } = useWallet();

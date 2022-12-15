@@ -1,19 +1,17 @@
-import { DEFAULT_TESTNET_LIST, RawCoinInfo } from "@manahippo/coin-list";
-import { FlexCol } from "components/FlexCol";
-import { FlexRow } from "components/FlexRow";
-import {
-  RegisteredMarket,
-  useRegisteredMarkets,
-} from "hooks/useRegisteredMarkets";
-import { DefaultWrapper } from "layout/DefaultWrapper";
-import { TradeActions } from "pages/Trade/TradeActions";
-import { TradeHeader } from "pages/Trade/TradeHeader";
-
 import React, { useEffect, useState } from "react";
 
 import { css } from "@emotion/react";
 
+import { FlexCol } from "../../components/FlexCol";
+import { FlexRow } from "../../components/FlexRow";
+import {
+  RegisteredMarket,
+  useRegisteredMarkets,
+} from "../../hooks/useRegisteredMarkets";
+import { DefaultWrapper } from "../../layout/DefaultWrapper";
+import { TradeActions } from "./TradeActions";
 import { TradeChart } from "./TradeChart";
+import { TradeHeader } from "./TradeHeader";
 
 export const Trade: React.FC = () => {
   const registeredMarkets = useRegisteredMarkets();

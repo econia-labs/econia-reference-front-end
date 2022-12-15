@@ -1,11 +1,10 @@
-import { FlexCol } from "components/FlexCol";
-import { RadioGroup } from "components/RadioGroup";
-import { RegisteredMarket } from "hooks/useRegisteredMarkets";
-
 import React from "react";
 
 import { css } from "@emotion/react";
 
+import { FlexCol } from "../../components/FlexCol";
+import { RadioGroup } from "../../components/RadioGroup";
+import { RegisteredMarket } from "../../hooks/useRegisteredMarkets";
 import { DepthChart } from "./charts/DepthChart";
 
 export const TradeChart: React.FC<{

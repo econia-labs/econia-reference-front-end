@@ -1,17 +1,18 @@
 import { parseTypeTagOrThrow } from "@manahippo/move-to-ts";
-import { DropdownMenu } from "components/DropdownMenu";
-import { FlexRow } from "components/FlexRow";
-import { Label } from "components/Label";
-import { useOnClickawayRef } from "hooks/useOnClickawayRef";
-import { useRegisterMarket } from "hooks/useRegisterMarket";
-import { RegisteredMarket } from "hooks/useRegisteredMarkets";
-import { DefaultContainer } from "layout/DefaultContainer";
-import { DefaultWrapper } from "layout/DefaultWrapper";
 
 import React, { useState } from "react";
 
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
+
+import { DropdownMenu } from "../../components/DropdownMenu";
+import { FlexRow } from "../../components/FlexRow";
+import { Label } from "../../components/Label";
+import { useOnClickawayRef } from "../../hooks/useOnClickawayRef";
+import { useRegisterMarket } from "../../hooks/useRegisterMarket";
+import { RegisteredMarket } from "../../hooks/useRegisteredMarkets";
+import { DefaultContainer } from "../../layout/DefaultContainer";
+import { DefaultWrapper } from "../../layout/DefaultWrapper";
 
 export const TradeHeader: React.FC<{
   market: RegisteredMarket;

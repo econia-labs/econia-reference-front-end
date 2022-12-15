@@ -1,9 +1,9 @@
 import { u64 } from "@manahippo/move-to-ts";
-import { query_index_orders_sdk } from "sdk/src/econia/market";
 
 import { useQuery } from "react-query";
 
 import { ECONIA_SIMULATION_KEYS } from "../constants";
+import { query_index_orders_sdk } from "../sdk/src/econia/market";
 import { useAptos } from "./useAptos";
 import { useEconiaSDK } from "./useEconiaSDK";
 import { useOrderBooks } from "./useOrderBooks";

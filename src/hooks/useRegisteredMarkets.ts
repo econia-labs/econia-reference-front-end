@@ -1,11 +1,11 @@
 import { StructTag } from "@manahippo/move-to-ts";
 import { HexString } from "aptos";
-import { Registry } from "sdk/src/econia/registry";
-import { moduleAddress } from "sdk/src/econia/registry";
-import { hexToUtf8 } from "utils/string";
 
 import { useQuery } from "react-query";
 
+import { Registry } from "../sdk/src/econia/registry";
+import { moduleAddress } from "../sdk/src/econia/registry";
+import { hexToUtf8 } from "../utils/string";
 import { useAptos } from "./useAptos";
 
 export type RegisteredMarket = {

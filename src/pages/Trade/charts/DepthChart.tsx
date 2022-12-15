@@ -1,10 +1,10 @@
-import { useOrderBook } from "hooks/useOrderBook";
-import { RegisteredMarket } from "hooks/useRegisteredMarkets";
-
 import React from "react";
 import { Line } from "react-chartjs-2";
 
 import { useTheme } from "@emotion/react";
+
+import { useOrderBook } from "../../../hooks/useOrderBook";
+import { RegisteredMarket } from "../../../hooks/useRegisteredMarkets";
 
 const convert0ToUndefined = (x: number) => (x === 0 ? undefined : x);
 

@@ -4,9 +4,6 @@ import {
   PontemWalletAdapter,
   WalletProvider,
 } from "@manahippo/aptos-wallet-adapter";
-import { AptosContextProvider } from "hooks/useAptos";
-import { EconiaSDKContextProvider } from "hooks/useEconiaSDK";
-import { theme } from "themes";
 
 import React from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
@@ -15,6 +12,9 @@ import { ReactQueryDevtools } from "react-query/devtools";
 import { Global, Theme, ThemeProvider, css } from "@emotion/react";
 
 import { App } from "./App";
+import { AptosContextProvider } from "./hooks/useAptos";
+import { EconiaSDKContextProvider } from "./hooks/useEconiaSDK";
+import { theme } from "./themes";
 
 const queryClient = new QueryClient();
 

@@ -1,6 +1,7 @@
 import { SimulationKeys } from "@manahippo/move-to-ts";
 import { HexString } from "aptos";
-import { moduleAddress as econiaAddr } from "sdk/src/econia/registry";
+
+import { moduleAddress as econiaAddr } from "./sdk/src/econia/registry";
 
 export const ORDER_BOOKS_ADDR = new HexString(
   "0xd62efe576ed25f7e98cc21102543ebd06949fbfeb3903a703cb013fe9f580baf",

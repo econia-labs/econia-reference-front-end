@@ -1,8 +1,8 @@
 import { useWallet } from "@manahippo/aptos-wallet-adapter";
 import { AptosClient, TxnBuilderTypes } from "aptos";
 import { TransactionPayload_EntryFunctionPayload } from "aptos/src/generated";
-import { Button } from "components/Button";
-import { FlexCol } from "components/FlexCol";
+import { Button } from "../components/Button";
+import { FlexCol } from "../components/FlexCol";
 
 import React, {
   PropsWithChildren,
