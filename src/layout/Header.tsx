@@ -4,11 +4,13 @@ import { HexString } from "aptos";
 import React from "react";
 import { Link } from "react-router-dom";
 
-import { css } from "@emotion/react";
+import { Theme, css } from "@emotion/react";
+import styled from "@emotion/styled";
 
 import { EconiaLogo } from "../assets/EconiaLogo";
 import { Button } from "../components/Button";
 import { DropdownMenu } from "../components/DropdownMenu";
+import { ExternalLink } from "../components/ExternalLink";
 import { useAptos } from "../hooks/useAptos";
 import { useOnClickawayRef } from "../hooks/useOnClickawayRef";
 import { shortenAddress } from "../utils/address";
@@ -37,9 +39,14 @@ export const Header: React.FC = () => {
         `}
       >
         <EconiaLogo width={32} height={32} />
-        <div>
-          <Link to="/">Trade</Link>
-        </div>
+        <NavContainer>
+          <Link css={NavLinkStyle} to="/">
+            Trade
+          </Link>
+          <ExternalLink css={NavLinkStyle} href="https://econia.dev">
+            Docs
+          </ExternalLink>
+        </NavContainer>
         {connected ? (
           <div ref={disconnectMenuClickawayRef}>
             <Button
@@ -83,3 +90,14 @@ export const Header: React.FC = () => {
     </DefaultWrapper>
   );
 };
+
+const NavContainer = styled.div`
+  display: flex;
+  gap: 12px;
+`;
+
+const NavLinkStyle = (theme: Theme) => css`
+  :hover {
+    text-decoration: underline 2px solid ${theme.colors.grey[100]};
+  }
+`;
