@@ -16,14 +16,13 @@ export const useOrderBook = (marketId: string | number) => {
   return useQuery({
     queryKey: ["useOrderBook", marketId],
     queryFn: async () => {
-      const orders = await query_index_orders_sdk(
+      return await query_index_orders_sdk(
         aptosClient,
         ECONIA_SIMULATION_KEYS,
         econia.repo,
         u64(marketId),
         [],
       );
-      return orders;
     },
     enabled: !!orderBooks.data,
   });

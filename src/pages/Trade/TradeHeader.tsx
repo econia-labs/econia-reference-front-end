@@ -8,6 +8,7 @@ import styled from "@emotion/styled";
 import { DropdownMenu } from "../../components/DropdownMenu";
 import { FlexRow } from "../../components/FlexRow";
 import { Label } from "../../components/Label";
+import { useMarketPrice } from "../../hooks/useMarketPrice";
 import { useOnClickawayRef } from "../../hooks/useOnClickawayRef";
 import { useRegisterMarket } from "../../hooks/useRegisterMarket";
 import { RegisteredMarket } from "../../hooks/useRegisteredMarkets";
@@ -25,6 +26,16 @@ export const TradeHeader: React.FC<{
     setShowMarketMenu(false),
   );
   const registerMarket = useRegisterMarket();
+  const marketPrice = useMarketPrice(market);
+
+  if (marketPrice.isLoading) {
+    // TODO: Better loading state
+    return <DefaultWrapper>Loading...</DefaultWrapper>;
+  } else if (!marketPrice.data) {
+    // TODO: Better error state
+    return <DefaultWrapper>Market price not found</DefaultWrapper>;
+  }
+
   return (
     <DefaultWrapper
       css={(theme) => css`
@@ -108,7 +119,10 @@ export const TradeHeader: React.FC<{
             </div>
           </FlexRow>
         </MarketWrapper>
-        <PriceWrapper>$16,257</PriceWrapper>
+        <PriceWrapper>
+          <Label>Price</Label>
+          {marketPrice.data.bestAskPrice?.toPrecision(3)} {quoteCoin.name}
+        </PriceWrapper>
         <PriceChangeWrapper>
           <Label>24h Change</Label>
           <ColoredValue color={"red"}>-$18.1</ColoredValue>
@@ -152,7 +166,7 @@ const MarketMenuItem = styled.div`
 
 const PriceWrapper = styled(HeaderItemWrapper)`
   display: flex;
-  align-items: center;
+  flex-direction: column;
 `;
 
 const PriceChangeWrapper = styled(HeaderItemWrapper)`
