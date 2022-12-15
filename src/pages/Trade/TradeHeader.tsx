@@ -37,9 +37,11 @@ export const TradeHeader: React.FC<{
   ) {
     // TODO: Better loading state
     return <DefaultWrapper>Loading...</DefaultWrapper>;
-  } else if (!baseCoinInfo.data || !quoteCoinInfo.data || !marketPrice.data) {
-    // TODO: Better error state
+  } else if (baseCoinInfo.error || quoteCoinInfo.error || marketPrice.error) {
+    // TODO: Better error states
     return <DefaultWrapper>Market price not found</DefaultWrapper>;
+  } else if (!baseCoinInfo.data || !quoteCoinInfo.data) {
+    return <DefaultWrapper>Coin info not found.</DefaultWrapper>;
   }
 
   return (
@@ -128,7 +130,7 @@ export const TradeHeader: React.FC<{
         </MarketWrapper>
         <PriceWrapper>
           <Label>Price</Label>
-          {marketPrice.data.bestAskPrice?.toFixed(2)}{" "}
+          {marketPrice.data?.bestAskPrice?.toFixed(2)}{" "}
           {quoteCoinInfo.data.symbol}
         </PriceWrapper>
         <PriceChangeWrapper>
