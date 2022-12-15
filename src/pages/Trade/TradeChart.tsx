@@ -3,6 +3,7 @@ import React from "react";
 import { css } from "@emotion/react";
 
 import { FlexCol } from "../../components/FlexCol";
+import { FlexRow } from "../../components/FlexRow";
 import { RadioGroup } from "../../components/RadioGroup";
 import { useCoinInfo } from "../../hooks/useCoinInfo";
 import { RegisteredMarket } from "../../hooks/useRegisteredMarkets";
@@ -29,17 +30,23 @@ export const TradeChart: React.FC<{
       css={css`
         width: 100%;
         height: 100%;
-        margin-left: 4px;
+        margin-left: 8px;
       `}
     >
-      <RadioGroup
+      <FlexRow
         css={css`
-          margin-bottom: 16px;
+          justify-content: flex-end;
         `}
-        options={["Price", "Depth"]}
-        value={mode}
-        onChange={setMode}
-      />
+      >
+        <RadioGroup
+          css={css`
+            margin-bottom: 16px;
+          `}
+          options={["Price", "Depth"]}
+          value={mode}
+          onChange={setMode}
+        />
+      </FlexRow>
       <div
         css={css`
           max-width: 1000px;
