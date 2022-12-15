@@ -6,7 +6,7 @@ import { useTheme } from "@emotion/react";
 import { CoinInfo } from "../../../hooks/useCoinInfo";
 import { useOrderBook } from "../../../hooks/useOrderBook";
 import { RegisteredMarket } from "../../../hooks/useRegisteredMarkets";
-import { toDecimalPrice } from "../../../utils/units";
+import { toDecimalPrice, toDecimalSize } from "../../../utils/units";
 
 export const DepthChart: React.FC<{
   market: RegisteredMarket;
@@ -47,11 +47,23 @@ export const DepthChart: React.FC<{
     }
     for (const { price, size } of orderBook.data.bids) {
       const idx = price.toJsNumber() - start;
-      bidData[idx] = (bidData[idx] ?? 0) + size.toJsNumber();
+      bidData[idx] =
+        (bidData[idx] ?? 0) +
+        toDecimalSize({
+          size: size.toJsNumber(),
+          lotSize: market.lotSize,
+          baseCoinDecimals: baseCoinInfo.decimals,
+        });
     }
     for (const { price, size } of orderBook.data.asks) {
       const idx = price.toJsNumber() - start;
-      askData[idx] = (askData[idx] ?? 0) + size.toJsNumber();
+      askData[idx] =
+        (askData[idx] ?? 0) +
+        toDecimalSize({
+          size: size.toJsNumber(),
+          lotSize: market.lotSize,
+          baseCoinDecimals: baseCoinInfo.decimals,
+        });
     }
     let seenFirstBid = false;
     for (let i = bidData.length - 2; i >= 0; i--) {
@@ -95,7 +107,7 @@ export const DepthChart: React.FC<{
         datasets: [
           {
             fill: true,
-            label: "Bids",
+            label: "Size",
             data: bidData,
             borderColor: theme.colors.green.primary,
             backgroundColor: theme.colors.green.primary + "44",
@@ -103,7 +115,7 @@ export const DepthChart: React.FC<{
           },
           {
             fill: true,
-            label: "Asks",
+            label: "Size",
             data: askData,
             borderColor: theme.colors.red.primary,
             backgroundColor: theme.colors.red.primary + "44",
