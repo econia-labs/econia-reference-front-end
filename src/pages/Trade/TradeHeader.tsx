@@ -8,6 +8,7 @@ import styled from "@emotion/styled";
 import { DropdownMenu } from "../../components/DropdownMenu";
 import { FlexRow } from "../../components/FlexRow";
 import { Label } from "../../components/Label";
+import { useCoinInfo } from "../../hooks/useCoinInfo";
 import { useMarketPrice } from "../../hooks/useMarketPrice";
 import { useOnClickawayRef } from "../../hooks/useOnClickawayRef";
 import { useRegisterMarket } from "../../hooks/useRegisterMarket";
@@ -20,7 +21,8 @@ export const TradeHeader: React.FC<{
   setSelectedMarket: (market: RegisteredMarket) => void;
   markets: RegisteredMarket[];
 }> = ({ market, setSelectedMarket, markets }) => {
-  const { baseType: marketCoin, quoteType: quoteCoin } = market;
+  const baseCoinInfo = useCoinInfo(market.baseType);
+  const quoteCoinInfo = useCoinInfo(market.quoteType);
   const [showMarketMenu, setShowMarketMenu] = useState(false);
   const marketMenuClickawayRef = useOnClickawayRef(() =>
     setShowMarketMenu(false),
@@ -28,10 +30,14 @@ export const TradeHeader: React.FC<{
   const registerMarket = useRegisterMarket();
   const marketPrice = useMarketPrice(market);
 
-  if (marketPrice.isLoading) {
+  if (
+    baseCoinInfo.isLoading ||
+    quoteCoinInfo.isLoading ||
+    marketPrice.isLoading
+  ) {
     // TODO: Better loading state
     return <DefaultWrapper>Loading...</DefaultWrapper>;
-  } else if (!marketPrice.data) {
+  } else if (!baseCoinInfo.data || !quoteCoinInfo.data || !marketPrice.data) {
     // TODO: Better error state
     return <DefaultWrapper>Market price not found</DefaultWrapper>;
   }
@@ -67,9 +73,10 @@ export const TradeHeader: React.FC<{
               width: 100%;
             `}
           >
-            <span>
-              {marketCoin.name}-{quoteCoin.name}
-            </span>
+            <MarketNameWrapper>
+              <Label>Market</Label>
+              {baseCoinInfo.data.symbol} / {quoteCoinInfo.data.symbol}
+            </MarketNameWrapper>
             <div ref={marketMenuClickawayRef}>
               <MarketSelector
                 onClick={() => setShowMarketMenu(!showMarketMenu)}
@@ -121,7 +128,8 @@ export const TradeHeader: React.FC<{
         </MarketWrapper>
         <PriceWrapper>
           <Label>Price</Label>
-          {marketPrice.data.bestAskPrice?.toFixed(2)} {quoteCoin.name}
+          {marketPrice.data.bestAskPrice?.toFixed(2)}{" "}
+          {quoteCoinInfo.data.symbol}
         </PriceWrapper>
         <PriceChangeWrapper>
           <Label>24h Change</Label>
@@ -162,6 +170,11 @@ const MarketSelector = styled.span`
 const MarketMenuItem = styled.div`
   background-color: ${({ theme }) => theme.colors.grey[800]};
   padding: 8px;
+`;
+
+const MarketNameWrapper = styled(HeaderItemWrapper)`
+  display: flex;
+  flex-direction: column;
 `;
 
 const PriceWrapper = styled(HeaderItemWrapper)`
