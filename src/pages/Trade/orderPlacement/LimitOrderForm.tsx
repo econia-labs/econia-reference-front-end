@@ -84,7 +84,6 @@ export const LimitOrderForm: React.FC<{ market: RegisteredMarket }> = ({
             alert("Price is required");
             return;
           }
-          // TODO: Work out the correct lot size and price
           const size = u64(
             Math.floor(
               (parseFloat(amountRef.current.value) *
@@ -99,12 +98,10 @@ export const LimitOrderForm: React.FC<{ market: RegisteredMarket }> = ({
                 market.tickSize,
             ),
           );
-          // TODO: This only works if the lotSize is <= 1 unit
-          const lotsPerUnit = u64(10 ** baseCoinInfo.data.decimals).div(
-            u64(market.lotSize),
-          );
           // AKA pricePerLot
-          const price = pricePerUnit.div(lotsPerUnit);
+          const price = pricePerUnit
+            .mul(u64(market.lotSize))
+            .div(u64(10 ** baseCoinInfo.data.decimals));
           let depositAmount;
           if (side === BID) {
             depositAmount = size.mul(price).mul(u64(market.tickSize));

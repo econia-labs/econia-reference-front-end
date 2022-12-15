@@ -1,3 +1,5 @@
+import { u64 } from "@manahippo/move-to-ts";
+
 import React, { useRef, useState } from "react";
 import { useMemo } from "react";
 
@@ -13,6 +15,7 @@ import { useCoinInfo } from "../../../hooks/useCoinInfo";
 import { useMarketPrice } from "../../../hooks/useMarketPrice";
 import { usePlaceMarketOrder } from "../../../hooks/usePlaceMarketOrder";
 import { RegisteredMarket } from "../../../hooks/useRegisteredMarkets";
+import { HI_PRICE } from "../../../sdk/src/econia/market";
 
 const BUY = true;
 const SELL = false;
@@ -34,7 +37,7 @@ export const MarketOrderForm: React.FC<{ market: RegisteredMarket }> = ({
         market.lotSize,
     );
     return marketPrice.data.getExecutionPrice(size, direction);
-  }, [marketPrice.data, amountStr, baseCoinInfo.data]);
+  }, [marketPrice.data, amountStr, baseCoinInfo.data, direction]);
 
   if (
     baseCoinInfo.isLoading ||
@@ -132,48 +135,46 @@ export const MarketOrderForm: React.FC<{ market: RegisteredMarket }> = ({
         </FlexRow>
       </div>
       <Button
+        disabled={!expectedPrice}
         onClick={async () => {
-          // TODO: Need market price to implement (min|max)_base and (min|max)_quote
-          // if (!amountRef.current) {
-          //   alert("Amount is required");
-          //   return;
-          // }
-          // // TODO: Work out the correct lot size and price
-          // const size = u64(
-          //   Math.floor(
-          //     (parseFloat(amountRef.current.value) *
-          //       10 ** baseCoinInfo.data.decimals) /
-          //       market.lotSize,
-          //   ),
-          // );
-          // const pricePerUnit = u64(
-          //   Math.floor(
-          //     (parseFloat(priceRef.current.value) *
-          //       10 ** quoteCoinInfo.data.decimals) /
-          //       market.tickSize,
-          //   ),
-          // );
-          // // TODO: This only works if the lotSize is <= 1 unit
-          // const lotsPerUnit = u64(10 ** baseCoinInfo.data.decimals).div(
-          //   u64(market.lotSize),
-          // );
-          // // AKA pricePerLot
-          // const price = pricePerUnit.div(lotsPerUnit);
-          // let depositAmount;
-          // if (direction === BUY) {
-          //   depositAmount = size.mul(price).mul(u64(market.tickSize));
-          // } else {
-          //   depositAmount = size.mul(u64(market.lotSize));
-          // }
-          // await placeMarketOrder(
-          //   depositAmount,
-          //   u64(market.marketId),
-          //   direction,
-          //   size,
-          //   price,
-          //   market.baseType,
-          //   market.quoteType,
-          // );
+          const size = u64(
+            Math.floor(
+              (expectedPrice!.sizeFillable * 10 ** baseCoinInfo.data.decimals) /
+                market.lotSize,
+            ),
+          );
+          const pricePerUnit = u64(
+            Math.floor(
+              (expectedPrice!.executionPrice *
+                10 ** quoteCoinInfo.data.decimals) /
+                market.tickSize,
+            ),
+          );
+          // AKA pricePerLot
+          const price = pricePerUnit
+            .mul(u64(market.lotSize))
+            .div(u64(10 ** baseCoinInfo.data.decimals));
+          // AKA total number of ticks transacted
+          const quote = size.mul(price);
+
+          let depositAmount;
+          if (direction === BUY) {
+            depositAmount = size.mul(price).mul(u64(market.tickSize));
+          } else {
+            depositAmount = size.mul(u64(market.lotSize));
+          }
+          await placeMarketOrder(
+            depositAmount,
+            u64(market.marketId),
+            direction,
+            size, // min_base
+            size, // max_base
+            quote, // min_quote
+            quote, // max_quote
+            HI_PRICE,
+            market.baseType,
+            market.quoteType,
+          );
         }}
         css={css`
           margin-top: 32px;
