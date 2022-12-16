@@ -1,4 +1,4 @@
-import { SimulationKeys } from "@manahippo/move-to-ts";
+import { SimulationKeys, u64 } from "@manahippo/move-to-ts";
 import { HexString } from "aptos";
 
 import { moduleAddress as econiaAddr } from "./sdk/src/econia/registry";
@@ -25,3 +25,5 @@ export const ASK = true;
 export const BID = false;
 export const BUY = true;
 export const SELL = false;
+
+export const ZERO_U64 = u64(0);

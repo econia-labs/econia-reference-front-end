@@ -11,14 +11,14 @@ import { FlexRow } from "../../../components/FlexRow";
 import { Input } from "../../../components/Input";
 import { Label } from "../../../components/Label";
 import { RadioGroup } from "../../../components/RadioGroup";
+import { BUY, SELL, ZERO_U64 } from "../../../constants";
 import { useCoinInfo } from "../../../hooks/useCoinInfo";
+import { useIncentiveParams } from "../../../hooks/useIncentiveParams";
 import { useMarketPrice } from "../../../hooks/useMarketPrice";
 import { usePlaceMarketOrder } from "../../../hooks/usePlaceMarketOrder";
 import { RegisteredMarket } from "../../../hooks/useRegisteredMarkets";
-import { HI_PRICE } from "../../../sdk/src/econia/market";
-
-const BUY = true;
-const SELL = false;
+import { calculate_max_quote_match_ } from "../../../sdk/src/econia/incentives";
+import { HI_PRICE, MAX_POSSIBLE } from "../../../sdk/src/econia/market";
 
 export const MarketOrderForm: React.FC<{ market: RegisteredMarket }> = ({
   market,
@@ -28,6 +28,7 @@ export const MarketOrderForm: React.FC<{ market: RegisteredMarket }> = ({
   const baseCoinInfo = useCoinInfo(market.baseType);
   const quoteCoinInfo = useCoinInfo(market.quoteType);
   const marketPrice = useMarketPrice(market);
+  const incentiveParams = useIncentiveParams();
   const placeMarketOrder = usePlaceMarketOrder();
   const expectedPrice = useMemo(() => {
     if (!marketPrice.data || !baseCoinInfo.data || amountStr === "")
@@ -42,11 +43,16 @@ export const MarketOrderForm: React.FC<{ market: RegisteredMarket }> = ({
   if (
     baseCoinInfo.isLoading ||
     quoteCoinInfo.isLoading ||
-    marketPrice.isLoading
+    marketPrice.isLoading ||
+    incentiveParams.isLoading
   ) {
     // TODO: Better loading state.
     return <div>Loading...</div>;
-  } else if (!baseCoinInfo.data || !quoteCoinInfo.data) {
+  } else if (
+    !baseCoinInfo.data ||
+    !quoteCoinInfo.data ||
+    !incentiveParams.data
+  ) {
     // TODO: Better error state.
     return <div>Failed to load coin info.</div>;
   }
@@ -155,7 +161,12 @@ export const MarketOrderForm: React.FC<{ market: RegisteredMarket }> = ({
             .mul(u64(market.lotSize))
             .div(u64(10 ** baseCoinInfo.data.decimals));
           // AKA total number of ticks transacted
-          const quote = size.mul(price);
+          const quote = calculate_max_quote_match_(
+            direction,
+            u64(incentiveParams.data.takerFeeDivisor),
+            size.mul(price),
+            undefined!,
+          );
 
           let depositAmount;
           if (direction === BUY) {
@@ -163,15 +174,16 @@ export const MarketOrderForm: React.FC<{ market: RegisteredMarket }> = ({
           } else {
             depositAmount = size.mul(u64(market.lotSize));
           }
+          // TODO: Handle slippage
           await placeMarketOrder(
             depositAmount,
             u64(market.marketId),
             direction,
             size, // min_base
-            size, // max_base
+            MAX_POSSIBLE, // max_base
             quote, // min_quote
-            quote, // max_quote
-            HI_PRICE,
+            MAX_POSSIBLE, // max_quote
+            direction === BUY ? HI_PRICE : ZERO_U64,
             market.baseType,
             market.quoteType,
           );
