@@ -1,4 +1,4 @@
-import { u64 } from "@manahippo/coin-list";
+import { u64 } from "@manahippo/move-to-ts";
 
 import React, { useRef, useState } from "react";
 
