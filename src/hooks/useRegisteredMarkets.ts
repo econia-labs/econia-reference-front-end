@@ -19,6 +19,7 @@ export type RegisteredMarket = {
   underwriterId: number;
 };
 
+// TODO: Probably should use useOrderBooks
 export const useRegisteredMarkets = () => {
   const { aptosClient } = useAptos();
 

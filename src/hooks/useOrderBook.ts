@@ -6,11 +6,9 @@ import { ECONIA_SIMULATION_KEYS } from "../constants";
 import { query_index_orders_sdk } from "../sdk/src/econia/market";
 import { useAptos } from "./useAptos";
 import { useEconiaSDK } from "./useEconiaSDK";
-import { useOrderBooks } from "./useOrderBooks";
 
 export const useOrderBook = (marketId: string | number) => {
   const { aptosClient } = useAptos();
-  const orderBooks = useOrderBooks();
   const { econia } = useEconiaSDK();
 
   return useQuery({
@@ -24,6 +22,5 @@ export const useOrderBook = (marketId: string | number) => {
         [],
       );
     },
-    enabled: !!orderBooks.data,
   });
 };

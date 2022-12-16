@@ -27,3 +27,15 @@ export const toDecimalSize = ({
 }) => {
   return (size * lotSize) / 10 ** baseCoinDecimals;
 };
+
+export const toDecimalQuote = ({
+  ticks,
+  tickSize,
+  quoteCoinDecimals,
+}: {
+  ticks: number;
+  tickSize: number;
+  quoteCoinDecimals: number;
+}) => {
+  return (ticks * tickSize) / 10 ** quoteCoinDecimals;
+};

@@ -13,8 +13,14 @@ import { useMarketPrice } from "../../hooks/useMarketPrice";
 import { useOnClickawayRef } from "../../hooks/useOnClickawayRef";
 import { useRegisterMarket } from "../../hooks/useRegisterMarket";
 import { RegisteredMarket } from "../../hooks/useRegisteredMarkets";
+import { useTakerEvents } from "../../hooks/useTakerEvents";
 import { DefaultContainer } from "../../layout/DefaultContainer";
 import { DefaultWrapper } from "../../layout/DefaultWrapper";
+import {
+  toDecimalPrice,
+  toDecimalQuote,
+  toDecimalSize,
+} from "../../utils/units";
 
 export const TradeHeader: React.FC<{
   market: RegisteredMarket;
@@ -29,6 +35,8 @@ export const TradeHeader: React.FC<{
   );
   const registerMarket = useRegisterMarket();
   const marketPrice = useMarketPrice(market);
+  const takerEvents = useTakerEvents(market.marketId);
+  const totalTrades = takerEvents.data?.length;
 
   if (
     baseCoinInfo.isLoading ||
@@ -44,6 +52,45 @@ export const TradeHeader: React.FC<{
     return <DefaultWrapper>Coin info not found.</DefaultWrapper>;
   }
 
+  let totalBaseVolume;
+  let totalQuoteVolume;
+  if (takerEvents.data) {
+    for (const takerEvent of takerEvents.data) {
+      if (!totalBaseVolume) totalBaseVolume = 0;
+      if (!totalQuoteVolume) totalQuoteVolume = 0;
+      totalBaseVolume += takerEvent.size;
+      totalQuoteVolume += takerEvent.size * takerEvent.price;
+    }
+    if (totalBaseVolume) {
+      totalBaseVolume = toDecimalSize({
+        size: totalBaseVolume,
+        lotSize: market.lotSize,
+        baseCoinDecimals: baseCoinInfo.data.decimals,
+      });
+    }
+    if (totalQuoteVolume) {
+      totalQuoteVolume = toDecimalQuote({
+        ticks: totalQuoteVolume,
+        tickSize: market.tickSize,
+        quoteCoinDecimals: quoteCoinInfo.data.decimals,
+      });
+    }
+  }
+
+  const priceChange =
+    takerEvents.data && takerEvents.data.length > 1
+      ? toDecimalPrice({
+          price:
+            takerEvents.data[takerEvents.data.length - 1].price -
+              takerEvents.data[takerEvents.data.length - 2]?.price ?? 0,
+          lotSize: market.lotSize,
+          tickSize: market.tickSize,
+          baseCoinDecimals: baseCoinInfo.data.decimals,
+          quoteCoinDecimals: quoteCoinInfo.data.decimals,
+        })
+      : null;
+
+  // TODO: Header items shouldn't change widths after loading
   return (
     <DefaultWrapper
       css={(theme) => css`
@@ -134,16 +181,25 @@ export const TradeHeader: React.FC<{
           {quoteCoinInfo.data.symbol}
         </PriceWrapper>
         <PriceChangeWrapper>
-          <Label>24h Change</Label>
-          <ColoredValue color={"red"}>-$18.1</ColoredValue>
+          <Label>Price Change</Label>
+          <ColoredValue
+            color={
+              priceChange ? (priceChange >= 0 ? "green" : "red") : undefined
+            }
+          >
+            {priceChange ?? "-"} {quoteCoinInfo.data.symbol}
+          </ColoredValue>
         </PriceChangeWrapper>
         <VolumeWrapper>
-          <Label>24h Volume</Label>
-          <span>$408,639,821</span>
+          <Label>Total Volume</Label>
+          <span>
+            {totalBaseVolume?.toFixed(2)} {baseCoinInfo.data.symbol} /{" "}
+            {totalQuoteVolume?.toFixed(2)} {quoteCoinInfo.data.symbol}
+          </span>
         </VolumeWrapper>
         <TradesWrapper>
-          <Label>24h Trades</Label>
-          <span>69,855</span>
+          <Label>Total Trades</Label>
+          <span>{totalTrades}</span>
         </TradesWrapper>
       </DefaultContainer>
     </DefaultWrapper>
@@ -199,7 +255,11 @@ const TradesWrapper = styled(HeaderItemWrapper)`
   flex-direction: column;
 `;
 
-const ColoredValue = styled.span<{ color: "green" | "red" }>`
+const ColoredValue = styled.span<{ color?: "green" | "red" }>`
   color: ${({ color, theme }) =>
-    color === "green" ? theme.colors.green.primary : "#F86C6B"};
+    color
+      ? color === "green"
+        ? theme.colors.green.primary
+        : "#F86C6B"
+      : theme.colors.grey[600]};
 `;
