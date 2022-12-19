@@ -3,21 +3,19 @@ import { HexString } from "aptos";
 import { useQuery } from "react-query";
 
 import { ORDER_BOOKS_ADDR } from "../constants";
+import { getTakerEventsCreationNumber } from "../utils/events";
 import { useAptos } from "./useAptos";
-import { useOrderBooks } from "./useOrderBooks";
 
 export const useTakerEvents = (marketId: string | number) => {
   const { aptosClient } = useAptos();
-  const orderBooks = useOrderBooks();
   return useQuery({
     queryKey: ["useTakerEvents", marketId],
     queryFn: async () => {
       try {
-        const orderBook = orderBooks.data![Number(marketId) - 1];
         const events = await aptosClient
           .getEventsByCreationNumber(
             ORDER_BOOKS_ADDR,
-            orderBook.takerEvents.guid.id.creationNum,
+            getTakerEventsCreationNumber(Number(marketId)),
           )
           .then((events) =>
             events.map(({ data }) => ({
@@ -37,6 +35,5 @@ export const useTakerEvents = (marketId: string | number) => {
         return null;
       }
     },
-    enabled: !!orderBooks.data,
   });
 };
