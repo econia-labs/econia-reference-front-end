@@ -43,19 +43,21 @@ export const Trade: React.FC = () => {
         setSelectedMarket={setMarket}
         markets={registeredMarkets.data}
       />
-      <FlexRow
+      <DefaultWrapper
         css={css`
           flex-grow: 1;
         `}
       >
-        <TradeActions market={market} />
-        <TradeChart
-          css={css`
-            flex-grow: 1;
-          `}
-          market={market}
-        />
-      </FlexRow>
+        <FlexRow>
+          <TradeActions market={market} />
+          <TradeChart
+            css={css`
+              flex-grow: 1;
+            `}
+            market={market}
+          />
+        </FlexRow>
+      </DefaultWrapper>
     </FlexCol>
   );
 };
