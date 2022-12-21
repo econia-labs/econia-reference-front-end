@@ -23,7 +23,7 @@ export const INTEGRATOR_ADDR = new HexString(
 
 export const ASK = true;
 export const BID = false;
-export const BUY = true;
-export const SELL = false;
+export const BUY = false;
+export const SELL = true;
 
 export const ZERO_U64 = u64(0);
