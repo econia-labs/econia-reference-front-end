@@ -1,73 +1,79 @@
-import { FlexCol } from "../components/FlexCol";
-import { RadioGroup } from "../components/RadioGroup";
-import { useOrderBook } from "../hooks/useOrderBook";
-import { RegisteredMarket } from "../hooks/useRegisteredMarkets";
-import { ColorType, CrosshairMode, createChart } from "lightweight-charts";
+import React from "react";
+import { Line } from "react-chartjs-2";
 
-import React, { useEffect, useRef } from "react";
+import { useTheme } from "@emotion/react";
 
-import { css, useTheme } from "@emotion/react";
+import { CoinInfo } from "../../../hooks/useCoinInfo";
+import { RegisteredMarket } from "../../../hooks/useRegisteredMarkets";
+import { useTakerEvents } from "../../../hooks/useTakerEvents";
+import { toDecimalPrice } from "../../../utils/units";
 
-import { MOCK_DATA } from "../mockData";
+enum PriceStatus {
+  NEUTRAL,
+  POSITIVE,
+  NEGATIVE,
+}
 
 export const PriceChart: React.FC<{
   market: RegisteredMarket;
-}> = ({ market }) => {
-  // TODO: Use real orderbook data
-  const orderBook = useOrderBook(market.marketId);
-  const ref = useRef<HTMLDivElement>(null);
+  baseCoinInfo: CoinInfo;
+  quoteCoinInfo: CoinInfo;
+}> = ({ market, baseCoinInfo, quoteCoinInfo }) => {
   const theme = useTheme();
-  useEffect(() => {
-    if (ref.current === null) return;
-    const handleResize = () => {
-      if (ref.current === null) return;
-      chart.applyOptions({ width: ref.current.clientWidth });
-    };
+  const takerEvents = useTakerEvents(market.marketId);
+  const labels = [];
+  const data: number[] = [];
+  if (takerEvents.data) {
+    for (const event of takerEvents.data) {
+      labels.push(event.version);
+      data.push(
+        toDecimalPrice({
+          price: event.price,
+          lotSize: market.lotSize,
+          tickSize: market.tickSize,
+          baseCoinDecimals: baseCoinInfo.decimals,
+          quoteCoinDecimals: quoteCoinInfo.decimals,
+        }),
+      );
+    }
+  }
 
-    const chart = createChart(ref.current, {
-      layout: {
-        background: { type: ColorType.Solid, color: theme.colors.grey[700] },
-        textColor: theme.colors.grey[100],
-      },
-      crosshair: {
-        mode: CrosshairMode.Magnet,
-      },
-      grid: {
-        vertLines: {
-          color: theme.colors.grey[600],
-        },
-        horzLines: {
-          color: theme.colors.grey[600],
-        },
-      },
-      width: ref.current.clientWidth,
-    });
-    chart.timeScale().fitContent();
+  let priceStatus = PriceStatus.NEUTRAL;
+  if (data.length > 1) {
+    if (data[data.length - 1] > data[data.length - 2]) {
+      priceStatus = PriceStatus.POSITIVE;
+    } else if (data[data.length - 1] < data[data.length - 2]) {
+      priceStatus = PriceStatus.NEGATIVE;
+    }
+  }
 
-    const newSeries = chart.addCandlestickSeries({
-      upColor: theme.colors.green.primary,
-      downColor: theme.colors.red.primary,
-      borderVisible: false,
-      wickUpColor: theme.colors.green.primary,
-      wickDownColor: theme.colors.red.primary,
-    });
-    newSeries.setData(MOCK_DATA);
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-      chart.remove();
-    };
-  }, [theme, ref.current]);
+  let borderColor = theme.colors.purple.primary;
+  if (priceStatus === PriceStatus.POSITIVE) {
+    borderColor = theme.colors.green.primary;
+  } else if (priceStatus === PriceStatus.NEGATIVE) {
+    borderColor = theme.colors.red.primary;
+  }
 
   return (
-    <div
-      css={css`
-        width: 100%;
-        height: 100%;
-      `}
-      ref={ref}
+    <Line
+      options={{
+        responsive: true,
+        plugins: {
+          legend: {
+            display: false,
+          },
+        },
+      }}
+      data={{
+        labels,
+        datasets: [
+          {
+            label: "Price",
+            data: data,
+            borderColor,
+          },
+        ],
+      }}
     />
   );
 };

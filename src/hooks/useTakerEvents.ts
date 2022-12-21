@@ -17,17 +17,24 @@ export const useTakerEvents = (marketId: string | number) => {
             ORDER_BOOKS_ADDR,
             getTakerEventsCreationNumber(Number(marketId)),
           )
-          .then((events) =>
-            events.map(({ data }) => ({
-              custodianId: parseInt(data.custodian_id),
-              maker: new HexString(data.maker),
-              marketId: parseInt(data.market_id),
-              marketOrderId: data.market_order_id.toString(),
-              price: parseInt(data.price),
-              side: data.side as boolean,
-              size: parseInt(data.size),
-            })),
-          );
+          .then((events) => {
+            return events.map((event) => {
+              const { sequence_number, data } = event;
+              // version does exist, just not in the typing
+              const version = (event as any).version;
+              return {
+                version: parseInt(version),
+                sequenceNumber: parseInt(sequence_number),
+                custodianId: parseInt(data.custodian_id),
+                maker: new HexString(data.maker),
+                marketId: parseInt(data.market_id),
+                marketOrderId: data.market_order_id.toString(),
+                price: parseInt(data.price),
+                side: data.side as boolean,
+                size: parseInt(data.size),
+              };
+            });
+          });
         return events;
       } catch (e) {
         // If the vault doesn't exist, return undefined

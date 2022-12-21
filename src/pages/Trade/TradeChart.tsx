@@ -8,6 +8,7 @@ import { RadioGroup } from "../../components/RadioGroup";
 import { useCoinInfo } from "../../hooks/useCoinInfo";
 import { RegisteredMarket } from "../../hooks/useRegisteredMarkets";
 import { DepthChart } from "./charts/DepthChart";
+import { PriceChart } from "./charts/PriceChart";
 
 export const TradeChart: React.FC<{
   className?: string;
@@ -54,8 +55,11 @@ export const TradeChart: React.FC<{
           `}
         >
           {mode === "Price" ? (
-            // <PriceChart market={market} />
-            <div>Price chart TODO</div>
+            <PriceChart
+              market={market}
+              baseCoinInfo={baseCoinInfo.data}
+              quoteCoinInfo={quoteCoinInfo.data}
+            />
           ) : (
             <DepthChart
               market={market}
