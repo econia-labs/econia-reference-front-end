@@ -55,7 +55,7 @@ export const BookTable: React.FC<{ market: RegisteredMarket }> = ({
         </thead>
         <tbody>
           {Array.from(asksByPrice.entries())
-            .sort(([priceA], [priceB]) => priceA - priceB)
+            .sort(([priceA], [priceB]) => priceB - priceA)
             .map(([price, size], i) => (
               <tr key={`ASK-${i}`}>
                 <td
@@ -96,7 +96,7 @@ export const BookTable: React.FC<{ market: RegisteredMarket }> = ({
             <td>--</td>
           </tr>
           {Array.from(bidsByPrice.entries())
-            .sort(([priceA], [priceB]) => priceA - priceB)
+            .sort(([priceA], [priceB]) => priceB - priceA)
             .map(([price, size], i) => (
               <tr key={`BID-${i}`}>
                 <td
