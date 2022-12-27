@@ -11,7 +11,7 @@ export const ECONIA_ADDR = econiaAddr;
 
 export const ECONIA_SIMULATION_KEYS: SimulationKeys = {
   pubkey: new HexString(
-    "0x31e13f3724737e056651f66d7c573bb8d3adb1b284b65abda16855864b17906f",
+    "0x86a82c05d5d89b65e684db85cfb77e8475d99b97ef31de5ae8bdf6152b2f3974",
   ),
   address: econiaAddr,
 };
