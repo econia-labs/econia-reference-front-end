@@ -152,6 +152,15 @@ const SwapInner: React.FC<{
           <p>{reverse ? baseCoin.data?.symbol : quoteCoin.data?.symbol}</p>
         </FlexRow>
       </div>
+      <Button
+        css={css`
+          width: 100%;
+        `}
+        variant="primary"
+        size="sm"
+      >
+        Swap
+      </Button>
     </>
   );
 };
