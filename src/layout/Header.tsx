@@ -2,7 +2,7 @@ import { useWallet } from "@manahippo/aptos-wallet-adapter";
 import { HexString } from "aptos";
 
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import { Theme, css } from "@emotion/react";
 import styled from "@emotion/styled";
@@ -17,6 +17,17 @@ import { shortenAddress } from "../utils/address";
 import { DefaultContainer } from "./DefaultContainer";
 import { DefaultWrapper } from "./DefaultWrapper";
 
+const HEADER_ITEMS = [
+  {
+    label: "Swap",
+    pathname: "/",
+  },
+  {
+    label: "Trade",
+    pathname: "/trade",
+  },
+];
+
 export const Header: React.FC = () => {
   const { connected, account, disconnect } = useWallet();
   const { connect } = useAptos();
@@ -24,6 +35,7 @@ export const Header: React.FC = () => {
   const disconnectMenuClickawayRef = useOnClickawayRef(() =>
     setShowDisconnectMenu(false),
   );
+  const location = useLocation();
   return (
     <DefaultWrapper
       css={(theme) => css`
@@ -40,9 +52,19 @@ export const Header: React.FC = () => {
       >
         <EconiaLogo width={32} height={32} />
         <NavContainer>
-          <Link css={NavLinkStyle} to="/">
-            Trade
-          </Link>
+          {HEADER_ITEMS.map(({ label, pathname }, i) => (
+            <Link
+              key={i}
+              css={
+                location.pathname === pathname
+                  ? ActiveNavLinkStyle
+                  : NavLinkStyle
+              }
+              to={pathname}
+            >
+              {label}
+            </Link>
+          ))}
           <ExternalLink css={NavLinkStyle} href="https://econia.dev">
             Docs
           </ExternalLink>
@@ -94,6 +116,10 @@ export const Header: React.FC = () => {
 const NavContainer = styled.div`
   display: flex;
   gap: 12px;
+`;
+
+const ActiveNavLinkStyle = (theme: Theme) => css`
+  text-decoration: underline 2px solid ${theme.colors.grey[100]};
 `;
 
 const NavLinkStyle = (theme: Theme) => css`

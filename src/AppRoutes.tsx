@@ -2,6 +2,7 @@ import React from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 
 import { NotFound } from "./pages/NotFound";
+import { Swap } from "./pages/Swap";
 import { Trade } from "./pages/Trade";
 
 export const AppRoutes: React.FC = () => {
@@ -13,7 +14,8 @@ export const AppRoutes: React.FC = () => {
   return (
     <>
       <Routes>
-        <Route path="/" element={<Trade />} />
+        <Route path="/" element={<Swap />} />
+        <Route path="/trade" element={<Trade />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>

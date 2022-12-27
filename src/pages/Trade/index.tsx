@@ -68,8 +68,6 @@ export const Trade: React.FC = () => {
       </DefaultWrapper>
     );
   }
-  const marketCoin = market.baseType;
-  const quoteCoin = market.quoteType;
 
   return (
     <FlexCol
