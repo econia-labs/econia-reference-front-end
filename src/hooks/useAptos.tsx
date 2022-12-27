@@ -1,8 +1,6 @@
 import { useWallet } from "@manahippo/aptos-wallet-adapter";
 import { AptosClient, TxnBuilderTypes } from "aptos";
 import { TransactionPayload_EntryFunctionPayload } from "aptos/src/generated";
-import { Button } from "../components/Button";
-import { FlexCol } from "../components/FlexCol";
 
 import React, {
   PropsWithChildren,
@@ -15,9 +13,13 @@ import { useQueryClient } from "react-query";
 
 import { css, useTheme } from "@emotion/react";
 
+import { Button } from "../components/Button";
+import { FlexCol } from "../components/FlexCol";
+
 interface IAptosContext {
   connect: () => void;
   aptosClient: AptosClient;
+  createTxLink: (txId: string | number) => string;
   sendTx: (
     payload:
       | TxnBuilderTypes.TransactionPayloadEntryFunction
@@ -26,6 +28,7 @@ interface IAptosContext {
 }
 
 export const AptosContext = createContext<IAptosContext | undefined>(undefined);
+// TODO: Dynamic by network
 const aptosClient = new AptosClient("https://fullnode.testnet.aptoslabs.com");
 
 export const AptosContextProvider: React.FC<PropsWithChildren> = (props) => {
@@ -107,6 +110,10 @@ export const AptosContextProvider: React.FC<PropsWithChildren> = (props) => {
         value={{
           connect: () => setShowConnectModal(true),
           aptosClient,
+          createTxLink: (txId) => {
+            // TODO: Dynamic by network
+            return `https://explorer.aptoslabs.com/txn/${txId}?network=testnet`;
+          },
           sendTx,
         }}
       >

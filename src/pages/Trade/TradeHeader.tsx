@@ -37,7 +37,6 @@ export const TradeHeader: React.FC<{
   const marketPrice = useMarketPrice(market);
   const takerEvents = useTakerEvents(market.marketId);
   const totalTrades = takerEvents.data?.length;
-  console.log(takerEvents.data);
 
   if (
     baseCoinInfo.isLoading ||
