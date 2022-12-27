@@ -14,16 +14,20 @@ import * as Resource_account from "./resource_account";
 import * as Tablist from "./tablist";
 import * as User from "./user";
 export const packageName = "Econia";
-export const moduleAddress = new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9");
+export const moduleAddress = new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200");
 export const moduleName = "market";
 
+export const ABORT : U8 = u8("0");
 export const ASCENDING : boolean = true;
 export const ASK : boolean = true;
 export const BID : boolean = false;
-export const BUY : boolean = true;
+export const BUY : boolean = false;
 export const CANCEL : U8 = u8("0");
+export const CANCEL_BOTH : U8 = u8("1");
+export const CANCEL_MAKER : U8 = u8("2");
+export const CANCEL_TAKER : U8 = u8("3");
 export const CHANGE : U8 = u8("1");
-export const CRITICAL_HEIGHT : U8 = u8("10");
+export const CRITICAL_HEIGHT : U8 = u8("18");
 export const DESCENDING : boolean = false;
 export const EVICT : U8 = u8("2");
 export const E_FILL_OR_ABORT_NOT_CROSS_SPREAD : U64 = u64("25");
@@ -32,8 +36,10 @@ export const E_INVALID_BASE : U64 = u64("7");
 export const E_INVALID_CUSTODIAN : U64 = u64("23");
 export const E_INVALID_MARKET_ID : U64 = u64("6");
 export const E_INVALID_MARKET_ORDER_ID : U64 = u64("22");
+export const E_INVALID_PERCENT : U64 = u64("29");
 export const E_INVALID_QUOTE : U64 = u64("8");
 export const E_INVALID_RESTRICTION : U64 = u64("18");
+export const E_INVALID_SELF_MATCH_BEHAVIOR : U64 = u64("28");
 export const E_INVALID_UNDERWRITER : U64 = u64("21");
 export const E_INVALID_USER : U64 = u64("24");
 export const E_MAX_BASE_0 : U64 = u64("0");
@@ -61,14 +67,17 @@ export const IMMEDIATE_OR_CANCEL : U8 = u8("2");
 export const MAX_POSSIBLE : U64 = u64("18446744073709551615");
 export const NIL : U64 = u64("0");
 export const NO_CUSTODIAN : U64 = u64("0");
+export const NO_MARKET_ACCOUNT : HexString = new HexString("0x0");
 export const NO_RESTRICTION : U8 = u8("0");
 export const NO_UNDERWRITER : U64 = u64("0");
 export const N_RESTRICTIONS : U8 = u8("3");
+export const PERCENT : boolean = true;
+export const PERCENT_100 : U64 = u64("100");
 export const PLACE : U8 = u8("3");
 export const POST_OR_ABORT : U8 = u8("3");
-export const SELL : boolean = false;
+export const SELL : boolean = true;
 export const SHIFT_COUNTER : U8 = u8("64");
-export const UNKNOWN_TAKER : HexString = new HexString("0x0");
+export const TICKS : boolean = false;
 
 
 export class MakerEvent 
@@ -185,11 +194,11 @@ export class OrderBook
   { name: "tick_size", typeTag: AtomicTypeTag.U64 },
   { name: "min_size", typeTag: AtomicTypeTag.U64 },
   { name: "underwriter_id", typeTag: AtomicTypeTag.U64 },
-  { name: "asks", typeTag: new StructTag(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), "avl_queue", "AVLqueue", [new StructTag(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), "market", "Order", [])]) },
-  { name: "bids", typeTag: new StructTag(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), "avl_queue", "AVLqueue", [new StructTag(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), "market", "Order", [])]) },
+  { name: "asks", typeTag: new StructTag(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), "avl_queue", "AVLqueue", [new StructTag(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), "market", "Order", [])]) },
+  { name: "bids", typeTag: new StructTag(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), "avl_queue", "AVLqueue", [new StructTag(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), "market", "Order", [])]) },
   { name: "counter", typeTag: AtomicTypeTag.U64 },
-  { name: "maker_events", typeTag: new StructTag(new HexString("0x1"), "event", "EventHandle", [new StructTag(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), "market", "MakerEvent", [])]) },
-  { name: "taker_events", typeTag: new StructTag(new HexString("0x1"), "event", "EventHandle", [new StructTag(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), "market", "TakerEvent", [])]) }];
+  { name: "maker_events", typeTag: new StructTag(new HexString("0x1"), "event", "EventHandle", [new StructTag(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), "market", "MakerEvent", [])]) },
+  { name: "taker_events", typeTag: new StructTag(new HexString("0x1"), "event", "EventHandle", [new StructTag(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), "market", "TakerEvent", [])]) }];
 
   base_type: Stdlib.Type_info.TypeInfo;
   base_name_generic: Stdlib.String.String;
@@ -250,7 +259,7 @@ export class OrderBooks
 
   ];
   static fields: FieldDeclType[] = [
-  { name: "map", typeTag: new StructTag(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), "tablist", "Tablist", [AtomicTypeTag.U64, new StructTag(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), "market", "OrderBook", [])]) }];
+  { name: "map", typeTag: new StructTag(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), "tablist", "Tablist", [AtomicTypeTag.U64, new StructTag(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), "market", "OrderBook", [])]) }];
 
   map: Tablist.Tablist;
 
@@ -292,8 +301,8 @@ export class Orders
 
   ];
   static fields: FieldDeclType[] = [
-  { name: "asks", typeTag: new VectorTag(new StructTag(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), "market", "Order", [])) },
-  { name: "bids", typeTag: new VectorTag(new StructTag(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), "market", "Order", [])) }];
+  { name: "asks", typeTag: new VectorTag(new StructTag(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), "market", "Order", [])) },
+  { name: "bids", typeTag: new VectorTag(new StructTag(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), "market", "Order", [])) }];
 
   asks: Order[];
   bids: Order[];
@@ -424,7 +433,7 @@ export function buildPayload_cancel_all_orders_user (
    | Types.TransactionPayload_EntryFunctionPayload {
   const typeParamStrings = [] as string[];
   return $.buildPayload(
-    new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"),
+    new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"),
     "market",
     "cancel_all_orders_user",
     typeParamStrings,
@@ -471,7 +480,7 @@ export function cancel_order_ (
   if (!($.copy(custodian_id)).eq(($.copy(order_custodian_id)))) {
     throw $.abortCode($.copy(E_INVALID_CUSTODIAN));
   }
-  User.cancel_order_internal_($.copy(user), $.copy(market_id), $.copy(custodian_id), side, $.copy(price), $.copy(order_access_key), $.copy(market_order_id), $c);
+  User.cancel_order_internal_($.copy(user), $.copy(market_id), $.copy(custodian_id), side, $.copy(size), $.copy(price), $.copy(order_access_key), $.copy(market_order_id), $c);
   Stdlib.Event.emit_event_(order_book_ref_mut.maker_events, new MakerEvent({ market_id: $.copy(market_id), side: side, market_order_id: $.copy(market_order_id), user: $.copy(user), custodian_id: $.copy(custodian_id), type: $.copy(CANCEL), size: $.copy(size), price: $.copy(price) }, new SimpleStructTag(MakerEvent)), $c, [new SimpleStructTag(MakerEvent)]);
   return;
 }
@@ -509,7 +518,7 @@ export function buildPayload_cancel_order_user (
    | Types.TransactionPayload_EntryFunctionPayload {
   const typeParamStrings = [] as string[];
   return $.buildPayload(
-    new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"),
+    new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"),
     "market",
     "cancel_order_user",
     typeParamStrings,
@@ -558,7 +567,7 @@ export function change_order_size_ (
   if (!($.copy(custodian_id)).eq(($.copy(order_ref_mut.custodian_id)))) {
     throw $.abortCode($.copy(E_INVALID_CUSTODIAN));
   }
-  User.change_order_size_internal_($.copy(user), $.copy(market_id), $.copy(custodian_id), side, $.copy(new_size), $.copy(order_ref_mut.price), $.copy(order_ref_mut.order_access_key), $.copy(market_order_id), $c);
+  User.change_order_size_internal_($.copy(user), $.copy(market_id), $.copy(custodian_id), side, $.copy(order_ref_mut.size), $.copy(new_size), $.copy(order_ref_mut.price), $.copy(order_ref_mut.order_access_key), $.copy(market_order_id), $c);
   order_ref_mut.size = $.copy(new_size);
   Stdlib.Event.emit_event_(order_book_ref_mut.maker_events, new MakerEvent({ market_id: $.copy(market_id), side: side, market_order_id: $.copy(market_order_id), user: $.copy(user), custodian_id: $.copy(custodian_id), type: $.copy(CHANGE), size: $.copy(order_ref_mut.size), price: $.copy(order_ref_mut.price) }, new SimpleStructTag(MakerEvent)), $c, [new SimpleStructTag(MakerEvent)]);
   return;
@@ -600,7 +609,7 @@ export function buildPayload_change_order_size_user (
    | Types.TransactionPayload_EntryFunctionPayload {
   const typeParamStrings = [] as string[];
   return $.buildPayload(
-    new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"),
+    new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"),
     "market",
     "change_order_size_user",
     typeParamStrings,
@@ -614,6 +623,132 @@ export function buildPayload_change_order_size_user (
   );
 
 }
+
+export function get_ABORT_ (
+  $c: AptosDataCache,
+): U8 {
+  return $.copy(ABORT);
+}
+
+
+export function get_ASK_ (
+  $c: AptosDataCache,
+): boolean {
+  return $.copy(ASK);
+}
+
+
+export function get_BID_ (
+  $c: AptosDataCache,
+): boolean {
+  return $.copy(BID);
+}
+
+
+export function get_BUY_ (
+  $c: AptosDataCache,
+): boolean {
+  return $.copy(BUY);
+}
+
+
+export function get_CANCEL_BOTH_ (
+  $c: AptosDataCache,
+): U8 {
+  return $.copy(CANCEL_BOTH);
+}
+
+
+export function get_CANCEL_MAKER_ (
+  $c: AptosDataCache,
+): U8 {
+  return $.copy(CANCEL_MAKER);
+}
+
+
+export function get_CANCEL_TAKER_ (
+  $c: AptosDataCache,
+): U8 {
+  return $.copy(CANCEL_TAKER);
+}
+
+
+export function get_FILL_OR_ABORT_ (
+  $c: AptosDataCache,
+): U8 {
+  return $.copy(FILL_OR_ABORT);
+}
+
+
+export function get_HI_PRICE_ (
+  $c: AptosDataCache,
+): U64 {
+  return $.copy(HI_PRICE);
+}
+
+
+export function get_IMMEDIATE_OR_CANCEL_ (
+  $c: AptosDataCache,
+): U8 {
+  return $.copy(IMMEDIATE_OR_CANCEL);
+}
+
+
+export function get_MAX_POSSIBLE_ (
+  $c: AptosDataCache,
+): U64 {
+  return $.copy(MAX_POSSIBLE);
+}
+
+
+export function get_NO_CUSTODIAN_ (
+  $c: AptosDataCache,
+): U64 {
+  return $.copy(NO_CUSTODIAN);
+}
+
+
+export function get_NO_RESTRICTION_ (
+  $c: AptosDataCache,
+): U8 {
+  return $.copy(NO_RESTRICTION);
+}
+
+
+export function get_NO_UNDERWRITER_ (
+  $c: AptosDataCache,
+): U64 {
+  return $.copy(NO_UNDERWRITER);
+}
+
+
+export function get_PERCENT_ (
+  $c: AptosDataCache,
+): boolean {
+  return $.copy(PERCENT);
+}
+
+
+export function get_POST_OR_ABORT_ (
+  $c: AptosDataCache,
+): U8 {
+  return $.copy(POST_OR_ABORT);
+}
+
+
+export function get_SELL_ (
+  $c: AptosDataCache,
+): boolean {
+  return $.copy(SELL);
+}
+
+
+export function get_TICKS_ (
+  $c: AptosDataCache,
+): boolean {
+  return $.copy(TICKS);
+}
+
 
 export function get_market_order_id_counter_ (
   market_order_id: U128,
@@ -637,14 +772,14 @@ export function index_orders_sdk_ (
   $c: AptosDataCache,
 ): void {
   let temp$1, i, n_asks, n_bids, order_book_ref_mut, order_books_map_ref_mut, orders, orders__2, resource_address;
-  if (!((Stdlib.Signer.address_of_(account, $c)).hex() === (new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9")).hex())) {
+  if (!((Stdlib.Signer.address_of_(account, $c)).hex() === (new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200")).hex())) {
     throw $.abortCode($.copy(E_NOT_SIMULATION_ACCOUNT));
   }
   resource_address = Resource_account.get_address_($c);
   order_books_map_ref_mut = $c.borrow_global_mut<OrderBooks>(new SimpleStructTag(OrderBooks), $.copy(resource_address)).map;
   order_book_ref_mut = Tablist.borrow_mut_(order_books_map_ref_mut, $.copy(market_id), $c, [AtomicTypeTag.U64, new SimpleStructTag(OrderBook)]);
-  if ($c.exists(new SimpleStructTag(Orders), new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"))) {
-    orders = $c.move_from<Orders>(new SimpleStructTag(Orders), new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"));
+  if ($c.exists(new SimpleStructTag(Orders), new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"))) {
+    orders = $c.move_from<Orders>(new SimpleStructTag(Orders), new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"));
     [n_asks, n_bids] = [Stdlib.Vector.length_(orders.asks, $c, [new SimpleStructTag(Order)]), Stdlib.Vector.length_(orders.bids, $c, [new SimpleStructTag(Order)])];
     i = u64("0");
     while (($.copy(i)).lt($.copy(n_asks))) {
@@ -687,7 +822,7 @@ export function buildPayload_index_orders_sdk (
    | Types.TransactionPayload_EntryFunctionPayload {
   const typeParamStrings = [] as string[];
   return $.buildPayload(
-    new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"),
+    new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"),
     "market",
     "index_orders_sdk",
     typeParamStrings,
@@ -726,6 +861,7 @@ export function match_ (
   market_id: U64,
   order_book_ref_mut: OrderBook,
   taker: HexString,
+  custodian_id: U64,
   integrator: HexString,
   direction: boolean,
   min_base: U64,
@@ -733,12 +869,13 @@ export function match_ (
   min_quote: U64,
   max_quote: U64,
   limit_price: U64,
+  self_match_behavior: U8,
   optional_base_coins: Stdlib.Option.Option,
   quote_coins: Stdlib.Coin.Coin,
   $c: AptosDataCache,
   $p: TypeTag[], /* <BaseType, QuoteType>*/
-): [Stdlib.Option.Option, Stdlib.Coin.Coin, U64, U64, U64] {
-  let temp$1, temp$10, temp$12, temp$2, temp$3, temp$4, temp$5, temp$6, temp$7, temp$8, temp$9, avlq_access_key, base_fill, complete_fill, custodian_id, fees_paid, fill_size, lot_size, lots_until_max, maker, market_order_id, max_fill_size, max_fill_size_ticks, max_lots, max_quote_match, max_ticks, order, order_ref_mut, orders_ref_mut, price, quote_coins__11, quote_fill, quote_traded, side, size, taker_fee_divisor, tick_size, ticks_filled, ticks_until_max;
+): [Stdlib.Option.Option, Stdlib.Coin.Coin, U64, U64, U64, boolean] {
+  let temp$1, temp$10, temp$13, temp$15, temp$2, temp$3, temp$4, temp$5, temp$6, temp$7, temp$8, temp$9, avlq_access_key, avlq_access_key__12, base_fill, cancel_maker_order, complete_fill, fees_paid, fill_size, lot_size, lots_until_max, maker, maker_custodian_id, maker_handle, market_order_id, market_order_id__11, max_fill_size, max_fill_size_ticks, max_lots, max_quote_match, max_ticks, order, order_ref_mut, orders_ref_mut, price, quote_coins__14, quote_fill, quote_traded, self_match, self_match_taker_cancel, side, taker_fee_divisor, taker_handle, tick_size, ticks_filled, ticks_until_max;
   if (!($.copy(limit_price)).le($.copy(HI_PRICE))) {
     throw $.abortCode($.copy(E_PRICE_TOO_HIGH));
   }
@@ -761,6 +898,7 @@ export function match_ (
     temp$2 = order_book_ref_mut.bids;
   }
   orders_ref_mut = temp$2;
+  self_match_taker_cancel = false;
   while (!Avl_queue.is_empty_(orders_ref_mut, $c, [new SimpleStructTag(Order)])) {
     {
       temp$3 = Avl_queue.get_head_key_(orders_ref_mut, $c, [new SimpleStructTag(Order)]);
@@ -812,53 +950,96 @@ export function match_ (
       }
       else{
       }
-      ticks_filled = ($.copy(fill_size)).mul($.copy(price));
-      lots_until_max = ($.copy(lots_until_max)).sub($.copy(fill_size));
-      ticks_until_max = ($.copy(ticks_until_max)).sub($.copy(ticks_filled));
-      [maker, custodian_id, size] = [$.copy(order_ref_mut.user), $.copy(order_ref_mut.custodian_id), $.copy(fill_size)];
-      if (!(($.copy(maker)).hex() !== ($.copy(taker)).hex())) {
-        throw $.abortCode($.copy(E_SELF_MATCH));
+      [maker, maker_custodian_id] = [$.copy(order_ref_mut.user), $.copy(order_ref_mut.custodian_id)];
+      if ((($.copy(taker)).hex() === ($.copy(maker)).hex())) {
+        temp$10 = ($.copy(custodian_id)).eq(($.copy(maker_custodian_id)));
       }
-      [optional_base_coins, quote_coins, market_order_id] = User.fill_order_internal_($.copy(maker), $.copy(market_id), $.copy(custodian_id), side, $.copy(order_ref_mut.order_access_key), $.copy(fill_size), complete_fill, optional_base_coins, quote_coins, ($.copy(fill_size)).mul($.copy(lot_size)), ($.copy(ticks_filled)).mul($.copy(tick_size)), $c, [$p[0], $p[1]]);
-      Stdlib.Event.emit_event_(order_book_ref_mut.taker_events, new TakerEvent({ market_id: $.copy(market_id), side: side, market_order_id: $.copy(market_order_id), maker: $.copy(maker), custodian_id: $.copy(custodian_id), size: $.copy(size), price: $.copy(price) }, new SimpleStructTag(TakerEvent)), $c, [new SimpleStructTag(TakerEvent)]);
-      if (complete_fill) {
-        avlq_access_key = u64(($.copy(market_order_id)).and(u128($.copy(HI_64))));
-        order = Avl_queue.remove_(orders_ref_mut, $.copy(avlq_access_key), $c, [new SimpleStructTag(Order)]);
-        order;
-        if (($.copy(lots_until_max)).eq((u64("0")))) {
-          temp$10 = true;
+      else{
+        temp$10 = false;
+      }
+      self_match = temp$10;
+      if (self_match) {
+        if (!($.copy(self_match_behavior)).neq($.copy(ABORT))) {
+          throw $.abortCode($.copy(E_SELF_MATCH));
+        }
+        cancel_maker_order = false;
+        if (($.copy(self_match_behavior)).eq(($.copy(CANCEL_BOTH)))) {
+          [cancel_maker_order, self_match_taker_cancel] = [true, true];
         }
         else{
-          temp$10 = ($.copy(ticks_until_max)).eq((u64("0")));
+          if (($.copy(self_match_behavior)).eq(($.copy(CANCEL_MAKER)))) {
+            cancel_maker_order = true;
+          }
+          else{
+            if (($.copy(self_match_behavior)).eq(($.copy(CANCEL_TAKER)))) {
+              self_match_taker_cancel = true;
+            }
+            else{
+              throw $.abortCode($.copy(E_INVALID_SELF_MATCH_BEHAVIOR));
+            }
+          }
         }
-        if (temp$10) {
+        if (cancel_maker_order) {
+          market_order_id = User.cancel_order_internal_($.copy(maker), $.copy(market_id), $.copy(maker_custodian_id), side, $.copy(order_ref_mut.size), $.copy(price), $.copy(order_ref_mut.order_access_key), u128($.copy(NIL)), $c);
+          avlq_access_key = u64(($.copy(market_order_id)).and(u128($.copy(HI_64))));
+          let { size: size } = Avl_queue.remove_(orders_ref_mut, $.copy(avlq_access_key), $c, [new SimpleStructTag(Order)]);
+          maker_handle = order_book_ref_mut.maker_events;
+          Stdlib.Event.emit_event_(maker_handle, new MakerEvent({ market_id: $.copy(market_id), side: side, market_order_id: $.copy(market_order_id), user: $.copy(maker), custodian_id: $.copy(maker_custodian_id), type: $.copy(CANCEL), size: $.copy(size), price: $.copy(price) }, new SimpleStructTag(MakerEvent)), $c, [new SimpleStructTag(MakerEvent)]);
+        }
+        else{
+        }
+        if (self_match_taker_cancel) {
           break;
         }
         else{
         }
       }
       else{
-        order_ref_mut.size = ($.copy(order_ref_mut.size)).sub($.copy(fill_size));
-        break;
+        ticks_filled = ($.copy(fill_size)).mul($.copy(price));
+        lots_until_max = ($.copy(lots_until_max)).sub($.copy(fill_size));
+        ticks_until_max = ($.copy(ticks_until_max)).sub($.copy(ticks_filled));
+        [optional_base_coins, quote_coins, market_order_id__11] = User.fill_order_internal_($.copy(maker), $.copy(market_id), $.copy(maker_custodian_id), side, $.copy(order_ref_mut.order_access_key), $.copy(order_ref_mut.size), $.copy(fill_size), complete_fill, optional_base_coins, quote_coins, ($.copy(fill_size)).mul($.copy(lot_size)), ($.copy(ticks_filled)).mul($.copy(tick_size)), $c, [$p[0], $p[1]]);
+        taker_handle = order_book_ref_mut.taker_events;
+        Stdlib.Event.emit_event_(taker_handle, new TakerEvent({ market_id: $.copy(market_id), side: side, market_order_id: $.copy(market_order_id__11), maker: $.copy(maker), custodian_id: $.copy(maker_custodian_id), size: $.copy(fill_size), price: $.copy(price) }, new SimpleStructTag(TakerEvent)), $c, [new SimpleStructTag(TakerEvent)]);
+        if (complete_fill) {
+          avlq_access_key__12 = u64(($.copy(market_order_id__11)).and(u128($.copy(HI_64))));
+          order = Avl_queue.remove_(orders_ref_mut, $.copy(avlq_access_key__12), $c, [new SimpleStructTag(Order)]);
+          order;
+          if (($.copy(lots_until_max)).eq((u64("0")))) {
+            temp$13 = true;
+          }
+          else{
+            temp$13 = ($.copy(ticks_until_max)).eq((u64("0")));
+          }
+          if (temp$13) {
+            break;
+          }
+          else{
+          }
+        }
+        else{
+          order_ref_mut.size = ($.copy(order_ref_mut.size)).sub($.copy(fill_size));
+          break;
+        }
       }
     }
 
   }[base_fill, quote_fill] = [(($.copy(max_lots)).sub($.copy(lots_until_max))).mul($.copy(lot_size)), (($.copy(max_ticks)).sub($.copy(ticks_until_max))).mul($.copy(tick_size))];
-  [quote_coins__11, fees_paid] = Incentives.assess_taker_fees_($.copy(market_id), $.copy(integrator), $.copy(taker_fee_divisor), $.copy(quote_fill), quote_coins, $c, [$p[1]]);
+  [quote_coins__14, fees_paid] = Incentives.assess_taker_fees_($.copy(market_id), $.copy(integrator), $.copy(taker_fee_divisor), $.copy(quote_fill), quote_coins, $c, [$p[1]]);
   if ((direction == $.copy(BUY))) {
-    temp$12 = ($.copy(quote_fill)).add($.copy(fees_paid));
+    temp$15 = ($.copy(quote_fill)).add($.copy(fees_paid));
   }
   else{
-    temp$12 = ($.copy(quote_fill)).sub($.copy(fees_paid));
+    temp$15 = ($.copy(quote_fill)).sub($.copy(fees_paid));
   }
-  quote_traded = temp$12;
+  quote_traded = temp$15;
   if (!($.copy(base_fill)).ge($.copy(min_base))) {
     throw $.abortCode($.copy(E_MIN_BASE_NOT_TRADED));
   }
   if (!($.copy(quote_traded)).ge($.copy(min_quote))) {
     throw $.abortCode($.copy(E_MIN_QUOTE_NOT_TRADED));
   }
-  return [optional_base_coins, quote_coins__11, $.copy(base_fill), $.copy(quote_traded), $.copy(fees_paid)];
+  return [optional_base_coins, quote_coins__14, $.copy(base_fill), $.copy(quote_traded), $.copy(fees_paid), self_match_taker_cancel];
 }
 
 export function place_limit_order_ (
@@ -870,11 +1051,12 @@ export function place_limit_order_ (
   size: U64,
   price: U64,
   restriction: U8,
+  self_match_behavior: U8,
   critical_height: U8,
   $c: AptosDataCache,
   $p: TypeTag[], /* <BaseType, QuoteType>*/
 ): [U128, U64, U64, U64] {
-  let temp$1, temp$10, temp$11, temp$12, temp$13, temp$2, temp$3, temp$4, temp$5, temp$6, temp$7, temp$8, temp$9, avlq_access_key, base, base_available, base_ceiling, base_deposit, base_traded, base_withdraw, crosses_spread, direction, evictee_access_key, evictee_value, fees, market_order_id, market_order_id_cancel, max_base, max_quote, min_base, min_quote, optional_base_coins, order, order_access_key, order_book_ref_mut, order_books_map_ref_mut, orders_ref_mut, price_cancel, quote, quote_available, quote_ceiling, quote_coins, quote_traded, quote_withdraw, resource_address, still_crosses_spread, ticks, underwriter_id;
+  let temp$1, temp$10, temp$11, temp$12, temp$13, temp$2, temp$3, temp$4, temp$5, temp$6, temp$7, temp$8, temp$9, avlq_access_key, base, base_available, base_ceiling, base_deposit, base_traded, base_withdraw, crosses_spread, direction, evictee_access_key, evictee_value, fees, market_order_id, market_order_id_cancel, max_base, max_quote, min_base, min_quote, optional_base_coins, order, order_access_key, order_book_ref_mut, order_books_map_ref_mut, orders_ref_mut, quote, quote_available, quote_ceiling, quote_coins, quote_traded, quote_withdraw, resource_address, self_match_cancel, still_crosses_spread, ticks, underwriter_id;
   if (!($.copy(restriction)).le($.copy(N_RESTRICTIONS))) {
     throw $.abortCode($.copy(E_INVALID_RESTRICTION));
   }
@@ -969,7 +1151,7 @@ export function place_limit_order_ (
     }
     [base_withdraw, quote_withdraw] = [temp$7, temp$8];
     [optional_base_coins, quote_coins] = User.withdraw_assets_internal_($.copy(user_address), $.copy(market_id), $.copy(custodian_id), $.copy(base_withdraw), $.copy(quote_withdraw), $.copy(underwriter_id), $c, [$p[0], $p[1]]);
-    [optional_base_coins, quote_coins, base_traded, quote_traded, fees] = match_($.copy(market_id), order_book_ref_mut, $.copy(user_address), $.copy(integrator), direction, $.copy(min_base), $.copy(max_base), $.copy(min_quote), $.copy(max_quote), $.copy(price), optional_base_coins, quote_coins, $c, [$p[0], $p[1]]);
+    [optional_base_coins, quote_coins, base_traded, quote_traded, fees, self_match_cancel] = match_($.copy(market_id), order_book_ref_mut, $.copy(user_address), $.copy(custodian_id), $.copy(integrator), direction, $.copy(min_base), $.copy(max_base), $.copy(min_quote), $.copy(max_quote), $.copy(price), $.copy(self_match_behavior), optional_base_coins, quote_coins, $c, [$p[0], $p[1]]);
     if ((direction == $.copy(BUY))) {
       temp$9 = $.copy(base_traded);
     }
@@ -985,7 +1167,7 @@ export function place_limit_order_ (
       temp$10 = !Avl_queue.would_update_head_(order_book_ref_mut.asks, $.copy(price), $c, [new SimpleStructTag(Order)]);
     }
     still_crosses_spread = temp$10;
-    if (still_crosses_spread) {
+    if ((still_crosses_spread || self_match_cancel)) {
       temp$11 = u64("0");
     }
     else{
@@ -1028,8 +1210,7 @@ export function place_limit_order_ (
   }
   else{
     let { size: size__17, price: price__16, user: user, custodian_id: custodian_id__14, order_access_key: order_access_key__15 } = Stdlib.Option.destroy_some_(evictee_value, $c, [new SimpleStructTag(Order)]);
-    price_cancel = ($.copy(evictee_access_key)).and($.copy(HI_PRICE));
-    market_order_id_cancel = User.cancel_order_internal_($.copy(user), $.copy(market_id), $.copy(custodian_id__14), side, $.copy(price_cancel), $.copy(order_access_key__15), u128($.copy(NIL)), $c);
+    market_order_id_cancel = User.cancel_order_internal_($.copy(user), $.copy(market_id), $.copy(custodian_id__14), side, $.copy(size__17), $.copy(price__16), $.copy(order_access_key__15), u128($.copy(NIL)), $c);
     Stdlib.Event.emit_event_(order_book_ref_mut.maker_events, new MakerEvent({ market_id: $.copy(market_id), side: side, market_order_id: $.copy(market_order_id_cancel), user: $.copy(user), custodian_id: $.copy(custodian_id__14), type: $.copy(EVICT), size: $.copy(size__17), price: $.copy(price__16) }, new SimpleStructTag(MakerEvent)), $c, [new SimpleStructTag(MakerEvent)]);
   }
   return [$.copy(market_order_id), $.copy(base_traded), $.copy(quote_traded), $.copy(fees)];
@@ -1043,11 +1224,211 @@ export function place_limit_order_custodian_ (
   size: U64,
   price: U64,
   restriction: U8,
+  self_match_behavior: U8,
   custodian_capability_ref: Registry.CustodianCapability,
   $c: AptosDataCache,
   $p: TypeTag[], /* <BaseType, QuoteType>*/
 ): [U128, U64, U64, U64] {
-  return place_limit_order_($.copy(user_address), $.copy(market_id), Registry.get_custodian_id_(custodian_capability_ref, $c), $.copy(integrator), side, $.copy(size), $.copy(price), $.copy(restriction), $.copy(CRITICAL_HEIGHT), $c, [$p[0], $p[1]]);
+  return place_limit_order_($.copy(user_address), $.copy(market_id), Registry.get_custodian_id_(custodian_capability_ref, $c), $.copy(integrator), side, $.copy(size), $.copy(price), $.copy(restriction), $.copy(self_match_behavior), $.copy(CRITICAL_HEIGHT), $c, [$p[0], $p[1]]);
+}
+
+export function place_limit_order_passive_advance_ (
+  user_address: HexString,
+  market_id: U64,
+  custodian_id: U64,
+  integrator: HexString,
+  side: boolean,
+  size: U64,
+  advance_style: boolean,
+  target_advance_amount: U64,
+  $c: AptosDataCache,
+  $p: TypeTag[], /* <BaseType, QuoteType>*/
+): U128 {
+  let temp$1, temp$10, temp$11, temp$12, temp$13, temp$14, temp$2, temp$3, temp$5, temp$6, temp$7, temp$8, temp$9, advance, check_price, check_price__4, cross_price, cross_price_option, full_advance, full_advance_price, market_order_id, max_bid_price_option, min_ask_price_option, order_book_ref, order_books_map_ref, price, resource_address, start_price, start_price_option;
+  resource_address = Resource_account.get_address_($c);
+  order_books_map_ref = $c.borrow_global<OrderBooks>(new SimpleStructTag(OrderBooks), $.copy(resource_address)).map;
+  if (!Tablist.contains_(order_books_map_ref, $.copy(market_id), $c, [AtomicTypeTag.U64, new SimpleStructTag(OrderBook)])) {
+    throw $.abortCode($.copy(E_INVALID_MARKET_ID));
+  }
+  order_book_ref = Tablist.borrow_(order_books_map_ref, $.copy(market_id), $c, [AtomicTypeTag.U64, new SimpleStructTag(OrderBook)]);
+  if (!$.deep_eq(Stdlib.Type_info.type_of_($c, [$p[0]]), $.copy(order_book_ref.base_type))) {
+    throw $.abortCode($.copy(E_INVALID_BASE));
+  }
+  if (!$.deep_eq(Stdlib.Type_info.type_of_($c, [$p[1]]), $.copy(order_book_ref.quote_type))) {
+    throw $.abortCode($.copy(E_INVALID_QUOTE));
+  }
+  [max_bid_price_option, min_ask_price_option] = [Avl_queue.get_head_key_(order_book_ref.bids, $c, [new SimpleStructTag(Order)]), Avl_queue.get_head_key_(order_book_ref.asks, $c, [new SimpleStructTag(Order)])];
+  if ((side == $.copy(ASK))) {
+    [temp$1, temp$2] = [$.copy(min_ask_price_option), $.copy(max_bid_price_option)];
+  }
+  else{
+    [temp$1, temp$2] = [$.copy(max_bid_price_option), $.copy(min_ask_price_option)];
+  }
+  [start_price_option, cross_price_option] = [temp$1, temp$2];
+  if (Stdlib.Option.is_none_(start_price_option, $c, [AtomicTypeTag.U64])) {
+    return u128($.copy(NIL));
+  }
+  else{
+  }
+  start_price = $.copy(Stdlib.Option.borrow_(start_price_option, $c, [AtomicTypeTag.U64]));
+  if (($.copy(target_advance_amount)).eq((u64("0")))) {
+    temp$14 = $.copy(start_price);
+  }
+  else{
+    if (Stdlib.Option.is_none_(cross_price_option, $c, [AtomicTypeTag.U64])) {
+      return u128($.copy(NIL));
+    }
+    else{
+    }
+    cross_price = $.copy(Stdlib.Option.borrow_(cross_price_option, $c, [AtomicTypeTag.U64]));
+    if ((side == $.copy(ASK))) {
+      check_price = ($.copy(cross_price)).add(u64("1"));
+      if (($.copy(check_price)).le($.copy(start_price))) {
+        temp$3 = $.copy(check_price);
+      }
+      else{
+        temp$3 = $.copy(start_price);
+      }
+      temp$6 = temp$3;
+    }
+    else{
+      check_price__4 = ($.copy(cross_price)).sub(u64("1"));
+      if (($.copy(check_price__4)).ge($.copy(start_price))) {
+        temp$5 = $.copy(check_price__4);
+      }
+      else{
+        temp$5 = $.copy(start_price);
+      }
+      temp$6 = temp$5;
+    }
+    full_advance_price = temp$6;
+    if (($.copy(full_advance_price)).eq(($.copy(start_price)))) {
+      temp$13 = $.copy(start_price);
+    }
+    else{
+      if ((side == $.copy(ASK))) {
+        temp$7 = ($.copy(start_price)).sub($.copy(full_advance_price));
+      }
+      else{
+        temp$7 = ($.copy(full_advance_price)).sub($.copy(start_price));
+      }
+      full_advance = temp$7;
+      if ((advance_style == $.copy(PERCENT))) {
+        if (!($.copy(target_advance_amount)).le($.copy(PERCENT_100))) {
+          throw $.abortCode($.copy(E_INVALID_PERCENT));
+        }
+        if (($.copy(target_advance_amount)).eq(($.copy(PERCENT_100)))) {
+          temp$9 = $.copy(full_advance_price);
+        }
+        else{
+          advance = (($.copy(full_advance)).mul($.copy(target_advance_amount))).div($.copy(PERCENT_100));
+          if ((side == $.copy(ASK))) {
+            temp$8 = ($.copy(start_price)).sub($.copy(advance));
+          }
+          else{
+            temp$8 = ($.copy(start_price)).add($.copy(advance));
+          }
+          temp$9 = temp$8;
+        }
+        temp$12 = temp$9;
+      }
+      else{
+        if (($.copy(target_advance_amount)).ge($.copy(full_advance))) {
+          temp$11 = $.copy(full_advance_price);
+        }
+        else{
+          if ((side == $.copy(ASK))) {
+            temp$10 = ($.copy(start_price)).sub($.copy(target_advance_amount));
+          }
+          else{
+            temp$10 = ($.copy(start_price)).add($.copy(target_advance_amount));
+          }
+          temp$11 = temp$10;
+        }
+        temp$12 = temp$11;
+      }
+      temp$13 = temp$12;
+    }
+    temp$14 = temp$13;
+  }
+  price = temp$14;
+  [market_order_id, , , ] = place_limit_order_($.copy(user_address), $.copy(market_id), $.copy(custodian_id), $.copy(integrator), side, $.copy(size), $.copy(price), $.copy(POST_OR_ABORT), $.copy(ABORT), $.copy(CRITICAL_HEIGHT), $c, [$p[0], $p[1]]);
+  return $.copy(market_order_id);
+}
+
+export function place_limit_order_passive_advance_custodian_ (
+  user_address: HexString,
+  market_id: U64,
+  integrator: HexString,
+  side: boolean,
+  size: U64,
+  advance_style: boolean,
+  target_advance_amount: U64,
+  custodian_capability_ref: Registry.CustodianCapability,
+  $c: AptosDataCache,
+  $p: TypeTag[], /* <BaseType, QuoteType>*/
+): U128 {
+  return place_limit_order_passive_advance_($.copy(user_address), $.copy(market_id), Registry.get_custodian_id_(custodian_capability_ref, $c), $.copy(integrator), side, $.copy(size), advance_style, $.copy(target_advance_amount), $c, [$p[0], $p[1]]);
+}
+
+export function place_limit_order_passive_advance_user_ (
+  user: HexString,
+  market_id: U64,
+  integrator: HexString,
+  side: boolean,
+  size: U64,
+  advance_style: boolean,
+  target_advance_amount: U64,
+  $c: AptosDataCache,
+  $p: TypeTag[], /* <BaseType, QuoteType>*/
+): U128 {
+  return place_limit_order_passive_advance_(Stdlib.Signer.address_of_(user, $c), $.copy(market_id), $.copy(NO_CUSTODIAN), $.copy(integrator), side, $.copy(size), advance_style, $.copy(target_advance_amount), $c, [$p[0], $p[1]]);
+}
+
+export function place_limit_order_passive_advance_user_entry_ (
+  user: HexString,
+  market_id: U64,
+  integrator: HexString,
+  side: boolean,
+  size: U64,
+  advance_style: boolean,
+  target_advance_amount: U64,
+  $c: AptosDataCache,
+  $p: TypeTag[], /* <BaseType, QuoteType>*/
+): void {
+  place_limit_order_passive_advance_user_(user, $.copy(market_id), $.copy(integrator), side, $.copy(size), advance_style, $.copy(target_advance_amount), $c, [$p[0], $p[1]]);
+  return;
+}
+
+
+export function buildPayload_place_limit_order_passive_advance_user_entry (
+  market_id: U64,
+  integrator: HexString,
+  side: boolean,
+  size: U64,
+  advance_style: boolean,
+  target_advance_amount: U64,
+  $p: TypeTag[], /* <BaseType, QuoteType>*/
+  isJSON = false,
+): TxnBuilderTypes.TransactionPayloadEntryFunction
+   | Types.TransactionPayload_EntryFunctionPayload {
+  const typeParamStrings = $p.map(t=>$.getTypeTagFullname(t));
+  return $.buildPayload(
+    new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"),
+    "market",
+    "place_limit_order_passive_advance_user_entry",
+    typeParamStrings,
+    [
+      market_id,
+      integrator,
+      side,
+      size,
+      advance_style,
+      target_advance_amount,
+    ],
+    isJSON,
+  );
+
 }
 
 export function place_limit_order_user_ (
@@ -1058,10 +1439,11 @@ export function place_limit_order_user_ (
   size: U64,
   price: U64,
   restriction: U8,
+  self_match_behavior: U8,
   $c: AptosDataCache,
   $p: TypeTag[], /* <BaseType, QuoteType>*/
 ): [U128, U64, U64, U64] {
-  return place_limit_order_(Stdlib.Signer.address_of_(user, $c), $.copy(market_id), $.copy(NO_CUSTODIAN), $.copy(integrator), side, $.copy(size), $.copy(price), $.copy(restriction), $.copy(CRITICAL_HEIGHT), $c, [$p[0], $p[1]]);
+  return place_limit_order_(Stdlib.Signer.address_of_(user, $c), $.copy(market_id), $.copy(NO_CUSTODIAN), $.copy(integrator), side, $.copy(size), $.copy(price), $.copy(restriction), $.copy(self_match_behavior), $.copy(CRITICAL_HEIGHT), $c, [$p[0], $p[1]]);
 }
 
 export function place_limit_order_user_entry_ (
@@ -1072,10 +1454,11 @@ export function place_limit_order_user_entry_ (
   size: U64,
   price: U64,
   restriction: U8,
+  self_match_behavior: U8,
   $c: AptosDataCache,
   $p: TypeTag[], /* <BaseType, QuoteType>*/
 ): void {
-  place_limit_order_user_(user, $.copy(market_id), $.copy(integrator), side, $.copy(size), $.copy(price), $.copy(restriction), $c, [$p[0], $p[1]]);
+  place_limit_order_user_(user, $.copy(market_id), $.copy(integrator), side, $.copy(size), $.copy(price), $.copy(restriction), $.copy(self_match_behavior), $c, [$p[0], $p[1]]);
   return;
 }
 
@@ -1087,13 +1470,14 @@ export function buildPayload_place_limit_order_user_entry (
   size: U64,
   price: U64,
   restriction: U8,
+  self_match_behavior: U8,
   $p: TypeTag[], /* <BaseType, QuoteType>*/
   isJSON = false,
 ): TxnBuilderTypes.TransactionPayloadEntryFunction
    | Types.TransactionPayload_EntryFunctionPayload {
   const typeParamStrings = $p.map(t=>$.getTypeTagFullname(t));
   return $.buildPayload(
-    new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"),
+    new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"),
     "market",
     "place_limit_order_user_entry",
     typeParamStrings,
@@ -1104,6 +1488,7 @@ export function buildPayload_place_limit_order_user_entry (
       size,
       price,
       restriction,
+      self_match_behavior,
     ],
     isJSON,
   );
@@ -1121,6 +1506,7 @@ export function place_market_order_ (
   min_quote: U64,
   max_quote: U64,
   limit_price: U64,
+  self_match_behavior: U8,
   $c: AptosDataCache,
   $p: TypeTag[], /* <BaseType, QuoteType>*/
 ): [U64, U64, U64] {
@@ -1167,7 +1553,7 @@ export function place_market_order_ (
   }
   [base_withdraw, quote_withdraw] = [temp$3, temp$4];
   [optional_base_coins, quote_coins] = User.withdraw_assets_internal_($.copy(user_address), $.copy(market_id), $.copy(custodian_id), $.copy(base_withdraw), $.copy(quote_withdraw), $.copy(underwriter_id), $c, [$p[0], $p[1]]);
-  [optional_base_coins__5, quote_coins__6, base_traded, quote_traded, fees] = match_($.copy(market_id), order_book_ref_mut, $.copy(user_address), $.copy(integrator), direction, $.copy(min_base), $.copy(max_base), $.copy(min_quote), $.copy(max_quote), $.copy(limit_price), optional_base_coins, quote_coins, $c, [$p[0], $p[1]]);
+  [optional_base_coins__5, quote_coins__6, base_traded, quote_traded, fees, ] = match_($.copy(market_id), order_book_ref_mut, $.copy(user_address), $.copy(custodian_id), $.copy(integrator), direction, $.copy(min_base), $.copy(max_base), $.copy(min_quote), $.copy(max_quote), $.copy(limit_price), $.copy(self_match_behavior), optional_base_coins, quote_coins, $c, [$p[0], $p[1]]);
   if ((direction == $.copy(BUY))) {
     temp$7 = $.copy(base_traded);
   }
@@ -1189,11 +1575,12 @@ export function place_market_order_custodian_ (
   min_quote: U64,
   max_quote: U64,
   limit_price: U64,
+  self_match_behavior: U8,
   custodian_capability_ref: Registry.CustodianCapability,
   $c: AptosDataCache,
   $p: TypeTag[], /* <BaseType, QuoteType>*/
 ): [U64, U64, U64] {
-  return place_market_order_($.copy(user_address), $.copy(market_id), Registry.get_custodian_id_(custodian_capability_ref, $c), $.copy(integrator), direction, $.copy(min_base), $.copy(max_base), $.copy(min_quote), $.copy(max_quote), $.copy(limit_price), $c, [$p[0], $p[1]]);
+  return place_market_order_($.copy(user_address), $.copy(market_id), Registry.get_custodian_id_(custodian_capability_ref, $c), $.copy(integrator), direction, $.copy(min_base), $.copy(max_base), $.copy(min_quote), $.copy(max_quote), $.copy(limit_price), $.copy(self_match_behavior), $c, [$p[0], $p[1]]);
 }
 
 export function place_market_order_user_ (
@@ -1206,10 +1593,11 @@ export function place_market_order_user_ (
   min_quote: U64,
   max_quote: U64,
   limit_price: U64,
+  self_match_behavior: U8,
   $c: AptosDataCache,
   $p: TypeTag[], /* <BaseType, QuoteType>*/
 ): [U64, U64, U64] {
-  return place_market_order_(Stdlib.Signer.address_of_(user, $c), $.copy(market_id), $.copy(NO_CUSTODIAN), $.copy(integrator), direction, $.copy(min_base), $.copy(max_base), $.copy(min_quote), $.copy(max_quote), $.copy(limit_price), $c, [$p[0], $p[1]]);
+  return place_market_order_(Stdlib.Signer.address_of_(user, $c), $.copy(market_id), $.copy(NO_CUSTODIAN), $.copy(integrator), direction, $.copy(min_base), $.copy(max_base), $.copy(min_quote), $.copy(max_quote), $.copy(limit_price), $.copy(self_match_behavior), $c, [$p[0], $p[1]]);
 }
 
 export function place_market_order_user_entry_ (
@@ -1222,10 +1610,11 @@ export function place_market_order_user_entry_ (
   min_quote: U64,
   max_quote: U64,
   limit_price: U64,
+  self_match_behavior: U8,
   $c: AptosDataCache,
   $p: TypeTag[], /* <BaseType, QuoteType>*/
 ): void {
-  place_market_order_user_(user, $.copy(market_id), $.copy(integrator), direction, $.copy(min_base), $.copy(max_base), $.copy(min_quote), $.copy(max_quote), $.copy(limit_price), $c, [$p[0], $p[1]]);
+  place_market_order_user_(user, $.copy(market_id), $.copy(integrator), direction, $.copy(min_base), $.copy(max_base), $.copy(min_quote), $.copy(max_quote), $.copy(limit_price), $.copy(self_match_behavior), $c, [$p[0], $p[1]]);
   return;
 }
 
@@ -1239,13 +1628,14 @@ export function buildPayload_place_market_order_user_entry (
   min_quote: U64,
   max_quote: U64,
   limit_price: U64,
+  self_match_behavior: U8,
   $p: TypeTag[], /* <BaseType, QuoteType>*/
   isJSON = false,
 ): TxnBuilderTypes.TransactionPayloadEntryFunction
    | Types.TransactionPayload_EntryFunctionPayload {
   const typeParamStrings = $p.map(t=>$.getTypeTagFullname(t));
   return $.buildPayload(
-    new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"),
+    new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"),
     "market",
     "place_market_order_user_entry",
     typeParamStrings,
@@ -1258,6 +1648,7 @@ export function buildPayload_place_market_order_user_entry (
       min_quote,
       max_quote,
       limit_price,
+      self_match_behavior,
     ],
     isJSON,
   );
@@ -1363,7 +1754,7 @@ export function buildPayload_register_market_base_coin_from_coinstore (
    | Types.TransactionPayload_EntryFunctionPayload {
   const typeParamStrings = $p.map(t=>$.getTypeTagFullname(t));
   return $.buildPayload(
-    new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"),
+    new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"),
     "market",
     "register_market_base_coin_from_coinstore",
     typeParamStrings,
@@ -1389,13 +1780,12 @@ export function register_market_base_generic_ (
 ): U64 {
   let market_id;
   market_id = Registry.register_market_base_generic_internal_($.copy(base_name_generic), $.copy(lot_size), $.copy(tick_size), $.copy(min_size), underwriter_capability_ref, utility_coins, $c, [$p[0], $p[1]]);
-  return register_market_($.copy(market_id), $.copy(base_name_generic), $.copy(lot_size), $.copy(tick_size), $.copy(min_size), Registry.get_underwriter_id_(underwriter_capability_ref, $c), $c, [new StructTag(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), "registry", "GenericAsset", []), $p[0]]);
+  return register_market_($.copy(market_id), $.copy(base_name_generic), $.copy(lot_size), $.copy(tick_size), $.copy(min_size), Registry.get_underwriter_id_(underwriter_capability_ref, $c), $c, [new StructTag(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), "registry", "GenericAsset", []), $p[0]]);
 }
 
 export function swap_ (
   market_id: U64,
   underwriter_id: U64,
-  taker: HexString,
   integrator: HexString,
   direction: boolean,
   min_base: U64,
@@ -1408,7 +1798,7 @@ export function swap_ (
   $c: AptosDataCache,
   $p: TypeTag[], /* <BaseType, QuoteType>*/
 ): [Stdlib.Option.Option, Stdlib.Coin.Coin, U64, U64, U64] {
-  let temp$1, temp$2, order_book_ref_mut, order_books_map_ref_mut, resource_address;
+  let temp$1, temp$2, base_traded, fees, order_book_ref_mut, order_books_map_ref_mut, quote_traded, resource_address;
   resource_address = Resource_account.get_address_($c);
   order_books_map_ref_mut = $c.borrow_global_mut<OrderBooks>(new SimpleStructTag(OrderBooks), $.copy(resource_address)).map;
   [temp$1, temp$2] = [order_books_map_ref_mut, $.copy(market_id)];
@@ -1429,7 +1819,8 @@ export function swap_ (
   if (!$.deep_eq(Stdlib.Type_info.type_of_($c, [$p[1]]), $.copy(order_book_ref_mut.quote_type))) {
     throw $.abortCode($.copy(E_INVALID_QUOTE));
   }
-  return match_($.copy(market_id), order_book_ref_mut, $.copy(taker), $.copy(integrator), direction, $.copy(min_base), $.copy(max_base), $.copy(min_quote), $.copy(max_quote), $.copy(limit_price), optional_base_coins, quote_coins, $c, [$p[0], $p[1]]);
+  [optional_base_coins, quote_coins, base_traded, quote_traded, fees, ] = match_($.copy(market_id), order_book_ref_mut, $.copy(NO_MARKET_ACCOUNT), $.copy(NO_CUSTODIAN), $.copy(integrator), direction, $.copy(min_base), $.copy(max_base), $.copy(min_quote), $.copy(max_quote), $.copy(limit_price), $.copy(ABORT), optional_base_coins, quote_coins, $c, [$p[0], $p[1]]);
+  return [optional_base_coins, quote_coins, $.copy(base_traded), $.copy(quote_traded), $.copy(fees)];
 }
 
 export function swap_between_coinstores_ (
@@ -1488,7 +1879,7 @@ export function swap_between_coinstores_ (
     [temp$3, temp$4] = [Stdlib.Option.some_(Stdlib.Coin.withdraw_(user, $.copy(max_base), $c, [$p[0]]), $c, [new StructTag(new HexString("0x1"), "coin", "Coin", [$p[0]])]), Stdlib.Coin.zero_($c, [$p[1]])];
   }
   [optional_base_coins, quote_coins] = [temp$3, temp$4];
-  [optional_base_coins__5, quote_coins__6, base_traded, quote_traded, fees] = swap_($.copy(market_id), $.copy(NO_UNDERWRITER), $.copy(user_address), $.copy(integrator), direction, $.copy(min_base), $.copy(max_base), $.copy(min_quote), $.copy(max_quote), $.copy(limit_price), optional_base_coins, quote_coins, $c, [$p[0], $p[1]]);
+  [optional_base_coins__5, quote_coins__6, base_traded, quote_traded, fees] = swap_($.copy(market_id), $.copy(NO_UNDERWRITER), $.copy(integrator), direction, $.copy(min_base), $.copy(max_base), $.copy(min_quote), $.copy(max_quote), $.copy(limit_price), optional_base_coins, quote_coins, $c, [$p[0], $p[1]]);
   Stdlib.Coin.deposit_($.copy(user_address), Stdlib.Option.destroy_some_(optional_base_coins__5, $c, [new StructTag(new HexString("0x1"), "coin", "Coin", [$p[0]])]), $c, [$p[0]]);
   Stdlib.Coin.deposit_($.copy(user_address), quote_coins__6, $c, [$p[1]]);
   return [$.copy(base_traded), $.copy(quote_traded), $.copy(fees)];
@@ -1527,7 +1918,7 @@ export function buildPayload_swap_between_coinstores_entry (
    | Types.TransactionPayload_EntryFunctionPayload {
   const typeParamStrings = $p.map(t=>$.getTypeTagFullname(t));
   return $.buildPayload(
-    new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"),
+    new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"),
     "market",
     "swap_between_coinstores_entry",
     typeParamStrings,
@@ -1583,7 +1974,7 @@ export function swap_coins_ (
   }
   quote_coins_to_match = temp$1;
   range_check_trade_(direction, $.copy(min_base), $.copy(max_base), $.copy(min_quote), $.copy(max_quote), $.copy(base_value), $.copy(base_value), $.copy(quote_value), $.copy(quote_value), $c);
-  [optional_base_coins__2, quote_coins_matched, base_traded, quote_traded, fees] = swap_($.copy(market_id), $.copy(NO_UNDERWRITER), $.copy(UNKNOWN_TAKER), $.copy(integrator), direction, $.copy(min_base), $.copy(max_base), $.copy(min_quote), $.copy(max_quote), $.copy(limit_price), optional_base_coins, quote_coins_to_match, $c, [$p[0], $p[1]]);
+  [optional_base_coins__2, quote_coins_matched, base_traded, quote_traded, fees] = swap_($.copy(market_id), $.copy(NO_UNDERWRITER), $.copy(integrator), direction, $.copy(min_base), $.copy(max_base), $.copy(min_quote), $.copy(max_quote), $.copy(limit_price), optional_base_coins, quote_coins_to_match, $c, [$p[0], $p[1]]);
   Stdlib.Coin.merge_(quote_coins, quote_coins_matched, $c, [$p[1]]);
   base_coins__3 = Stdlib.Option.destroy_some_(optional_base_coins__2, $c, [new StructTag(new HexString("0x1"), "coin", "Coin", [$p[0]])]);
   return [base_coins__3, quote_coins, $.copy(base_traded), $.copy(quote_traded), $.copy(fees)];
@@ -1620,19 +2011,19 @@ export function swap_generic_ (
   }
   [base_value, quote_coins_to_match] = [temp$1, temp$2];
   range_check_trade_(direction, $.copy(min_base), $.copy(max_base), $.copy(min_quote), $.copy(max_quote), $.copy(base_value), $.copy(base_value), $.copy(quote_value), $.copy(quote_value), $c);
-  [optional_base_coins, quote_coins_matched, base_traded, quote_traded, fees] = swap_($.copy(market_id), $.copy(underwriter_id), $.copy(UNKNOWN_TAKER), $.copy(integrator), direction, $.copy(min_base), $.copy(max_base), $.copy(min_quote), $.copy(max_quote), $.copy(limit_price), Stdlib.Option.none_($c, [new StructTag(new HexString("0x1"), "coin", "Coin", [new StructTag(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), "registry", "GenericAsset", [])])]), quote_coins_to_match, $c, [new StructTag(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), "registry", "GenericAsset", []), $p[0]]);
-  Stdlib.Option.destroy_none_(optional_base_coins, $c, [new StructTag(new HexString("0x1"), "coin", "Coin", [new StructTag(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), "registry", "GenericAsset", [])])]);
+  [optional_base_coins, quote_coins_matched, base_traded, quote_traded, fees] = swap_($.copy(market_id), $.copy(underwriter_id), $.copy(integrator), direction, $.copy(min_base), $.copy(max_base), $.copy(min_quote), $.copy(max_quote), $.copy(limit_price), Stdlib.Option.none_($c, [new StructTag(new HexString("0x1"), "coin", "Coin", [new StructTag(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), "registry", "GenericAsset", [])])]), quote_coins_to_match, $c, [new StructTag(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), "registry", "GenericAsset", []), $p[0]]);
+  Stdlib.Option.destroy_none_(optional_base_coins, $c, [new StructTag(new HexString("0x1"), "coin", "Coin", [new StructTag(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), "registry", "GenericAsset", [])])]);
   Stdlib.Coin.merge_(quote_coins, quote_coins_matched, $c, [$p[0]]);
   return [quote_coins, $.copy(base_traded), $.copy(quote_traded), $.copy(fees)];
 }
 
 export function loadParsers(repo: AptosParserRepo) {
-  repo.addParser("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9::market::MakerEvent", MakerEvent.MakerEventParser);
-  repo.addParser("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9::market::Order", Order.OrderParser);
-  repo.addParser("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9::market::OrderBook", OrderBook.OrderBookParser);
-  repo.addParser("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9::market::OrderBooks", OrderBooks.OrderBooksParser);
-  repo.addParser("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9::market::Orders", Orders.OrdersParser);
-  repo.addParser("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9::market::TakerEvent", TakerEvent.TakerEventParser);
+  repo.addParser("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200::market::MakerEvent", MakerEvent.MakerEventParser);
+  repo.addParser("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200::market::Order", Order.OrderParser);
+  repo.addParser("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200::market::OrderBook", OrderBook.OrderBookParser);
+  repo.addParser("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200::market::OrderBooks", OrderBooks.OrderBooksParser);
+  repo.addParser("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200::market::Orders", Orders.OrdersParser);
+  repo.addParser("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200::market::TakerEvent", TakerEvent.TakerEventParser);
 }
 export class App {
   constructor(
@@ -1762,6 +2153,34 @@ export class App {
   ) {
   return query_index_orders_sdk(this.client, fetcher, this.repo, market_id,$p, option);
   }
+  payload_place_limit_order_passive_advance_user_entry(
+    market_id: U64,
+    integrator: HexString,
+    side: boolean,
+    size: U64,
+    advance_style: boolean,
+    target_advance_amount: U64,
+    $p: TypeTag[], /* <BaseType, QuoteType>*/
+    isJSON = false,
+  ): TxnBuilderTypes.TransactionPayloadEntryFunction
+        | Types.TransactionPayload_EntryFunctionPayload {
+    return buildPayload_place_limit_order_passive_advance_user_entry(market_id, integrator, side, size, advance_style, target_advance_amount, $p, isJSON);
+  }
+  async place_limit_order_passive_advance_user_entry(
+    _account: AptosAccount,
+    market_id: U64,
+    integrator: HexString,
+    side: boolean,
+    size: U64,
+    advance_style: boolean,
+    target_advance_amount: U64,
+    $p: TypeTag[], /* <BaseType, QuoteType>*/
+    option?: OptionTransaction,
+    _isJSON = false
+  ) {
+    const payload__ = buildPayload_place_limit_order_passive_advance_user_entry(market_id, integrator, side, size, advance_style, target_advance_amount, $p, _isJSON);
+    return $.sendPayloadTx(this.client, _account, payload__, option);
+  }
   payload_place_limit_order_user_entry(
     market_id: U64,
     integrator: HexString,
@@ -1769,11 +2188,12 @@ export class App {
     size: U64,
     price: U64,
     restriction: U8,
+    self_match_behavior: U8,
     $p: TypeTag[], /* <BaseType, QuoteType>*/
     isJSON = false,
   ): TxnBuilderTypes.TransactionPayloadEntryFunction
         | Types.TransactionPayload_EntryFunctionPayload {
-    return buildPayload_place_limit_order_user_entry(market_id, integrator, side, size, price, restriction, $p, isJSON);
+    return buildPayload_place_limit_order_user_entry(market_id, integrator, side, size, price, restriction, self_match_behavior, $p, isJSON);
   }
   async place_limit_order_user_entry(
     _account: AptosAccount,
@@ -1783,11 +2203,12 @@ export class App {
     size: U64,
     price: U64,
     restriction: U8,
+    self_match_behavior: U8,
     $p: TypeTag[], /* <BaseType, QuoteType>*/
     option?: OptionTransaction,
     _isJSON = false
   ) {
-    const payload__ = buildPayload_place_limit_order_user_entry(market_id, integrator, side, size, price, restriction, $p, _isJSON);
+    const payload__ = buildPayload_place_limit_order_user_entry(market_id, integrator, side, size, price, restriction, self_match_behavior, $p, _isJSON);
     return $.sendPayloadTx(this.client, _account, payload__, option);
   }
   payload_place_market_order_user_entry(
@@ -1799,11 +2220,12 @@ export class App {
     min_quote: U64,
     max_quote: U64,
     limit_price: U64,
+    self_match_behavior: U8,
     $p: TypeTag[], /* <BaseType, QuoteType>*/
     isJSON = false,
   ): TxnBuilderTypes.TransactionPayloadEntryFunction
         | Types.TransactionPayload_EntryFunctionPayload {
-    return buildPayload_place_market_order_user_entry(market_id, integrator, direction, min_base, max_base, min_quote, max_quote, limit_price, $p, isJSON);
+    return buildPayload_place_market_order_user_entry(market_id, integrator, direction, min_base, max_base, min_quote, max_quote, limit_price, self_match_behavior, $p, isJSON);
   }
   async place_market_order_user_entry(
     _account: AptosAccount,
@@ -1815,11 +2237,12 @@ export class App {
     min_quote: U64,
     max_quote: U64,
     limit_price: U64,
+    self_match_behavior: U8,
     $p: TypeTag[], /* <BaseType, QuoteType>*/
     option?: OptionTransaction,
     _isJSON = false
   ) {
-    const payload__ = buildPayload_place_market_order_user_entry(market_id, integrator, direction, min_base, max_base, min_quote, max_quote, limit_price, $p, _isJSON);
+    const payload__ = buildPayload_place_market_order_user_entry(market_id, integrator, direction, min_base, max_base, min_quote, max_quote, limit_price, self_match_behavior, $p, _isJSON);
     return $.sendPayloadTx(this.client, _account, payload__, option);
   }
   payload_register_market_base_coin_from_coinstore(
@@ -1875,6 +2298,78 @@ export class App {
   ) {
     const payload__ = buildPayload_swap_between_coinstores_entry(market_id, integrator, direction, min_base, max_base, min_quote, max_quote, limit_price, $p, _isJSON);
     return $.sendPayloadTx(this.client, _account, payload__, option);
+  }
+  app_get_ABORT(
+  ) {
+    return get_ABORT_( this.cache);
+  }
+  app_get_ASK(
+  ) {
+    return get_ASK_( this.cache);
+  }
+  app_get_BID(
+  ) {
+    return get_BID_( this.cache);
+  }
+  app_get_BUY(
+  ) {
+    return get_BUY_( this.cache);
+  }
+  app_get_CANCEL_BOTH(
+  ) {
+    return get_CANCEL_BOTH_( this.cache);
+  }
+  app_get_CANCEL_MAKER(
+  ) {
+    return get_CANCEL_MAKER_( this.cache);
+  }
+  app_get_CANCEL_TAKER(
+  ) {
+    return get_CANCEL_TAKER_( this.cache);
+  }
+  app_get_FILL_OR_ABORT(
+  ) {
+    return get_FILL_OR_ABORT_( this.cache);
+  }
+  app_get_HI_PRICE(
+  ) {
+    return get_HI_PRICE_( this.cache);
+  }
+  app_get_IMMEDIATE_OR_CANCEL(
+  ) {
+    return get_IMMEDIATE_OR_CANCEL_( this.cache);
+  }
+  app_get_MAX_POSSIBLE(
+  ) {
+    return get_MAX_POSSIBLE_( this.cache);
+  }
+  app_get_NO_CUSTODIAN(
+  ) {
+    return get_NO_CUSTODIAN_( this.cache);
+  }
+  app_get_NO_RESTRICTION(
+  ) {
+    return get_NO_RESTRICTION_( this.cache);
+  }
+  app_get_NO_UNDERWRITER(
+  ) {
+    return get_NO_UNDERWRITER_( this.cache);
+  }
+  app_get_PERCENT(
+  ) {
+    return get_PERCENT_( this.cache);
+  }
+  app_get_POST_OR_ABORT(
+  ) {
+    return get_POST_OR_ABORT_( this.cache);
+  }
+  app_get_SELL(
+  ) {
+    return get_SELL_( this.cache);
+  }
+  app_get_TICKS(
+  ) {
+    return get_TICKS_( this.cache);
   }
   app_get_market_order_id_counter(
       market_order_id: U128,

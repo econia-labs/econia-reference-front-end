@@ -8,7 +8,7 @@ import {OptionTransaction} from "@manahippo/move-to-ts";
 import {HexString, AptosClient, AptosAccount, TxnBuilderTypes, Types} from "aptos";
 import * as Stdlib from "../stdlib";
 export const packageName = "Econia";
-export const moduleAddress = new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9");
+export const moduleAddress = new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200");
 export const moduleName = "resource_account";
 
 
@@ -58,7 +58,7 @@ export function get_address_ (
   $c: AptosDataCache,
 ): HexString {
   let signer_capability_ref;
-  signer_capability_ref = $c.borrow_global<SignerCapabilityStore>(new SimpleStructTag(SignerCapabilityStore), new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9")).signer_capability;
+  signer_capability_ref = $c.borrow_global<SignerCapabilityStore>(new SimpleStructTag(SignerCapabilityStore), new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200")).signer_capability;
   return Stdlib.Account.get_signer_capability_address_(signer_capability_ref, $c);
 }
 
@@ -66,7 +66,7 @@ export function get_signer_ (
   $c: AptosDataCache,
 ): HexString {
   let signer_capability_ref;
-  signer_capability_ref = $c.borrow_global<SignerCapabilityStore>(new SimpleStructTag(SignerCapabilityStore), new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9")).signer_capability;
+  signer_capability_ref = $c.borrow_global<SignerCapabilityStore>(new SimpleStructTag(SignerCapabilityStore), new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200")).signer_capability;
   return Stdlib.Account.create_signer_with_capability_(signer_capability_ref, $c);
 }
 
@@ -83,7 +83,7 @@ export function init_module_ (
 }
 
 export function loadParsers(repo: AptosParserRepo) {
-  repo.addParser("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9::resource_account::SignerCapabilityStore", SignerCapabilityStore.SignerCapabilityStoreParser);
+  repo.addParser("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200::resource_account::SignerCapabilityStore", SignerCapabilityStore.SignerCapabilityStoreParser);
 }
 export class App {
   constructor(

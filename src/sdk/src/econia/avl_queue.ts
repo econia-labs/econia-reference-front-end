@@ -8,7 +8,7 @@ import {OptionTransaction} from "@manahippo/move-to-ts";
 import {HexString, AptosClient, AptosAccount, TxnBuilderTypes, Types} from "aptos";
 import * as Stdlib from "../stdlib";
 export const packageName = "Econia";
-export const moduleAddress = new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9");
+export const moduleAddress = new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200");
 export const moduleName = "avl_queue";
 
 export const ASCENDING : boolean = true;
@@ -71,8 +71,8 @@ export class AVLqueue
   static fields: FieldDeclType[] = [
   { name: "bits", typeTag: AtomicTypeTag.U128 },
   { name: "root_lsbs", typeTag: AtomicTypeTag.U8 },
-  { name: "tree_nodes", typeTag: new StructTag(new HexString("0x1"), "table_with_length", "TableWithLength", [AtomicTypeTag.U64, new StructTag(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), "avl_queue", "TreeNode", [])]) },
-  { name: "list_nodes", typeTag: new StructTag(new HexString("0x1"), "table_with_length", "TableWithLength", [AtomicTypeTag.U64, new StructTag(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), "avl_queue", "ListNode", [])]) },
+  { name: "tree_nodes", typeTag: new StructTag(new HexString("0x1"), "table_with_length", "TableWithLength", [AtomicTypeTag.U64, new StructTag(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), "avl_queue", "TreeNode", [])]) },
+  { name: "list_nodes", typeTag: new StructTag(new HexString("0x1"), "table_with_length", "TableWithLength", [AtomicTypeTag.U64, new StructTag(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), "avl_queue", "ListNode", [])]) },
   { name: "values", typeTag: new StructTag(new HexString("0x1"), "table", "Table", [AtomicTypeTag.U64, new StructTag(new HexString("0x1"), "option", "Option", [new $.TypeParamIdx(0)])]) }];
 
   bits: U128;
@@ -1690,9 +1690,9 @@ export function would_update_tail_ (
 }
 
 export function loadParsers(repo: AptosParserRepo) {
-  repo.addParser("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9::avl_queue::AVLqueue", AVLqueue.AVLqueueParser);
-  repo.addParser("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9::avl_queue::ListNode", ListNode.ListNodeParser);
-  repo.addParser("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9::avl_queue::TreeNode", TreeNode.TreeNodeParser);
+  repo.addParser("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200::avl_queue::AVLqueue", AVLqueue.AVLqueueParser);
+  repo.addParser("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200::avl_queue::ListNode", ListNode.ListNodeParser);
+  repo.addParser("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200::avl_queue::TreeNode", TreeNode.TreeNodeParser);
 }
 export class App {
   constructor(

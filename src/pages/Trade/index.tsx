@@ -1,9 +1,13 @@
+import { parseTypeTagOrThrow } from "@manahippo/move-to-ts";
+
 import React, { useEffect, useState } from "react";
 
 import { css } from "@emotion/react";
 
+import { Button } from "../../components/Button";
 import { FlexCol } from "../../components/FlexCol";
 import { FlexRow } from "../../components/FlexRow";
+import { useRegisterMarket } from "../../hooks/useRegisterMarket";
 import {
   RegisteredMarket,
   useRegisteredMarkets,
@@ -15,6 +19,7 @@ import { TradeHeader } from "./TradeHeader";
 
 export const Trade: React.FC = () => {
   const registeredMarkets = useRegisteredMarkets();
+  const registerMarket = useRegisterMarket();
   const [market, setMarket] = useState<RegisteredMarket>();
   useEffect(() => {
     if (registeredMarkets.data !== undefined) {
@@ -22,12 +27,45 @@ export const Trade: React.FC = () => {
     }
   }, [registeredMarkets.data]);
 
-  if (
-    registeredMarkets.isLoading ||
-    market === undefined ||
-    registeredMarkets.data === undefined
-  ) {
+  if (registeredMarkets.isLoading || registeredMarkets.data === undefined) {
     return <DefaultWrapper>Loading...</DefaultWrapper>;
+  } else if (market === undefined) {
+    return (
+      <DefaultWrapper
+        css={css`
+          text-align: center;
+        `}
+      >
+        <p
+          css={css`
+            margin: 16px 0px;
+          `}
+        >
+          No markets.
+        </p>
+        <Button
+          variant="primary"
+          size="sm"
+          onClick={async () => {
+            const baseCoin = prompt("Enter base coin address");
+            const quoteCoin = prompt("Enter quote coin address");
+            if (baseCoin === null) {
+              alert("Base coin address is required");
+              return;
+            } else if (quoteCoin === null) {
+              alert("Quote coin address is required");
+              return;
+            }
+            await registerMarket(
+              parseTypeTagOrThrow(baseCoin),
+              parseTypeTagOrThrow(quoteCoin),
+            ).catch((e) => console.error("Error registering market", e));
+          }}
+        >
+          Create a market
+        </Button>
+      </DefaultWrapper>
+    );
   }
   const marketCoin = market.baseType;
   const quoteCoin = market.quoteType;

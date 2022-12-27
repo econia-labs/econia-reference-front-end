@@ -8,7 +8,7 @@ import {OptionTransaction} from "@manahippo/move-to-ts";
 import {HexString, AptosClient, AptosAccount, TxnBuilderTypes, Types} from "aptos";
 import * as Stdlib from "../stdlib";
 export const packageName = "Econia";
-export const moduleAddress = new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9");
+export const moduleAddress = new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200");
 export const moduleName = "tablist";
 
 export const E_DESTROY_NOT_EMPTY : U64 = u64("0");
@@ -67,7 +67,7 @@ export class Tablist
     { name: "V", isPhantom: false }
   ];
   static fields: FieldDeclType[] = [
-  { name: "table", typeTag: new StructTag(new HexString("0x1"), "table_with_length", "TableWithLength", [new $.TypeParamIdx(0), new StructTag(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), "tablist", "Node", [new $.TypeParamIdx(0), new $.TypeParamIdx(1)])]) },
+  { name: "table", typeTag: new StructTag(new HexString("0x1"), "table_with_length", "TableWithLength", [new $.TypeParamIdx(0), new StructTag(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), "tablist", "Node", [new $.TypeParamIdx(0), new $.TypeParamIdx(1)])]) },
   { name: "head", typeTag: new StructTag(new HexString("0x1"), "option", "Option", [new $.TypeParamIdx(0)]) },
   { name: "tail", typeTag: new StructTag(new HexString("0x1"), "option", "Option", [new $.TypeParamIdx(0)]) }];
 
@@ -265,8 +265,8 @@ export function singleton_ (
 }
 
 export function loadParsers(repo: AptosParserRepo) {
-  repo.addParser("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9::tablist::Node", Node.NodeParser);
-  repo.addParser("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9::tablist::Tablist", Tablist.TablistParser);
+  repo.addParser("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200::tablist::Node", Node.NodeParser);
+  repo.addParser("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200::tablist::Tablist", Tablist.TablistParser);
 }
 export class App {
   constructor(

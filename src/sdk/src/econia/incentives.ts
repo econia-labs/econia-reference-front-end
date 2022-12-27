@@ -10,11 +10,11 @@ import * as Stdlib from "../stdlib";
 import * as Resource_account from "./resource_account";
 import * as Tablist from "./tablist";
 export const packageName = "Econia";
-export const moduleAddress = new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9");
+export const moduleAddress = new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200");
 export const moduleName = "incentives";
 
-export const BUY : boolean = true;
-export const CUSTODIAN_REGISTRATION_FEE : U64 = u64("200000000");
+export const BUY : boolean = false;
+export const CUSTODIAN_REGISTRATION_FEE : U64 = u64("250000");
 export const E_ACTIVATION_FEE_TOO_SMALL : U64 = u64("9");
 export const E_CUSTODIAN_REGISTRATION_FEE_LESS_THAN_MIN : U64 = u64("6");
 export const E_ECONIA_FEE_STORE_OVERFLOW : U64 = u64("20");
@@ -39,28 +39,37 @@ export const E_UTILITY_COIN_STORE_OVERFLOW : U64 = u64("21");
 export const E_WITHDRAWAL_FEE_TOO_BIG : U64 = u64("10");
 export const E_WITHDRAWAL_FEE_TOO_SMALL : U64 = u64("11");
 export const FEE_SHARE_DIVISOR_0 : U64 = u64("10000");
-export const FEE_SHARE_DIVISOR_1 : U64 = u64("5000");
-export const FEE_SHARE_DIVISOR_2 : U64 = u64("4000");
-export const FEE_SHARE_DIVISOR_3 : U64 = u64("3333");
+export const FEE_SHARE_DIVISOR_1 : U64 = u64("8333");
+export const FEE_SHARE_DIVISOR_2 : U64 = u64("7692");
+export const FEE_SHARE_DIVISOR_3 : U64 = u64("7143");
+export const FEE_SHARE_DIVISOR_4 : U64 = u64("6667");
+export const FEE_SHARE_DIVISOR_5 : U64 = u64("6250");
+export const FEE_SHARE_DIVISOR_6 : U64 = u64("5882");
 export const FEE_SHARE_DIVISOR_INDEX : U64 = u64("0");
 export const HI_64 : U64 = u64("18446744073709551615");
-export const MARKET_REGISTRATION_FEE : U64 = u64("2000000000");
+export const MARKET_REGISTRATION_FEE : U64 = u64("625000000");
 export const MAX_INTEGRATOR_FEE_STORE_TIERS : U64 = u64("255");
 export const MIN_DIVISOR : U64 = u64("2");
 export const MIN_FEE : U64 = u64("1");
 export const N_TIER_FIELDS : U64 = u64("3");
-export const SELL : boolean = false;
+export const SELL : boolean = true;
 export const TAKER_FEE_DIVISOR : U64 = u64("2000");
 export const TIER_ACTIVATION_FEE_0 : U64 = u64("0");
-export const TIER_ACTIVATION_FEE_1 : U64 = u64("2000000000");
-export const TIER_ACTIVATION_FEE_2 : U64 = u64("20000000000");
-export const TIER_ACTIVATION_FEE_3 : U64 = u64("200000000000");
+export const TIER_ACTIVATION_FEE_1 : U64 = u64("5000000");
+export const TIER_ACTIVATION_FEE_2 : U64 = u64("75000000");
+export const TIER_ACTIVATION_FEE_3 : U64 = u64("1000000000");
+export const TIER_ACTIVATION_FEE_4 : U64 = u64("12500000000");
+export const TIER_ACTIVATION_FEE_5 : U64 = u64("150000000000");
+export const TIER_ACTIVATION_FEE_6 : U64 = u64("1750000000000");
 export const TIER_ACTIVATION_FEE_INDEX : U64 = u64("1");
-export const UNDERWRITER_REGISTRATION_FEE : U64 = u64("500000000");
-export const WITHDRAWAL_FEE_0 : U64 = u64("200000000");
-export const WITHDRAWAL_FEE_1 : U64 = u64("100000000");
-export const WITHDRAWAL_FEE_2 : U64 = u64("50000000");
-export const WITHDRAWAL_FEE_3 : U64 = u64("20000000");
+export const UNDERWRITER_REGISTRATION_FEE : U64 = u64("250000");
+export const WITHDRAWAL_FEE_0 : U64 = u64("5000000");
+export const WITHDRAWAL_FEE_1 : U64 = u64("4750000");
+export const WITHDRAWAL_FEE_2 : U64 = u64("4500000");
+export const WITHDRAWAL_FEE_3 : U64 = u64("4250000");
+export const WITHDRAWAL_FEE_4 : U64 = u64("4000000");
+export const WITHDRAWAL_FEE_5 : U64 = u64("3750000");
+export const WITHDRAWAL_FEE_6 : U64 = u64("3500000");
 export const WITHDRAWAL_FEE_INDEX : U64 = u64("2");
 
 
@@ -74,7 +83,7 @@ export class EconiaFeeStore
     { name: "QuoteCoinType", isPhantom: true }
   ];
   static fields: FieldDeclType[] = [
-  { name: "map", typeTag: new StructTag(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), "tablist", "Tablist", [AtomicTypeTag.U64, new StructTag(new HexString("0x1"), "coin", "Coin", [new $.TypeParamIdx(0)])]) }];
+  { name: "map", typeTag: new StructTag(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), "tablist", "Tablist", [AtomicTypeTag.U64, new StructTag(new HexString("0x1"), "coin", "Coin", [new $.TypeParamIdx(0)])]) }];
 
   map: Tablist.Tablist;
 
@@ -121,7 +130,7 @@ export class IncentiveParameters
   { name: "underwriter_registration_fee", typeTag: AtomicTypeTag.U64 },
   { name: "custodian_registration_fee", typeTag: AtomicTypeTag.U64 },
   { name: "taker_fee_divisor", typeTag: AtomicTypeTag.U64 },
-  { name: "integrator_fee_store_tiers", typeTag: new VectorTag(new StructTag(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), "incentives", "IntegratorFeeStoreTierParameters", [])) }];
+  { name: "integrator_fee_store_tiers", typeTag: new VectorTag(new StructTag(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), "incentives", "IntegratorFeeStoreTierParameters", [])) }];
 
   utility_coin_type_info: Stdlib.Type_info.TypeInfo;
   market_registration_fee: U64;
@@ -247,7 +256,7 @@ export class IntegratorFeeStores
     { name: "QuoteCoinType", isPhantom: true }
   ];
   static fields: FieldDeclType[] = [
-  { name: "map", typeTag: new StructTag(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), "tablist", "Tablist", [AtomicTypeTag.U64, new StructTag(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), "incentives", "IntegratorFeeStore", [new $.TypeParamIdx(0)])]) }];
+  { name: "map", typeTag: new StructTag(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), "tablist", "Tablist", [AtomicTypeTag.U64, new StructTag(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), "incentives", "IntegratorFeeStore", [new $.TypeParamIdx(0)])]) }];
 
   map: Tablist.Tablist;
 
@@ -462,7 +471,7 @@ export function get_cost_to_upgrade_integrator_fee_store_ (
 export function get_custodian_registration_fee_ (
   $c: AptosDataCache,
 ): U64 {
-  return $.copy($c.borrow_global<IncentiveParameters>(new SimpleStructTag(IncentiveParameters), new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9")).custodian_registration_fee);
+  return $.copy($c.borrow_global<IncentiveParameters>(new SimpleStructTag(IncentiveParameters), new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200")).custodian_registration_fee);
 }
 
 
@@ -471,7 +480,7 @@ export function get_fee_share_divisor_ (
   $c: AptosDataCache,
 ): U64 {
   let integrator_fee_store_tier_ref, integrator_fee_store_tiers_ref;
-  integrator_fee_store_tiers_ref = $c.borrow_global<IncentiveParameters>(new SimpleStructTag(IncentiveParameters), new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9")).integrator_fee_store_tiers;
+  integrator_fee_store_tiers_ref = $c.borrow_global<IncentiveParameters>(new SimpleStructTag(IncentiveParameters), new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200")).integrator_fee_store_tiers;
   if (!(u64($.copy(tier))).lt(Stdlib.Vector.length_(integrator_fee_store_tiers_ref, $c, [new SimpleStructTag(IntegratorFeeStoreTierParameters)]))) {
     throw $.abortCode($.copy(E_INVALID_TIER));
   }
@@ -496,7 +505,7 @@ export function get_integrator_withdrawal_fee_ (
 export function get_market_registration_fee_ (
   $c: AptosDataCache,
 ): U64 {
-  return $.copy($c.borrow_global<IncentiveParameters>(new SimpleStructTag(IncentiveParameters), new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9")).market_registration_fee);
+  return $.copy($c.borrow_global<IncentiveParameters>(new SimpleStructTag(IncentiveParameters), new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200")).market_registration_fee);
 }
 
 
@@ -504,7 +513,7 @@ export function get_n_fee_store_tiers_ (
   $c: AptosDataCache,
 ): U64 {
   let integrator_fee_store_tiers_ref;
-  integrator_fee_store_tiers_ref = $c.borrow_global<IncentiveParameters>(new SimpleStructTag(IncentiveParameters), new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9")).integrator_fee_store_tiers;
+  integrator_fee_store_tiers_ref = $c.borrow_global<IncentiveParameters>(new SimpleStructTag(IncentiveParameters), new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200")).integrator_fee_store_tiers;
   return Stdlib.Vector.length_(integrator_fee_store_tiers_ref, $c, [new SimpleStructTag(IntegratorFeeStoreTierParameters)]);
 }
 
@@ -512,7 +521,7 @@ export function get_n_fee_store_tiers_ (
 export function get_taker_fee_divisor_ (
   $c: AptosDataCache,
 ): U64 {
-  return $.copy($c.borrow_global<IncentiveParameters>(new SimpleStructTag(IncentiveParameters), new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9")).taker_fee_divisor);
+  return $.copy($c.borrow_global<IncentiveParameters>(new SimpleStructTag(IncentiveParameters), new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200")).taker_fee_divisor);
 }
 
 
@@ -521,7 +530,7 @@ export function get_tier_activation_fee_ (
   $c: AptosDataCache,
 ): U64 {
   let integrator_fee_store_tier_ref, integrator_fee_store_tiers_ref;
-  integrator_fee_store_tiers_ref = $c.borrow_global<IncentiveParameters>(new SimpleStructTag(IncentiveParameters), new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9")).integrator_fee_store_tiers;
+  integrator_fee_store_tiers_ref = $c.borrow_global<IncentiveParameters>(new SimpleStructTag(IncentiveParameters), new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200")).integrator_fee_store_tiers;
   if (!(u64($.copy(tier))).lt(Stdlib.Vector.length_(integrator_fee_store_tiers_ref, $c, [new SimpleStructTag(IntegratorFeeStoreTierParameters)]))) {
     throw $.abortCode($.copy(E_INVALID_TIER));
   }
@@ -535,7 +544,7 @@ export function get_tier_withdrawal_fee_ (
   $c: AptosDataCache,
 ): U64 {
   let integrator_fee_store_tier_ref, integrator_fee_store_tiers_ref;
-  integrator_fee_store_tiers_ref = $c.borrow_global<IncentiveParameters>(new SimpleStructTag(IncentiveParameters), new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9")).integrator_fee_store_tiers;
+  integrator_fee_store_tiers_ref = $c.borrow_global<IncentiveParameters>(new SimpleStructTag(IncentiveParameters), new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200")).integrator_fee_store_tiers;
   if (!(u64($.copy(tier))).lt(Stdlib.Vector.length_(integrator_fee_store_tiers_ref, $c, [new SimpleStructTag(IntegratorFeeStoreTierParameters)]))) {
     throw $.abortCode($.copy(E_INVALID_TIER));
   }
@@ -547,7 +556,7 @@ export function get_tier_withdrawal_fee_ (
 export function get_underwriter_registration_fee_ (
   $c: AptosDataCache,
 ): U64 {
-  return $.copy($c.borrow_global<IncentiveParameters>(new SimpleStructTag(IncentiveParameters), new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9")).underwriter_registration_fee);
+  return $.copy($c.borrow_global<IncentiveParameters>(new SimpleStructTag(IncentiveParameters), new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200")).underwriter_registration_fee);
 }
 
 
@@ -556,7 +565,7 @@ export function init_module_ (
   $c: AptosDataCache,
 ): void {
   let integrator_fee_store_tiers;
-  integrator_fee_store_tiers = [[$.copy(FEE_SHARE_DIVISOR_0), $.copy(TIER_ACTIVATION_FEE_0), $.copy(WITHDRAWAL_FEE_0)], [$.copy(FEE_SHARE_DIVISOR_1), $.copy(TIER_ACTIVATION_FEE_1), $.copy(WITHDRAWAL_FEE_1)], [$.copy(FEE_SHARE_DIVISOR_2), $.copy(TIER_ACTIVATION_FEE_2), $.copy(WITHDRAWAL_FEE_2)], [$.copy(FEE_SHARE_DIVISOR_3), $.copy(TIER_ACTIVATION_FEE_3), $.copy(WITHDRAWAL_FEE_3)]];
+  integrator_fee_store_tiers = [[$.copy(FEE_SHARE_DIVISOR_0), $.copy(TIER_ACTIVATION_FEE_0), $.copy(WITHDRAWAL_FEE_0)], [$.copy(FEE_SHARE_DIVISOR_1), $.copy(TIER_ACTIVATION_FEE_1), $.copy(WITHDRAWAL_FEE_1)], [$.copy(FEE_SHARE_DIVISOR_2), $.copy(TIER_ACTIVATION_FEE_2), $.copy(WITHDRAWAL_FEE_2)], [$.copy(FEE_SHARE_DIVISOR_3), $.copy(TIER_ACTIVATION_FEE_3), $.copy(WITHDRAWAL_FEE_3)], [$.copy(FEE_SHARE_DIVISOR_4), $.copy(TIER_ACTIVATION_FEE_4), $.copy(WITHDRAWAL_FEE_4)], [$.copy(FEE_SHARE_DIVISOR_5), $.copy(TIER_ACTIVATION_FEE_5), $.copy(WITHDRAWAL_FEE_5)], [$.copy(FEE_SHARE_DIVISOR_6), $.copy(TIER_ACTIVATION_FEE_6), $.copy(WITHDRAWAL_FEE_6)]];
   set_incentive_parameters_(econia, $.copy(MARKET_REGISTRATION_FEE), $.copy(UNDERWRITER_REGISTRATION_FEE), $.copy(CUSTODIAN_REGISTRATION_FEE), $.copy(TAKER_FEE_DIVISOR), integrator_fee_store_tiers, false, $c, [new StructTag(new HexString("0x1"), "aptos_coin", "AptosCoin", [])]);
   return;
 }
@@ -581,7 +590,7 @@ export function is_utility_coin_type_ (
   $c: AptosDataCache,
   $p: TypeTag[], /* <T>*/
 ): boolean {
-  return $.deep_eq(Stdlib.Type_info.type_of_($c, [$p[0]]), $.copy($c.borrow_global<IncentiveParameters>(new SimpleStructTag(IncentiveParameters), new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9")).utility_coin_type_info));
+  return $.deep_eq(Stdlib.Type_info.type_of_($c, [$p[0]]), $.copy($c.borrow_global<IncentiveParameters>(new SimpleStructTag(IncentiveParameters), new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200")).utility_coin_type_info));
 }
 
 
@@ -663,16 +672,16 @@ export function set_incentive_parameters_ (
     if (!($.copy(n_new_tiers)).ge($.copy(n_old_tiers))) {
       throw $.abortCode($.copy(E_FEWER_TIERS));
     }
-    incentive_parameters_ref_mut = $c.borrow_global_mut<IncentiveParameters>(new SimpleStructTag(IncentiveParameters), new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"));
+    incentive_parameters_ref_mut = $c.borrow_global_mut<IncentiveParameters>(new SimpleStructTag(IncentiveParameters), new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"));
     incentive_parameters_ref_mut.integrator_fee_store_tiers = Stdlib.Vector.empty_($c, [new SimpleStructTag(IntegratorFeeStoreTierParameters)]);
-    $c.move_from<IncentiveParameters>(new SimpleStructTag(IncentiveParameters), new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"));
+    $c.move_from<IncentiveParameters>(new SimpleStructTag(IncentiveParameters), new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"));
   }
   else{
   }
   utility_coin_type_info = Stdlib.Type_info.type_of_($c, [$p[0]]);
   integrator_fee_store_tiers = Stdlib.Vector.empty_($c, [new SimpleStructTag(IntegratorFeeStoreTierParameters)]);
   $c.move_to(new SimpleStructTag(IncentiveParameters), econia, new IncentiveParameters({ utility_coin_type_info: $.copy(utility_coin_type_info), market_registration_fee: $.copy(market_registration_fee), underwriter_registration_fee: $.copy(underwriter_registration_fee), custodian_registration_fee: $.copy(custodian_registration_fee), taker_fee_divisor: $.copy(taker_fee_divisor), integrator_fee_store_tiers: integrator_fee_store_tiers }, new SimpleStructTag(IncentiveParameters)));
-  incentive_parameters_ref_mut__1 = $c.borrow_global_mut<IncentiveParameters>(new SimpleStructTag(IncentiveParameters), new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"));
+  incentive_parameters_ref_mut__1 = $c.borrow_global_mut<IncentiveParameters>(new SimpleStructTag(IncentiveParameters), new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"));
   set_incentive_parameters_parse_tiers_vector_($.copy(taker_fee_divisor), integrator_fee_store_tiers_ref, incentive_parameters_ref_mut__1.integrator_fee_store_tiers, $c);
   return;
 }
@@ -684,7 +693,7 @@ export function set_incentive_parameters_parse_tiers_vector_ (
   $c: AptosDataCache,
 ): void {
   let activation_fee_last, divisor_last, fee_share_divisor_ref, i, n_tiers, tier_activation_fee_ref, tier_fields_ref, withdrawal_fee_last, withdrawal_fee_ref;
-  [divisor_last, activation_fee_last, withdrawal_fee_last] = [$.copy(HI_64), $.copy(HI_64), $.copy(HI_64)];
+  [divisor_last, activation_fee_last, withdrawal_fee_last] = [$.copy(HI_64), u64("0"), $.copy(HI_64)];
   n_tiers = Stdlib.Vector.length_(integrator_fee_store_tiers_ref, $c, [new VectorTag(AtomicTypeTag.U64)]);
   i = u64("0");
   while (($.copy(i)).lt($.copy(n_tiers))) {
@@ -737,7 +746,7 @@ export function set_incentive_parameters_range_check_inputs_ (
   integrator_fee_store_tiers_ref: U64[][],
   $c: AptosDataCache,
 ): void {
-  if (!((Stdlib.Signer.address_of_(econia, $c)).hex() === (new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9")).hex())) {
+  if (!((Stdlib.Signer.address_of_(econia, $c)).hex() === (new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200")).hex())) {
     throw $.abortCode($.copy(E_NOT_ECONIA));
   }
   if (!($.copy(market_registration_fee)).ge($.copy(MIN_FEE))) {
@@ -788,7 +797,7 @@ export function buildPayload_update_incentives (
    | Types.TransactionPayload_EntryFunctionPayload {
   const typeParamStrings = $p.map(t=>$.getTypeTagFullname(t));
   return $.buildPayload(
-    new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"),
+    new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"),
     "incentives",
     "update_incentives",
     typeParamStrings,
@@ -845,7 +854,7 @@ export function buildPayload_upgrade_integrator_fee_store_via_coinstore (
    | Types.TransactionPayload_EntryFunctionPayload {
   const typeParamStrings = $p.map(t=>$.getTypeTagFullname(t));
   return $.buildPayload(
-    new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"),
+    new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"),
     "incentives",
     "upgrade_integrator_fee_store_via_coinstore",
     typeParamStrings,
@@ -907,7 +916,7 @@ export function buildPayload_withdraw_econia_fees_all_to_coin_store (
    | Types.TransactionPayload_EntryFunctionPayload {
   const typeParamStrings = $p.map(t=>$.getTypeTagFullname(t));
   return $.buildPayload(
-    new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"),
+    new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"),
     "incentives",
     "withdraw_econia_fees_all_to_coin_store",
     typeParamStrings,
@@ -928,7 +937,7 @@ export function withdraw_econia_fees_internal_ (
   $p: TypeTag[], /* <QuoteCoinType>*/
 ): Stdlib.Coin.Coin {
   let temp$1, econia_fee_store_map_ref_mut, fee_account_address, fee_coins_ref_mut;
-  if (!((Stdlib.Signer.address_of_(account, $c)).hex() === (new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9")).hex())) {
+  if (!((Stdlib.Signer.address_of_(account, $c)).hex() === (new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200")).hex())) {
     throw $.abortCode($.copy(E_NOT_ECONIA));
   }
   fee_account_address = Resource_account.get_address_($c);
@@ -964,7 +973,7 @@ export function buildPayload_withdraw_econia_fees_to_coin_store (
    | Types.TransactionPayload_EntryFunctionPayload {
   const typeParamStrings = $p.map(t=>$.getTypeTagFullname(t));
   return $.buildPayload(
-    new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"),
+    new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"),
     "incentives",
     "withdraw_econia_fees_to_coin_store",
     typeParamStrings,
@@ -987,12 +996,12 @@ export function withdraw_econia_fees_to_coin_store_internal_ (
 ): void {
   let coins;
   coins = withdraw_econia_fees_internal_(econia, $.copy(market_id), all, $.copy(amount), $c, [$p[0]]);
-  if (!Stdlib.Coin.is_account_registered_(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), $c, [$p[0]])) {
+  if (!Stdlib.Coin.is_account_registered_(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), $c, [$p[0]])) {
     Stdlib.Coin.register_(econia, $c, [$p[0]]);
   }
   else{
   }
-  Stdlib.Coin.deposit_(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), coins, $c, [$p[0]]);
+  Stdlib.Coin.deposit_(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), coins, $c, [$p[0]]);
   return;
 }
 
@@ -1040,7 +1049,7 @@ export function buildPayload_withdraw_integrator_fees_via_coinstores (
    | Types.TransactionPayload_EntryFunctionPayload {
   const typeParamStrings = $p.map(t=>$.getTypeTagFullname(t));
   return $.buildPayload(
-    new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"),
+    new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"),
     "incentives",
     "withdraw_integrator_fees_via_coinstores",
     typeParamStrings,
@@ -1086,7 +1095,7 @@ export function buildPayload_withdraw_utility_coins_all_to_coin_store (
    | Types.TransactionPayload_EntryFunctionPayload {
   const typeParamStrings = $p.map(t=>$.getTypeTagFullname(t));
   return $.buildPayload(
-    new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"),
+    new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"),
     "incentives",
     "withdraw_utility_coins_all_to_coin_store",
     typeParamStrings,
@@ -1104,7 +1113,7 @@ export function withdraw_utility_coins_internal_ (
   $p: TypeTag[], /* <UtilityCoinType>*/
 ): Stdlib.Coin.Coin {
   let temp$1, fee_account_address, utility_coins_ref_mut;
-  if (!((Stdlib.Signer.address_of_(account, $c)).hex() === (new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9")).hex())) {
+  if (!((Stdlib.Signer.address_of_(account, $c)).hex() === (new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200")).hex())) {
     throw $.abortCode($.copy(E_NOT_ECONIA));
   }
   fee_account_address = Resource_account.get_address_($c);
@@ -1137,7 +1146,7 @@ export function buildPayload_withdraw_utility_coins_to_coin_store (
    | Types.TransactionPayload_EntryFunctionPayload {
   const typeParamStrings = $p.map(t=>$.getTypeTagFullname(t));
   return $.buildPayload(
-    new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"),
+    new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"),
     "incentives",
     "withdraw_utility_coins_to_coin_store",
     typeParamStrings,
@@ -1158,22 +1167,22 @@ export function withdraw_utility_coins_to_coin_store_internal_ (
 ): void {
   let coins;
   coins = withdraw_utility_coins_internal_(econia, all, $.copy(amount), $c, [$p[0]]);
-  if (!Stdlib.Coin.is_account_registered_(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), $c, [$p[0]])) {
+  if (!Stdlib.Coin.is_account_registered_(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), $c, [$p[0]])) {
     Stdlib.Coin.register_(econia, $c, [$p[0]]);
   }
   else{
   }
-  Stdlib.Coin.deposit_(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), coins, $c, [$p[0]]);
+  Stdlib.Coin.deposit_(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), coins, $c, [$p[0]]);
   return;
 }
 
 export function loadParsers(repo: AptosParserRepo) {
-  repo.addParser("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9::incentives::EconiaFeeStore", EconiaFeeStore.EconiaFeeStoreParser);
-  repo.addParser("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9::incentives::IncentiveParameters", IncentiveParameters.IncentiveParametersParser);
-  repo.addParser("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9::incentives::IntegratorFeeStore", IntegratorFeeStore.IntegratorFeeStoreParser);
-  repo.addParser("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9::incentives::IntegratorFeeStoreTierParameters", IntegratorFeeStoreTierParameters.IntegratorFeeStoreTierParametersParser);
-  repo.addParser("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9::incentives::IntegratorFeeStores", IntegratorFeeStores.IntegratorFeeStoresParser);
-  repo.addParser("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9::incentives::UtilityCoinStore", UtilityCoinStore.UtilityCoinStoreParser);
+  repo.addParser("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200::incentives::EconiaFeeStore", EconiaFeeStore.EconiaFeeStoreParser);
+  repo.addParser("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200::incentives::IncentiveParameters", IncentiveParameters.IncentiveParametersParser);
+  repo.addParser("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200::incentives::IntegratorFeeStore", IntegratorFeeStore.IntegratorFeeStoreParser);
+  repo.addParser("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200::incentives::IntegratorFeeStoreTierParameters", IntegratorFeeStoreTierParameters.IntegratorFeeStoreTierParametersParser);
+  repo.addParser("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200::incentives::IntegratorFeeStores", IntegratorFeeStores.IntegratorFeeStoresParser);
+  repo.addParser("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200::incentives::UtilityCoinStore", UtilityCoinStore.UtilityCoinStoreParser);
 }
 export class App {
   constructor(

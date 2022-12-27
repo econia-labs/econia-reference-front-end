@@ -8,7 +8,7 @@ import {OptionTransaction} from "@manahippo/move-to-ts";
 import {HexString, AptosClient, AptosAccount, TxnBuilderTypes, Types} from "aptos";
 import * as Stdlib from "../stdlib";
 export const packageName = "Econia";
-export const moduleAddress = new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9");
+export const moduleAddress = new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200");
 export const moduleName = "assets";
 
 export const BASE_COIN_DECIMALS : U8 = u8("4");
@@ -169,7 +169,7 @@ export function burn_ (
   $p: TypeTag[], /* <CoinType>*/
 ): void {
   let burn_capability;
-  burn_capability = $c.borrow_global<CoinCapabilities>(new SimpleStructTag(CoinCapabilities, [$p[0]]), new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9")).burn_capability;
+  burn_capability = $c.borrow_global<CoinCapabilities>(new SimpleStructTag(CoinCapabilities, [$p[0]]), new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200")).burn_capability;
   Stdlib.Coin.burn_(coins, burn_capability, $c, [$p[0]]);
   return;
 }
@@ -183,10 +183,10 @@ export function init_coin_type_ (
   $p: TypeTag[], /* <CoinType>*/
 ): void {
   let burn_capability, freeze_capability, mint_capability;
-  if (!((Stdlib.Signer.address_of_(account, $c)).hex() === (new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9")).hex())) {
+  if (!((Stdlib.Signer.address_of_(account, $c)).hex() === (new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200")).hex())) {
     throw $.abortCode($.copy(E_NOT_ECONIA));
   }
-  if (!!$c.exists(new SimpleStructTag(CoinCapabilities, [$p[0]]), new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"))) {
+  if (!!$c.exists(new SimpleStructTag(CoinCapabilities, [$p[0]]), new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"))) {
     throw $.abortCode($.copy(E_HAS_CAPABILITIES));
   }
   [burn_capability, freeze_capability, mint_capability] = Stdlib.Coin.initialize_(account, Stdlib.String.utf8_($.copy(coin_name), $c), Stdlib.String.utf8_($.copy(coin_symbol), $c), $.copy(decimals), false, $c, [$p[0]]);
@@ -212,7 +212,7 @@ export function mint_ (
 ): Stdlib.Coin.Coin {
   let account_address, mint_capability;
   account_address = Stdlib.Signer.address_of_(account, $c);
-  if (!(($.copy(account_address)).hex() === (new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9")).hex())) {
+  if (!(($.copy(account_address)).hex() === (new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200")).hex())) {
     throw $.abortCode($.copy(E_NOT_ECONIA));
   }
   mint_capability = $c.borrow_global<CoinCapabilities>(new SimpleStructTag(CoinCapabilities, [$p[0]]), $.copy(account_address)).mint_capability;
@@ -220,10 +220,10 @@ export function mint_ (
 }
 
 export function loadParsers(repo: AptosParserRepo) {
-  repo.addParser("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9::assets::BC", BC.BCParser);
-  repo.addParser("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9::assets::CoinCapabilities", CoinCapabilities.CoinCapabilitiesParser);
-  repo.addParser("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9::assets::QC", QC.QCParser);
-  repo.addParser("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9::assets::UC", UC.UCParser);
+  repo.addParser("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200::assets::BC", BC.BCParser);
+  repo.addParser("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200::assets::CoinCapabilities", CoinCapabilities.CoinCapabilitiesParser);
+  repo.addParser("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200::assets::QC", QC.QCParser);
+  repo.addParser("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200::assets::UC", UC.UCParser);
 }
 export class App {
   constructor(

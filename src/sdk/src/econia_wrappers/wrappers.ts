@@ -9,11 +9,14 @@ import {HexString, AptosClient, AptosAccount, TxnBuilderTypes, Types} from "apto
 import * as Econia from "../econia";
 import * as Stdlib from "../stdlib";
 export const packageName = "Econia Wrappers";
-export const moduleAddress = new HexString("0x7c36a610d1cde8853a692c057e7bd2479ba9d5eeaeceafa24f125c23d2abf942");
+export const moduleAddress = new HexString("0x5ccea8ed10638110d0f5df241b5f68512ba09916a7567bbb939b4ff4fbca11ef");
 export const moduleName = "wrappers";
 
 export const BID : boolean = false;
-export const BUY : boolean = true;
+export const BUY : boolean = false;
+export const CANCEL_BOTH : U8 = u8("1");
+export const CANCEL_MAKER : U8 = u8("2");
+export const CANCEL_TAKER : U8 = u8("3");
 export const NO_CUSTODIAN : U64 = u64("0");
 export const SHIFT_MARKET_ID : U8 = u8("64");
 
@@ -61,11 +64,12 @@ export function place_limit_order_user_entry_ (
   size: U64,
   price: U64,
   restriction: U8,
+  self_match_behaviour: U8,
   $c: AptosDataCache,
   $p: TypeTag[], /* <BaseType, QuoteType>*/
 ): void {
   before_order_placement_(user, $.copy(deposit_amount), $.copy(market_id), side, $c, [$p[0], $p[1]]);
-  Econia.Market.place_limit_order_user_entry_(user, $.copy(market_id), $.copy(integrator), side, $.copy(size), $.copy(price), $.copy(restriction), $c, [$p[0], $p[1]]);
+  Econia.Market.place_limit_order_user_entry_(user, $.copy(market_id), $.copy(integrator), side, $.copy(size), $.copy(price), $.copy(restriction), $.copy(self_match_behaviour), $c, [$p[0], $p[1]]);
   return;
 }
 
@@ -78,13 +82,14 @@ export function buildPayload_place_limit_order_user_entry (
   size: U64,
   price: U64,
   restriction: U8,
+  self_match_behaviour: U8,
   $p: TypeTag[], /* <BaseType, QuoteType>*/
   isJSON = false,
 ): TxnBuilderTypes.TransactionPayloadEntryFunction
    | Types.TransactionPayload_EntryFunctionPayload {
   const typeParamStrings = $p.map(t=>$.getTypeTagFullname(t));
   return $.buildPayload(
-    new HexString("0x7c36a610d1cde8853a692c057e7bd2479ba9d5eeaeceafa24f125c23d2abf942"),
+    new HexString("0x5ccea8ed10638110d0f5df241b5f68512ba09916a7567bbb939b4ff4fbca11ef"),
     "wrappers",
     "place_limit_order_user_entry",
     typeParamStrings,
@@ -96,6 +101,7 @@ export function buildPayload_place_limit_order_user_entry (
       size,
       price,
       restriction,
+      self_match_behaviour,
     ],
     isJSON,
   );
@@ -113,11 +119,19 @@ export function place_market_order_user_entry_ (
   min_quote: U64,
   max_quote: U64,
   limit_price: U64,
+  self_match_behaviour: U8,
   $c: AptosDataCache,
   $p: TypeTag[], /* <BaseType, QuoteType>*/
 ): void {
+  let base_traded, quote_traded;
   before_order_placement_(user, $.copy(deposit_amount), $.copy(market_id), !direction, $c, [$p[0], $p[1]]);
-  Econia.Market.place_market_order_user_(user, $.copy(market_id), $.copy(integrator), direction, $.copy(min_base), $.copy(max_base), $.copy(min_quote), $.copy(max_quote), $.copy(limit_price), $c, [$p[0], $p[1]]);
+  [base_traded, quote_traded, ] = Econia.Market.place_market_order_user_(user, $.copy(market_id), $.copy(integrator), direction, $.copy(min_base), $.copy(max_base), $.copy(min_quote), $.copy(max_quote), $.copy(limit_price), $.copy(self_match_behaviour), $c, [$p[0], $p[1]]);
+  if ((direction == $.copy(BUY))) {
+    Econia.User.withdraw_to_coinstore_(user, $.copy(market_id), $.copy(base_traded), $c, [$p[0]]);
+  }
+  else{
+    Econia.User.withdraw_to_coinstore_(user, $.copy(market_id), $.copy(quote_traded), $c, [$p[1]]);
+  }
   return;
 }
 
@@ -132,13 +146,14 @@ export function buildPayload_place_market_order_user_entry (
   min_quote: U64,
   max_quote: U64,
   limit_price: U64,
+  self_match_behaviour: U8,
   $p: TypeTag[], /* <BaseType, QuoteType>*/
   isJSON = false,
 ): TxnBuilderTypes.TransactionPayloadEntryFunction
    | Types.TransactionPayload_EntryFunctionPayload {
   const typeParamStrings = $p.map(t=>$.getTypeTagFullname(t));
   return $.buildPayload(
-    new HexString("0x7c36a610d1cde8853a692c057e7bd2479ba9d5eeaeceafa24f125c23d2abf942"),
+    new HexString("0x5ccea8ed10638110d0f5df241b5f68512ba09916a7567bbb939b4ff4fbca11ef"),
     "wrappers",
     "place_market_order_user_entry",
     typeParamStrings,
@@ -152,6 +167,7 @@ export function buildPayload_place_market_order_user_entry (
       min_quote,
       max_quote,
       limit_price,
+      self_match_behaviour,
     ],
     isJSON,
   );
@@ -177,11 +193,12 @@ export class App {
     size: U64,
     price: U64,
     restriction: U8,
+    self_match_behaviour: U8,
     $p: TypeTag[], /* <BaseType, QuoteType>*/
     isJSON = false,
   ): TxnBuilderTypes.TransactionPayloadEntryFunction
         | Types.TransactionPayload_EntryFunctionPayload {
-    return buildPayload_place_limit_order_user_entry(deposit_amount, market_id, integrator, side, size, price, restriction, $p, isJSON);
+    return buildPayload_place_limit_order_user_entry(deposit_amount, market_id, integrator, side, size, price, restriction, self_match_behaviour, $p, isJSON);
   }
   async place_limit_order_user_entry(
     _account: AptosAccount,
@@ -192,11 +209,12 @@ export class App {
     size: U64,
     price: U64,
     restriction: U8,
+    self_match_behaviour: U8,
     $p: TypeTag[], /* <BaseType, QuoteType>*/
     option?: OptionTransaction,
     _isJSON = false
   ) {
-    const payload__ = buildPayload_place_limit_order_user_entry(deposit_amount, market_id, integrator, side, size, price, restriction, $p, _isJSON);
+    const payload__ = buildPayload_place_limit_order_user_entry(deposit_amount, market_id, integrator, side, size, price, restriction, self_match_behaviour, $p, _isJSON);
     return $.sendPayloadTx(this.client, _account, payload__, option);
   }
   payload_place_market_order_user_entry(
@@ -209,11 +227,12 @@ export class App {
     min_quote: U64,
     max_quote: U64,
     limit_price: U64,
+    self_match_behaviour: U8,
     $p: TypeTag[], /* <BaseType, QuoteType>*/
     isJSON = false,
   ): TxnBuilderTypes.TransactionPayloadEntryFunction
         | Types.TransactionPayload_EntryFunctionPayload {
-    return buildPayload_place_market_order_user_entry(deposit_amount, market_id, integrator, direction, min_base, max_base, min_quote, max_quote, limit_price, $p, isJSON);
+    return buildPayload_place_market_order_user_entry(deposit_amount, market_id, integrator, direction, min_base, max_base, min_quote, max_quote, limit_price, self_match_behaviour, $p, isJSON);
   }
   async place_market_order_user_entry(
     _account: AptosAccount,
@@ -226,11 +245,12 @@ export class App {
     min_quote: U64,
     max_quote: U64,
     limit_price: U64,
+    self_match_behaviour: U8,
     $p: TypeTag[], /* <BaseType, QuoteType>*/
     option?: OptionTransaction,
     _isJSON = false
   ) {
-    const payload__ = buildPayload_place_market_order_user_entry(deposit_amount, market_id, integrator, direction, min_base, max_base, min_quote, max_quote, limit_price, $p, _isJSON);
+    const payload__ = buildPayload_place_market_order_user_entry(deposit_amount, market_id, integrator, direction, min_base, max_base, min_quote, max_quote, limit_price, self_match_behaviour, $p, _isJSON);
     return $.sendPayloadTx(this.client, _account, payload__, option);
   }
 }

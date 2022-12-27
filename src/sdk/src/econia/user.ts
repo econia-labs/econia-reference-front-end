@@ -10,7 +10,7 @@ import * as Stdlib from "../stdlib";
 import * as Registry from "./registry";
 import * as Tablist from "./tablist";
 export const packageName = "Econia";
-export const moduleAddress = new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9");
+export const moduleAddress = new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200");
 export const moduleName = "user";
 
 export const ASK : boolean = true;
@@ -31,11 +31,12 @@ export const E_OVERFLOW_ASSET_IN : U64 = u64("12");
 export const E_PRICE_0 : U64 = u64("8");
 export const E_PRICE_TOO_HIGH : U64 = u64("9");
 export const E_SIZE_TOO_LOW : U64 = u64("10");
+export const E_START_SIZE_MISMATCH : U64 = u64("19");
 export const E_TICKS_OVERFLOW : U64 = u64("11");
 export const E_UNREGISTERED_CUSTODIAN : U64 = u64("1");
 export const E_WITHDRAW_TOO_LITTLE_AVAILABLE : U64 = u64("7");
 export const HI_64 : U64 = u64("18446744073709551615");
-export const MAX_PRICE : U64 = u64("4294967295");
+export const HI_PRICE : U64 = u64("4294967295");
 export const NIL : U64 = u64("0");
 export const NO_CUSTODIAN : U64 = u64("0");
 export const NO_UNDERWRITER : U64 = u64("0");
@@ -52,7 +53,7 @@ export class Collateral
     { name: "CoinType", isPhantom: true }
   ];
   static fields: FieldDeclType[] = [
-  { name: "map", typeTag: new StructTag(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), "tablist", "Tablist", [AtomicTypeTag.U128, new StructTag(new HexString("0x1"), "coin", "Coin", [new $.TypeParamIdx(0)])]) }];
+  { name: "map", typeTag: new StructTag(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), "tablist", "Tablist", [AtomicTypeTag.U128, new StructTag(new HexString("0x1"), "coin", "Coin", [new $.TypeParamIdx(0)])]) }];
 
   map: Tablist.Tablist;
 
@@ -101,8 +102,8 @@ export class MarketAccount
   { name: "tick_size", typeTag: AtomicTypeTag.U64 },
   { name: "min_size", typeTag: AtomicTypeTag.U64 },
   { name: "underwriter_id", typeTag: AtomicTypeTag.U64 },
-  { name: "asks", typeTag: new StructTag(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), "tablist", "Tablist", [AtomicTypeTag.U64, new StructTag(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), "user", "Order", [])]) },
-  { name: "bids", typeTag: new StructTag(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), "tablist", "Tablist", [AtomicTypeTag.U64, new StructTag(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), "user", "Order", [])]) },
+  { name: "asks", typeTag: new StructTag(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), "tablist", "Tablist", [AtomicTypeTag.U64, new StructTag(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), "user", "Order", [])]) },
+  { name: "bids", typeTag: new StructTag(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), "tablist", "Tablist", [AtomicTypeTag.U64, new StructTag(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), "user", "Order", [])]) },
   { name: "asks_stack_top", typeTag: AtomicTypeTag.U64 },
   { name: "bids_stack_top", typeTag: AtomicTypeTag.U64 },
   { name: "base_total", typeTag: AtomicTypeTag.U64 },
@@ -179,8 +180,8 @@ export class MarketAccounts
 
   ];
   static fields: FieldDeclType[] = [
-  { name: "map", typeTag: new StructTag(new HexString("0x1"), "table", "Table", [AtomicTypeTag.U128, new StructTag(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), "user", "MarketAccount", [])]) },
-  { name: "custodians", typeTag: new StructTag(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), "tablist", "Tablist", [AtomicTypeTag.U64, new VectorTag(AtomicTypeTag.U64)]) }];
+  { name: "map", typeTag: new StructTag(new HexString("0x1"), "table", "Table", [AtomicTypeTag.U128, new StructTag(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), "user", "MarketAccount", [])]) },
+  { name: "custodians", typeTag: new StructTag(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), "tablist", "Tablist", [AtomicTypeTag.U64, new VectorTag(AtomicTypeTag.U64)]) }];
 
   map: Stdlib.Table.Table;
   custodians: Tablist.Tablist;
@@ -254,6 +255,7 @@ export function cancel_order_internal_ (
   market_id: U64,
   custodian_id: U64,
   side: boolean,
+  start_size: U64,
   price: U64,
   order_access_key: U64,
   market_order_id: U128,
@@ -272,6 +274,9 @@ export function cancel_order_internal_ (
   [orders_ref_mut, stack_top_ref_mut, in_ceiling_ref_mut, out_available_ref_mut, size_multiplier_ceiling, size_multiplier_available] = [temp$1, temp$2, temp$3, temp$4, temp$5, temp$6];
   order_ref_mut = Tablist.borrow_mut_(orders_ref_mut, $.copy(order_access_key), $c, [AtomicTypeTag.U64, new SimpleStructTag(Order)]);
   size = $.copy(order_ref_mut.size);
+  if (!($.copy(size)).eq(($.copy(start_size)))) {
+    throw $.abortCode($.copy(E_START_SIZE_MISMATCH));
+  }
   if (($.copy(market_order_id)).eq((u128($.copy(NIL))))) {
     market_order_id = $.copy(order_ref_mut.market_order_id);
   }
@@ -295,6 +300,7 @@ export function change_order_size_internal_ (
   market_id: U64,
   custodian_id: U64,
   side: boolean,
+  start_size: U64,
   new_size: U64,
   price: U64,
   order_access_key: U64,
@@ -316,7 +322,7 @@ export function change_order_size_internal_ (
   if (!($.copy(order_ref.size)).neq($.copy(new_size))) {
     throw $.abortCode($.copy(E_CHANGE_ORDER_NO_CHANGE));
   }
-  cancel_order_internal_($.copy(user_address), $.copy(market_id), $.copy(custodian_id), side, $.copy(price), $.copy(order_access_key), $.copy(market_order_id), $c);
+  cancel_order_internal_($.copy(user_address), $.copy(market_id), $.copy(custodian_id), side, $.copy(start_size), $.copy(price), $.copy(order_access_key), $.copy(market_order_id), $c);
   place_order_internal_($.copy(user_address), $.copy(market_id), $.copy(custodian_id), side, $.copy(new_size), $.copy(price), $.copy(market_order_id), $.copy(order_access_key), $c);
   return;
 }
@@ -363,7 +369,7 @@ export function deposit_asset_ (
   $.set(total_ref_mut, ($.copy(total_ref_mut)).add($.copy(amount)));
   $.set(available_ref_mut, ($.copy(available_ref_mut)).add($.copy(amount)));
   $.set(ceiling_ref_mut, ($.copy(ceiling_ref_mut)).add($.copy(amount)));
-  if ($.deep_eq($.copy(asset_type), Stdlib.Type_info.type_of_($c, [new StructTag(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), "registry", "GenericAsset", [])]))) {
+  if ($.deep_eq($.copy(asset_type), Stdlib.Type_info.type_of_($c, [new StructTag(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), "registry", "GenericAsset", [])]))) {
     if (!($.copy(underwriter_id)).eq(($.copy(market_account_ref_mut.underwriter_id)))) {
       throw $.abortCode($.copy(E_INVALID_UNDERWRITER));
     }
@@ -406,7 +412,7 @@ export function deposit_coins_ (
   $p: TypeTag[], /* <CoinType>*/
 ): void {
   let coin_type_is_generic_asset;
-  coin_type_is_generic_asset = $.deep_eq(Stdlib.Type_info.type_of_($c, [$p[0]]), Stdlib.Type_info.type_of_($c, [new StructTag(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), "registry", "GenericAsset", [])]));
+  coin_type_is_generic_asset = $.deep_eq(Stdlib.Type_info.type_of_($c, [$p[0]]), Stdlib.Type_info.type_of_($c, [new StructTag(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), "registry", "GenericAsset", [])]));
   if (!!coin_type_is_generic_asset) {
     throw $.abortCode($.copy(E_COIN_TYPE_IS_GENERIC_ASSET));
   }
@@ -437,7 +443,7 @@ export function buildPayload_deposit_from_coinstore (
    | Types.TransactionPayload_EntryFunctionPayload {
   const typeParamStrings = $p.map(t=>$.getTypeTagFullname(t));
   return $.buildPayload(
-    new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"),
+    new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"),
     "user",
     "deposit_from_coinstore",
     typeParamStrings,
@@ -459,7 +465,7 @@ export function deposit_generic_asset_ (
   underwriter_capability_ref: Registry.UnderwriterCapability,
   $c: AptosDataCache,
 ): void {
-  deposit_asset_($.copy(user_address), $.copy(market_id), $.copy(custodian_id), $.copy(amount), Stdlib.Option.none_($c, [new StructTag(new HexString("0x1"), "coin", "Coin", [new StructTag(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), "registry", "GenericAsset", [])])]), Registry.get_underwriter_id_(underwriter_capability_ref, $c), $c, [new StructTag(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), "registry", "GenericAsset", [])]);
+  deposit_asset_($.copy(user_address), $.copy(market_id), $.copy(custodian_id), $.copy(amount), Stdlib.Option.none_($c, [new StructTag(new HexString("0x1"), "coin", "Coin", [new StructTag(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), "registry", "GenericAsset", [])])]), Registry.get_underwriter_id_(underwriter_capability_ref, $c), $c, [new StructTag(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), "registry", "GenericAsset", [])]);
   return;
 }
 
@@ -469,6 +475,7 @@ export function fill_order_internal_ (
   custodian_id: U64,
   side: boolean,
   order_access_key: U64,
+  start_size: U64,
   fill_size: U64,
   complete_fill: boolean,
   optional_base_coins: Stdlib.Option.Option,
@@ -491,6 +498,9 @@ export function fill_order_internal_ (
   [orders_ref_mut, stack_top_ref_mut, asset_in, asset_in_total_ref_mut, asset_in_available_ref_mut, asset_out, asset_out_total_ref_mut, asset_out_ceiling_ref_mut] = [temp$1, temp$2, temp$3, temp$4, temp$5, temp$6, temp$7, temp$8];
   order_ref_mut = Tablist.borrow_mut_(orders_ref_mut, $.copy(order_access_key), $c, [AtomicTypeTag.U64, new SimpleStructTag(Order)]);
   market_order_id = $.copy(order_ref_mut.market_order_id);
+  if (!($.copy(order_ref_mut.size)).eq(($.copy(start_size)))) {
+    throw $.abortCode($.copy(E_START_SIZE_MISMATCH));
+  }
   if (complete_fill) {
     order_ref_mut.market_order_id = u128($.copy(NIL));
     order_ref_mut.size = $.copy(stack_top_ref_mut);
@@ -526,6 +536,27 @@ export function fill_order_internal_ (
   }
   return [optional_base_coins, quote_coins, $.copy(market_order_id)];
 }
+
+export function get_ASK_ (
+  $c: AptosDataCache,
+): boolean {
+  return $.copy(ASK);
+}
+
+
+export function get_BID_ (
+  $c: AptosDataCache,
+): boolean {
+  return $.copy(BID);
+}
+
+
+export function get_NO_CUSTODIAN_ (
+  $c: AptosDataCache,
+): U64 {
+  return $.copy(NO_CUSTODIAN);
+}
+
 
 export function get_active_market_order_ids_internal_ (
   user_address: HexString,
@@ -687,6 +718,44 @@ export function get_market_account_id_ (
 }
 
 
+export function get_market_account_market_info_ (
+  user_address: HexString,
+  market_id: U64,
+  custodian_id: U64,
+  $c: AptosDataCache,
+): [Stdlib.Type_info.TypeInfo, Stdlib.String.String, Stdlib.Type_info.TypeInfo, U64, U64, U64, U64] {
+  let market_account_id, market_account_ref, market_accounts_map_ref;
+  if (!$c.exists(new SimpleStructTag(MarketAccounts), $.copy(user_address))) {
+    throw $.abortCode($.copy(E_NO_MARKET_ACCOUNTS));
+  }
+  market_accounts_map_ref = $c.borrow_global<MarketAccounts>(new SimpleStructTag(MarketAccounts), $.copy(user_address)).map;
+  market_account_id = ((u128($.copy(market_id))).shl($.copy(SHIFT_MARKET_ID))).or(u128($.copy(custodian_id)));
+  if (!Stdlib.Table.contains_(market_accounts_map_ref, $.copy(market_account_id), $c, [AtomicTypeTag.U128, new SimpleStructTag(MarketAccount)])) {
+    throw $.abortCode($.copy(E_NO_MARKET_ACCOUNT));
+  }
+  market_account_ref = Stdlib.Table.borrow_(market_accounts_map_ref, $.copy(market_account_id), $c, [AtomicTypeTag.U128, new SimpleStructTag(MarketAccount)]);
+  return [$.copy(market_account_ref.base_type), $.copy(market_account_ref.base_name_generic), $.copy(market_account_ref.quote_type), $.copy(market_account_ref.lot_size), $.copy(market_account_ref.tick_size), $.copy(market_account_ref.min_size), $.copy(market_account_ref.underwriter_id)];
+}
+
+export function get_market_account_market_info_custodian_ (
+  user_address: HexString,
+  market_id: U64,
+  custodian_capability_ref: Registry.CustodianCapability,
+  $c: AptosDataCache,
+): [Stdlib.Type_info.TypeInfo, Stdlib.String.String, Stdlib.Type_info.TypeInfo, U64, U64, U64, U64] {
+  return get_market_account_market_info_($.copy(user_address), $.copy(market_id), Registry.get_custodian_id_(custodian_capability_ref, $c), $c);
+}
+
+
+export function get_market_account_market_info_user_ (
+  user: HexString,
+  market_id: U64,
+  $c: AptosDataCache,
+): [Stdlib.Type_info.TypeInfo, Stdlib.String.String, Stdlib.Type_info.TypeInfo, U64, U64, U64, U64] {
+  return get_market_account_market_info_(Stdlib.Signer.address_of_(user, $c), $.copy(market_id), $.copy(NO_CUSTODIAN), $c);
+}
+
+
 export function get_market_id_ (
   market_account_id: U128,
   $c: AptosDataCache,
@@ -776,7 +845,7 @@ export function place_order_internal_ (
   if (!($.copy(price)).gt(u64("0"))) {
     throw $.abortCode($.copy(E_PRICE_0));
   }
-  if (!($.copy(price)).le($.copy(MAX_PRICE))) {
+  if (!($.copy(price)).le($.copy(HI_PRICE))) {
     throw $.abortCode($.copy(E_PRICE_TOO_HIGH));
   }
   market_accounts_map_ref_mut = $c.borrow_global_mut<MarketAccounts>(new SimpleStructTag(MarketAccounts), $.copy(user_address)).map;
@@ -862,7 +931,7 @@ export function buildPayload_register_market_account (
    | Types.TransactionPayload_EntryFunctionPayload {
   const typeParamStrings = $p.map(t=>$.getTypeTagFullname(t));
   return $.buildPayload(
-    new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"),
+    new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"),
     "user",
     "register_market_account",
     typeParamStrings,
@@ -935,7 +1004,7 @@ export function register_market_account_generic_base_ (
   $c: AptosDataCache,
   $p: TypeTag[], /* <QuoteType>*/
 ): void {
-  register_market_account_(user, $.copy(market_id), $.copy(custodian_id), $c, [new StructTag(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), "registry", "GenericAsset", []), $p[0]]);
+  register_market_account_(user, $.copy(market_id), $.copy(custodian_id), $c, [new StructTag(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), "registry", "GenericAsset", []), $p[0]]);
   return;
 }
 
@@ -949,7 +1018,7 @@ export function buildPayload_register_market_account_generic_base (
    | Types.TransactionPayload_EntryFunctionPayload {
   const typeParamStrings = $p.map(t=>$.getTypeTagFullname(t));
   return $.buildPayload(
-    new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"),
+    new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"),
     "user",
     "register_market_account_generic_base",
     typeParamStrings,
@@ -1003,7 +1072,7 @@ export function withdraw_asset_ (
   $.set(total_ref_mut, ($.copy(total_ref_mut)).sub($.copy(amount)));
   $.set(available_ref_mut, ($.copy(available_ref_mut)).sub($.copy(amount)));
   $.set(ceiling_ref_mut, ($.copy(ceiling_ref_mut)).sub($.copy(amount)));
-  if ($.deep_eq($.copy(asset_type), Stdlib.Type_info.type_of_($c, [new StructTag(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), "registry", "GenericAsset", [])]))) {
+  if ($.deep_eq($.copy(asset_type), Stdlib.Type_info.type_of_($c, [new StructTag(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), "registry", "GenericAsset", [])]))) {
     if (!($.copy(underwriter_id)).eq(($.copy(market_account_ref_mut.underwriter_id)))) {
       throw $.abortCode($.copy(E_INVALID_UNDERWRITER));
     }
@@ -1070,7 +1139,7 @@ export function withdraw_generic_asset_ (
   underwriter_capability_ref: Registry.UnderwriterCapability,
   $c: AptosDataCache,
 ): void {
-  return Stdlib.Option.destroy_none_(withdraw_asset_($.copy(user_address), $.copy(market_id), $.copy(custodian_id), $.copy(amount), Registry.get_underwriter_id_(underwriter_capability_ref, $c), $c, [new StructTag(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), "registry", "GenericAsset", [])]), $c, [new StructTag(new HexString("0x1"), "coin", "Coin", [new StructTag(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), "registry", "GenericAsset", [])])]);
+  return Stdlib.Option.destroy_none_(withdraw_asset_($.copy(user_address), $.copy(market_id), $.copy(custodian_id), $.copy(amount), Registry.get_underwriter_id_(underwriter_capability_ref, $c), $c, [new StructTag(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), "registry", "GenericAsset", [])]), $c, [new StructTag(new HexString("0x1"), "coin", "Coin", [new StructTag(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), "registry", "GenericAsset", [])])]);
 }
 
 export function withdraw_generic_asset_custodian_ (
@@ -1120,7 +1189,7 @@ export function buildPayload_withdraw_to_coinstore (
    | Types.TransactionPayload_EntryFunctionPayload {
   const typeParamStrings = $p.map(t=>$.getTypeTagFullname(t));
   return $.buildPayload(
-    new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"),
+    new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"),
     "user",
     "withdraw_to_coinstore",
     typeParamStrings,
@@ -1134,10 +1203,10 @@ export function buildPayload_withdraw_to_coinstore (
 }
 
 export function loadParsers(repo: AptosParserRepo) {
-  repo.addParser("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9::user::Collateral", Collateral.CollateralParser);
-  repo.addParser("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9::user::MarketAccount", MarketAccount.MarketAccountParser);
-  repo.addParser("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9::user::MarketAccounts", MarketAccounts.MarketAccountsParser);
-  repo.addParser("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9::user::Order", Order.OrderParser);
+  repo.addParser("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200::user::Collateral", Collateral.CollateralParser);
+  repo.addParser("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200::user::MarketAccount", MarketAccount.MarketAccountParser);
+  repo.addParser("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200::user::MarketAccounts", MarketAccounts.MarketAccountsParser);
+  repo.addParser("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200::user::Order", Order.OrderParser);
 }
 export class App {
   constructor(
@@ -1263,6 +1332,18 @@ export class App {
     const payload__ = buildPayload_withdraw_to_coinstore(market_id, amount, $p, _isJSON);
     return $.sendPayloadTx(this.client, _account, payload__, option);
   }
+  app_get_ASK(
+  ) {
+    return get_ASK_( this.cache);
+  }
+  app_get_BID(
+  ) {
+    return get_BID_( this.cache);
+  }
+  app_get_NO_CUSTODIAN(
+  ) {
+    return get_NO_CUSTODIAN_( this.cache);
+  }
   app_get_all_market_account_ids_for_market_id(
       user: HexString,
       market_id: U64,
@@ -1296,6 +1377,18 @@ export class App {
       custodian_id: U64,
   ) {
     return get_market_account_id_(market_id, custodian_id, this.cache);
+  }
+  app_get_market_account_market_info_custodian(
+      user_address: HexString,
+      market_id: U64,
+      custodian_capability_ref: Registry.CustodianCapability,
+  ) {
+    return get_market_account_market_info_custodian_(user_address, market_id, custodian_capability_ref, this.cache);
+  }
+  app_get_market_account_market_info_user(
+      market_id: U64,
+  ) {
+    return get_market_account_market_info_user_(market_id, this.cache);
   }
   app_get_market_id(
       market_account_id: U128,

@@ -10,7 +10,7 @@ import * as Stdlib from "../stdlib";
 import * as Incentives from "./incentives";
 import * as Tablist from "./tablist";
 export const packageName = "Econia";
-export const moduleAddress = new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9");
+export const moduleAddress = new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200");
 export const moduleName = "registry";
 
 export const E_BASE_NOT_COIN : U64 = u64("6");
@@ -224,8 +224,8 @@ export class RecognizedMarketEvent
 
   ];
   static fields: FieldDeclType[] = [
-  { name: "trading_pair", typeTag: new StructTag(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), "registry", "TradingPair", []) },
-  { name: "recognized_market_info", typeTag: new StructTag(new HexString("0x1"), "option", "Option", [new StructTag(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), "registry", "RecognizedMarketInfo", [])]) }];
+  { name: "trading_pair", typeTag: new StructTag(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), "registry", "TradingPair", []) },
+  { name: "recognized_market_info", typeTag: new StructTag(new HexString("0x1"), "option", "Option", [new StructTag(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), "registry", "RecognizedMarketInfo", [])]) }];
 
   trading_pair: TradingPair;
   recognized_market_info: Stdlib.Option.Option;
@@ -305,8 +305,8 @@ export class RecognizedMarkets
 
   ];
   static fields: FieldDeclType[] = [
-  { name: "map", typeTag: new StructTag(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), "tablist", "Tablist", [new StructTag(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), "registry", "TradingPair", []), new StructTag(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), "registry", "RecognizedMarketInfo", [])]) },
-  { name: "recognized_market_events", typeTag: new StructTag(new HexString("0x1"), "event", "EventHandle", [new StructTag(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), "registry", "RecognizedMarketEvent", [])]) }];
+  { name: "map", typeTag: new StructTag(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), "tablist", "Tablist", [new StructTag(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), "registry", "TradingPair", []), new StructTag(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), "registry", "RecognizedMarketInfo", [])]) },
+  { name: "recognized_market_events", typeTag: new StructTag(new HexString("0x1"), "event", "EventHandle", [new StructTag(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), "registry", "RecognizedMarketEvent", [])]) }];
 
   map: Tablist.Tablist;
   recognized_market_events: Stdlib.Event.EventHandle;
@@ -351,11 +351,11 @@ export class Registry
 
   ];
   static fields: FieldDeclType[] = [
-  { name: "market_id_to_info", typeTag: new StructTag(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), "tablist", "Tablist", [AtomicTypeTag.U64, new StructTag(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), "registry", "MarketInfo", [])]) },
-  { name: "market_info_to_id", typeTag: new StructTag(new HexString("0x1"), "table", "Table", [new StructTag(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), "registry", "MarketInfo", []), AtomicTypeTag.U64]) },
+  { name: "market_id_to_info", typeTag: new StructTag(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), "tablist", "Tablist", [AtomicTypeTag.U64, new StructTag(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), "registry", "MarketInfo", [])]) },
+  { name: "market_info_to_id", typeTag: new StructTag(new HexString("0x1"), "table", "Table", [new StructTag(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), "registry", "MarketInfo", []), AtomicTypeTag.U64]) },
   { name: "n_custodians", typeTag: AtomicTypeTag.U64 },
   { name: "n_underwriters", typeTag: AtomicTypeTag.U64 },
-  { name: "market_registration_events", typeTag: new StructTag(new HexString("0x1"), "event", "EventHandle", [new StructTag(new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"), "registry", "MarketRegistrationEvent", [])]) }];
+  { name: "market_registration_events", typeTag: new StructTag(new HexString("0x1"), "event", "EventHandle", [new StructTag(new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"), "registry", "MarketRegistrationEvent", [])]) }];
 
   market_id_to_info: Tablist.Tablist;
   market_info_to_id: Stdlib.Table.Table;
@@ -469,6 +469,34 @@ export class UnderwriterCapability
   }
 
 }
+export function get_MAX_CHARACTERS_GENERIC_ (
+  $c: AptosDataCache,
+): U64 {
+  return $.copy(MAX_CHARACTERS_GENERIC);
+}
+
+
+export function get_MIN_CHARACTERS_GENERIC_ (
+  $c: AptosDataCache,
+): U64 {
+  return $.copy(MIN_CHARACTERS_GENERIC);
+}
+
+
+export function get_NO_CUSTODIAN_ (
+  $c: AptosDataCache,
+): U64 {
+  return $.copy(NO_CUSTODIAN);
+}
+
+
+export function get_NO_UNDERWRITER_ (
+  $c: AptosDataCache,
+): U64 {
+  return $.copy(NO_UNDERWRITER);
+}
+
+
 export function get_custodian_id_ (
   custodian_capability_ref: CustodianCapability,
   $c: AptosDataCache,
@@ -484,7 +512,7 @@ export function get_market_info_for_market_account_ (
   $c: AptosDataCache,
 ): [Stdlib.String.String, U64, U64, U64, U64] {
   let market_info_ref, markets_map_ref;
-  markets_map_ref = $c.borrow_global<Registry>(new SimpleStructTag(Registry), new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9")).market_id_to_info;
+  markets_map_ref = $c.borrow_global<Registry>(new SimpleStructTag(Registry), new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200")).market_id_to_info;
   if (!Tablist.contains_(markets_map_ref, $.copy(market_id), $c, [AtomicTypeTag.U64, new SimpleStructTag(MarketInfo)])) {
     throw $.abortCode($.copy(E_INVALID_MARKET_ID));
   }
@@ -503,7 +531,7 @@ export function get_recognized_market_info_ (
   $c: AptosDataCache,
 ): [U64, U64, U64, U64, U64] {
   let recognized_map_ref, recognized_market_info_ref;
-  recognized_map_ref = $c.borrow_global<RecognizedMarkets>(new SimpleStructTag(RecognizedMarkets), new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9")).map;
+  recognized_map_ref = $c.borrow_global<RecognizedMarkets>(new SimpleStructTag(RecognizedMarkets), new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200")).map;
   if (!Tablist.contains_(recognized_map_ref, $.copy(trading_pair), $c, [new SimpleStructTag(TradingPair), new SimpleStructTag(RecognizedMarketInfo)])) {
     throw $.abortCode($.copy(E_NO_RECOGNIZED_MARKET));
   }
@@ -565,7 +593,7 @@ export function has_recognized_market_ (
   $c: AptosDataCache,
 ): boolean {
   let recognized_map_ref;
-  recognized_map_ref = $c.borrow_global<RecognizedMarkets>(new SimpleStructTag(RecognizedMarkets), new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9")).map;
+  recognized_map_ref = $c.borrow_global<RecognizedMarkets>(new SimpleStructTag(RecognizedMarkets), new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200")).map;
   return Tablist.contains_(recognized_map_ref, $.copy(trading_pair), $c, [new SimpleStructTag(TradingPair), new SimpleStructTag(RecognizedMarketInfo)]);
 }
 
@@ -624,7 +652,7 @@ export function is_registered_custodian_id_ (
   $c: AptosDataCache,
 ): boolean {
   let temp$1, n_custodians;
-  n_custodians = $.copy($c.borrow_global<Registry>(new SimpleStructTag(Registry), new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9")).n_custodians);
+  n_custodians = $.copy($c.borrow_global<Registry>(new SimpleStructTag(Registry), new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200")).n_custodians);
   if (($.copy(custodian_id)).le($.copy(n_custodians))) {
     temp$1 = ($.copy(custodian_id)).neq($.copy(NO_CUSTODIAN));
   }
@@ -640,7 +668,7 @@ export function register_custodian_capability_ (
   $p: TypeTag[], /* <UtilityCoinType>*/
 ): CustodianCapability {
   let custodian_id, registry_ref_mut;
-  registry_ref_mut = $c.borrow_global_mut<Registry>(new SimpleStructTag(Registry), new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"));
+  registry_ref_mut = $c.borrow_global_mut<Registry>(new SimpleStructTag(Registry), new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"));
   custodian_id = ($.copy(registry_ref_mut.n_custodians)).add(u64("1"));
   registry_ref_mut.n_custodians = $.copy(custodian_id);
   Incentives.deposit_custodian_registration_utility_coins_(utility_coins, $c, [$p[0]]);
@@ -656,7 +684,7 @@ export function register_integrator_fee_store_ (
   $p: TypeTag[], /* <QuoteCoinType, UtilityCoinType>*/
 ): void {
   let market_info_ref, market_map_ref;
-  market_map_ref = $c.borrow_global<Registry>(new SimpleStructTag(Registry), new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9")).market_id_to_info;
+  market_map_ref = $c.borrow_global<Registry>(new SimpleStructTag(Registry), new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200")).market_id_to_info;
   if (!Tablist.contains_(market_map_ref, $.copy(market_id), $c, [AtomicTypeTag.U64, new SimpleStructTag(MarketInfo)])) {
     throw $.abortCode($.copy(E_INVALID_MARKET_ID));
   }
@@ -687,7 +715,7 @@ export function buildPayload_register_integrator_fee_store_base_tier (
    | Types.TransactionPayload_EntryFunctionPayload {
   const typeParamStrings = $p.map(t=>$.getTypeTagFullname(t));
   return $.buildPayload(
-    new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"),
+    new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"),
     "registry",
     "register_integrator_fee_store_base_tier",
     typeParamStrings,
@@ -720,7 +748,7 @@ export function buildPayload_register_integrator_fee_store_from_coinstore (
    | Types.TransactionPayload_EntryFunctionPayload {
   const typeParamStrings = $p.map(t=>$.getTypeTagFullname(t));
   return $.buildPayload(
-    new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"),
+    new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"),
     "registry",
     "register_integrator_fee_store_from_coinstore",
     typeParamStrings,
@@ -798,7 +826,7 @@ export function register_market_internal_ (
     throw $.abortCode($.copy(E_BASE_QUOTE_SAME));
   }
   market_info = new MarketInfo({ base_type: $.copy(base_type), base_name_generic: $.copy(base_name_generic), quote_type: $.copy(quote_type), lot_size: $.copy(lot_size), tick_size: $.copy(tick_size), min_size: $.copy(min_size), underwriter_id: $.copy(underwriter_id) }, new SimpleStructTag(MarketInfo));
-  registry_ref_mut = $c.borrow_global_mut<Registry>(new SimpleStructTag(Registry), new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"));
+  registry_ref_mut = $c.borrow_global_mut<Registry>(new SimpleStructTag(Registry), new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"));
   info_to_id_ref_mut = registry_ref_mut.market_info_to_id;
   [temp$1, temp$2] = [info_to_id_ref_mut, $.copy(market_info)];
   if (!!Stdlib.Table.contains_(temp$1, temp$2, $c, [new SimpleStructTag(MarketInfo), AtomicTypeTag.U64])) {
@@ -820,7 +848,7 @@ export function register_underwriter_capability_ (
   $p: TypeTag[], /* <UtilityCoinType>*/
 ): UnderwriterCapability {
   let registry_ref_mut, underwriter_id;
-  registry_ref_mut = $c.borrow_global_mut<Registry>(new SimpleStructTag(Registry), new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"));
+  registry_ref_mut = $c.borrow_global_mut<Registry>(new SimpleStructTag(Registry), new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"));
   underwriter_id = ($.copy(registry_ref_mut.n_underwriters)).add(u64("1"));
   registry_ref_mut.n_underwriters = $.copy(underwriter_id);
   Incentives.deposit_underwriter_registration_utility_coins_(utility_coins, $c, [$p[0]]);
@@ -833,13 +861,13 @@ export function remove_recognized_market_ (
   $c: AptosDataCache,
 ): void {
   let temp$1, temp$2, temp$3, temp$4, event_handle_ref_mut, market_info_ref, markets_map_ref, recognized_map_ref_mut, recognized_market_id_for_trading_pair, recognized_markets_ref_mut, trading_pair;
-  if (!((Stdlib.Signer.address_of_(account, $c)).hex() === (new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9")).hex())) {
+  if (!((Stdlib.Signer.address_of_(account, $c)).hex() === (new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200")).hex())) {
     throw $.abortCode($.copy(E_NOT_ECONIA));
   }
-  markets_map_ref = $c.borrow_global<Registry>(new SimpleStructTag(Registry), new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9")).market_id_to_info;
+  markets_map_ref = $c.borrow_global<Registry>(new SimpleStructTag(Registry), new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200")).market_id_to_info;
   market_info_ref = Tablist.borrow_(markets_map_ref, $.copy(market_id), $c, [AtomicTypeTag.U64, new SimpleStructTag(MarketInfo)]);
   trading_pair = new TradingPair({ base_type: $.copy(market_info_ref.base_type), base_name_generic: $.copy(market_info_ref.base_name_generic), quote_type: $.copy(market_info_ref.quote_type) }, new SimpleStructTag(TradingPair));
-  recognized_markets_ref_mut = $c.borrow_global_mut<RecognizedMarkets>(new SimpleStructTag(RecognizedMarkets), new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"));
+  recognized_markets_ref_mut = $c.borrow_global_mut<RecognizedMarkets>(new SimpleStructTag(RecognizedMarkets), new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"));
   recognized_map_ref_mut = recognized_markets_ref_mut.map;
   [temp$1, temp$2] = [recognized_map_ref_mut, $.copy(trading_pair)];
   if (!Tablist.contains_(temp$1, temp$2, $c, [new SimpleStructTag(TradingPair), new SimpleStructTag(RecognizedMarketInfo)])) {
@@ -864,7 +892,7 @@ export function buildPayload_remove_recognized_market (
    | Types.TransactionPayload_EntryFunctionPayload {
   const typeParamStrings = [] as string[];
   return $.buildPayload(
-    new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"),
+    new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"),
     "registry",
     "remove_recognized_market",
     typeParamStrings,
@@ -902,7 +930,7 @@ export function buildPayload_remove_recognized_markets (
    | Types.TransactionPayload_EntryFunctionPayload {
   const typeParamStrings = [] as string[];
   return $.buildPayload(
-    new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"),
+    new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"),
     "registry",
     "remove_recognized_markets",
     typeParamStrings,
@@ -920,15 +948,15 @@ export function set_recognized_market_ (
   $c: AptosDataCache,
 ): void {
   let temp$1, temp$2, base_name_generic, base_type, event_handle_ref_mut, lot_size, market_info_ref, markets_map_ref, min_size, new__, optional_market_info, quote_type, recognized_map_ref_mut, recognized_market_info, recognized_markets_ref_mut, tick_size, trading_pair, underwriter_id;
-  if (!((Stdlib.Signer.address_of_(account, $c)).hex() === (new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9")).hex())) {
+  if (!((Stdlib.Signer.address_of_(account, $c)).hex() === (new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200")).hex())) {
     throw $.abortCode($.copy(E_NOT_ECONIA));
   }
-  markets_map_ref = $c.borrow_global<Registry>(new SimpleStructTag(Registry), new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9")).market_id_to_info;
+  markets_map_ref = $c.borrow_global<Registry>(new SimpleStructTag(Registry), new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200")).market_id_to_info;
   market_info_ref = Tablist.borrow_(markets_map_ref, $.copy(market_id), $c, [AtomicTypeTag.U64, new SimpleStructTag(MarketInfo)]);
   [base_type, base_name_generic, quote_type, lot_size, tick_size, min_size, underwriter_id] = [$.copy(market_info_ref.base_type), $.copy(market_info_ref.base_name_generic), $.copy(market_info_ref.quote_type), $.copy(market_info_ref.lot_size), $.copy(market_info_ref.tick_size), $.copy(market_info_ref.min_size), $.copy(market_info_ref.underwriter_id)];
   trading_pair = new TradingPair({ base_type: $.copy(base_type), base_name_generic: $.copy(base_name_generic), quote_type: $.copy(quote_type) }, new SimpleStructTag(TradingPair));
   recognized_market_info = new RecognizedMarketInfo({ market_id: $.copy(market_id), lot_size: $.copy(lot_size), tick_size: $.copy(tick_size), min_size: $.copy(min_size), underwriter_id: $.copy(underwriter_id) }, new SimpleStructTag(RecognizedMarketInfo));
-  recognized_markets_ref_mut = $c.borrow_global_mut<RecognizedMarkets>(new SimpleStructTag(RecognizedMarkets), new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"));
+  recognized_markets_ref_mut = $c.borrow_global_mut<RecognizedMarkets>(new SimpleStructTag(RecognizedMarkets), new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"));
   recognized_map_ref_mut = recognized_markets_ref_mut.map;
   [temp$1, temp$2] = [recognized_map_ref_mut, $.copy(trading_pair)];
   new__ = !Tablist.contains_(temp$1, temp$2, $c, [new SimpleStructTag(TradingPair), new SimpleStructTag(RecognizedMarketInfo)]);
@@ -952,7 +980,7 @@ export function buildPayload_set_recognized_market (
    | Types.TransactionPayload_EntryFunctionPayload {
   const typeParamStrings = [] as string[];
   return $.buildPayload(
-    new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"),
+    new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"),
     "registry",
     "set_recognized_market",
     typeParamStrings,
@@ -990,7 +1018,7 @@ export function buildPayload_set_recognized_markets (
    | Types.TransactionPayload_EntryFunctionPayload {
   const typeParamStrings = [] as string[];
   return $.buildPayload(
-    new HexString("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9"),
+    new HexString("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200"),
     "registry",
     "set_recognized_markets",
     typeParamStrings,
@@ -1003,16 +1031,16 @@ export function buildPayload_set_recognized_markets (
 }
 
 export function loadParsers(repo: AptosParserRepo) {
-  repo.addParser("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9::registry::CustodianCapability", CustodianCapability.CustodianCapabilityParser);
-  repo.addParser("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9::registry::GenericAsset", GenericAsset.GenericAssetParser);
-  repo.addParser("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9::registry::MarketInfo", MarketInfo.MarketInfoParser);
-  repo.addParser("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9::registry::MarketRegistrationEvent", MarketRegistrationEvent.MarketRegistrationEventParser);
-  repo.addParser("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9::registry::RecognizedMarketEvent", RecognizedMarketEvent.RecognizedMarketEventParser);
-  repo.addParser("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9::registry::RecognizedMarketInfo", RecognizedMarketInfo.RecognizedMarketInfoParser);
-  repo.addParser("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9::registry::RecognizedMarkets", RecognizedMarkets.RecognizedMarketsParser);
-  repo.addParser("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9::registry::Registry", Registry.RegistryParser);
-  repo.addParser("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9::registry::TradingPair", TradingPair.TradingPairParser);
-  repo.addParser("0x2e51979739db25dc987bd24e1a968e45cca0e0daea7cae9121f68af93e8884c9::registry::UnderwriterCapability", UnderwriterCapability.UnderwriterCapabilityParser);
+  repo.addParser("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200::registry::CustodianCapability", CustodianCapability.CustodianCapabilityParser);
+  repo.addParser("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200::registry::GenericAsset", GenericAsset.GenericAssetParser);
+  repo.addParser("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200::registry::MarketInfo", MarketInfo.MarketInfoParser);
+  repo.addParser("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200::registry::MarketRegistrationEvent", MarketRegistrationEvent.MarketRegistrationEventParser);
+  repo.addParser("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200::registry::RecognizedMarketEvent", RecognizedMarketEvent.RecognizedMarketEventParser);
+  repo.addParser("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200::registry::RecognizedMarketInfo", RecognizedMarketInfo.RecognizedMarketInfoParser);
+  repo.addParser("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200::registry::RecognizedMarkets", RecognizedMarkets.RecognizedMarketsParser);
+  repo.addParser("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200::registry::Registry", Registry.RegistryParser);
+  repo.addParser("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200::registry::TradingPair", TradingPair.TradingPairParser);
+  repo.addParser("0x3c04538036604862c67261221a6167fa4ae5121d3649e29b330fa8c248b66200::registry::UnderwriterCapability", UnderwriterCapability.UnderwriterCapabilityParser);
 }
 export class App {
   constructor(
@@ -1176,6 +1204,22 @@ export class App {
   ) {
     const payload__ = buildPayload_set_recognized_markets(market_ids, _isJSON);
     return $.sendPayloadTx(this.client, _account, payload__, option);
+  }
+  app_get_MAX_CHARACTERS_GENERIC(
+  ) {
+    return get_MAX_CHARACTERS_GENERIC_( this.cache);
+  }
+  app_get_MIN_CHARACTERS_GENERIC(
+  ) {
+    return get_MIN_CHARACTERS_GENERIC_( this.cache);
+  }
+  app_get_NO_CUSTODIAN(
+  ) {
+    return get_NO_CUSTODIAN_( this.cache);
+  }
+  app_get_NO_UNDERWRITER(
+  ) {
+    return get_NO_UNDERWRITER_( this.cache);
   }
   app_get_custodian_id(
       custodian_capability_ref: CustodianCapability,
