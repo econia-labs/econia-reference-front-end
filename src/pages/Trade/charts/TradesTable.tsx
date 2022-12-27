@@ -17,10 +17,12 @@ export const TradesTable: React.FC<{ market: RegisteredMarket }> = ({
   const baseCoin = useCoinInfo(market.baseType);
   const quoteCoin = useCoinInfo(market.quoteType);
 
-  if (baseCoin.isLoading || quoteCoin.isLoading)
+  if (takerEvents.isLoading || baseCoin.isLoading || quoteCoin.isLoading)
+    // TODO: Better loading state
     return <DefaultWrapper>Loading...</DefaultWrapper>;
-  else if (!baseCoin.data || !quoteCoin.data) {
-    return <DefaultWrapper>No data for coins</DefaultWrapper>;
+  else if (!takerEvents.data || !baseCoin.data || !quoteCoin.data) {
+    // TODO: Better error state
+    return <DefaultWrapper>Error getting data</DefaultWrapper>;
   }
   return (
     <DefaultWrapper>
@@ -45,46 +47,48 @@ export const TradesTable: React.FC<{ market: RegisteredMarket }> = ({
           </tr>
         </thead>
         <tbody>
-          {takerEvents.data?.map(({ price, size, side, version }, i) => (
-            <tr key={`${i}`}>
-              <td
-                css={(theme) => css`
-                  text-align: left;
-                  color: ${side === BID
-                    ? theme.colors.green.primary
-                    : theme.colors.red.primary};
-                `}
-              >
-                {side === BID ? "BID" : "ASK"}
-              </td>
-              <td>
-                {toDecimalSize({
-                  size,
-                  lotSize: market.lotSize,
-                  baseCoinDecimals: baseCoin.data.decimals,
-                }).toFixed(3)}
-              </td>
-              <td>
-                {toDecimalPrice({
-                  price,
-                  lotSize: market.lotSize,
-                  tickSize: market.tickSize,
-                  baseCoinDecimals: baseCoin.data.decimals,
-                  quoteCoinDecimals: quoteCoin.data.decimals,
-                }).toFixed(2)}
-              </td>
-              <td>
-                <TxLink
-                  css={(theme) =>
-                    css`
-                      color: ${theme.colors.grey[600]};
-                    `
-                  }
-                  txId={version}
-                />
-              </td>
-            </tr>
-          ))}
+          {takerEvents.data
+            .sort(({ version: vA }, { version: vB }) => vB - vA)
+            .map(({ price, size, side, version }, i) => (
+              <tr key={i}>
+                <td
+                  css={(theme) => css`
+                    text-align: left;
+                    color: ${side === BID
+                      ? theme.colors.green.primary
+                      : theme.colors.red.primary};
+                  `}
+                >
+                  {side === BID ? "BID" : "ASK"}
+                </td>
+                <td>
+                  {toDecimalSize({
+                    size,
+                    lotSize: market.lotSize,
+                    baseCoinDecimals: baseCoin.data.decimals,
+                  }).toFixed(3)}
+                </td>
+                <td>
+                  {toDecimalPrice({
+                    price,
+                    lotSize: market.lotSize,
+                    tickSize: market.tickSize,
+                    baseCoinDecimals: baseCoin.data.decimals,
+                    quoteCoinDecimals: quoteCoin.data.decimals,
+                  }).toFixed(2)}
+                </td>
+                <td>
+                  <TxLink
+                    css={(theme) =>
+                      css`
+                        color: ${theme.colors.grey[600]};
+                      `
+                    }
+                    txId={version}
+                  />
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
     </DefaultWrapper>
