@@ -3,8 +3,10 @@ import { HexString } from "aptos";
 
 import { moduleAddress as econiaAddr } from "./sdk/src/econia/registry";
 
+// NOTE: This is the resource account of `@econia`. This must be changed if
+// @econia changes.
 export const ORDER_BOOKS_ADDR = new HexString(
-  "0xd62efe576ed25f7e98cc21102543ebd06949fbfeb3903a703cb013fe9f580baf",
+  "0x1f4e6edbb26c78bdf8dbd771a54445f221c47af340457bf5a1bff34cd9f419bb",
 );
 
 export const ECONIA_ADDR = econiaAddr;
