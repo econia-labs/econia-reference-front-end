@@ -16,6 +16,7 @@ import { DefaultWrapper } from "../../layout/DefaultWrapper";
 import { TradeActions } from "./TradeActions";
 import { TradeChart } from "./TradeChart";
 import { TradeHeader } from "./TradeHeader";
+import { TradeTable } from "./TradeTable";
 
 export const Trade: React.FC = () => {
   const registeredMarkets = useRegisteredMarkets();
@@ -88,6 +89,7 @@ export const Trade: React.FC = () => {
       >
         <FlexRow>
           <TradeActions market={market} />
+          <TradeTable market={market} />
           <TradeChart
             css={css`
               flex-grow: 1;

@@ -1,6 +1,6 @@
 import { u64 } from "@manahippo/move-to-ts";
 
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { useMemo } from "react";
 
 import { css } from "@emotion/react";
@@ -183,7 +183,7 @@ export const MarketOrderForm: React.FC<{ market: RegisteredMarket }> = ({
             MAX_POSSIBLE, // max_base
             quote, // min_quote
             MAX_POSSIBLE, // max_quote
-            direction === BUY ? HI_PRICE : ZERO_U64,
+            direction === BUY ? HI_PRICE : ZERO_U64, // limit_price
             market.baseType,
             market.quoteType,
           );
