@@ -188,14 +188,17 @@ const SwapInner: React.FC<{
           </p>
         </FlexRow>
       </div>
-      <div>
-        <Button
-          variant="secondary"
-          size="sm"
-          onClick={() => setDirection(!direction)}
-        >
-          ▼
-        </Button>
+      <div
+        css={(theme) => css`
+          padding: 4px 8px;
+          cursor: pointer;
+          :hover {
+            background-color: ${theme.colors.grey[600]};
+          }
+        `}
+        onClick={() => setDirection(!direction)}
+      >
+        ▼
       </div>
       <div
         css={css`
@@ -284,7 +287,11 @@ const SwapContainer = styled(FlexCol)`
   padding: 16px 32px;
   width: fit-content;
   align-items: center;
-  div {
+  label {
+    margin-top: 16px;
+    margin-bottom: 4px;
+  }
+  input {
     margin-bottom: 16px;
   }
 `;
