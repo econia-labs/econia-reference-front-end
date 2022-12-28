@@ -12,6 +12,7 @@ import { RadioGroup } from "../../../components/RadioGroup";
 import { useCoinInfo } from "../../../hooks/useCoinInfo";
 import { usePlaceLimitOrder } from "../../../hooks/usePlaceLimitOrder";
 import { RegisteredMarket } from "../../../hooks/useRegisteredMarkets";
+import { fromDecimalPrice, fromDecimalSize } from "../../../utils/units";
 
 const ASK = true;
 const BID = false;
@@ -85,23 +86,22 @@ export const LimitOrderForm: React.FC<{ market: RegisteredMarket }> = ({
             return;
           }
           const size = u64(
-            Math.floor(
-              (parseFloat(amountRef.current.value) *
-                10 ** baseCoinInfo.data.decimals) /
-                market.lotSize,
-            ),
+            fromDecimalSize({
+              size: parseFloat(amountRef.current.value),
+              lotSize: market.lotSize,
+              baseCoinDecimals: baseCoinInfo.data.decimals,
+            }),
           );
-          const pricePerUnit = u64(
-            Math.floor(
-              (parseFloat(priceRef.current.value) *
-                10 ** quoteCoinInfo.data.decimals) /
-                market.tickSize,
-            ),
+          const price = u64(
+            fromDecimalPrice({
+              price: parseFloat(priceRef.current.value),
+              lotSize: market.lotSize,
+              tickSize: market.tickSize,
+              baseCoinDecimals: baseCoinInfo.data.decimals,
+              quoteCoinDecimals: quoteCoinInfo.data.decimals,
+            }),
           );
-          // AKA pricePerLot
-          const price = pricePerUnit
-            .mul(u64(market.lotSize))
-            .div(u64(10 ** baseCoinInfo.data.decimals));
+
           let depositAmount;
           if (side === BID) {
             depositAmount = size.mul(price).mul(u64(market.tickSize));

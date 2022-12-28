@@ -26,6 +26,7 @@ import { DefaultWrapper } from "../../layout/DefaultWrapper";
 import { calculate_max_quote_match_ } from "../../sdk/src/econia/incentives";
 import { MAX_POSSIBLE } from "../../sdk/src/econia/market";
 import { HI_PRICE } from "../../sdk/src/econia/user";
+import { fromDecimalPrice } from "../../utils/units";
 
 export const Swap: React.FC = () => {
   const registeredMarkets = useRegisteredMarkets();
@@ -115,6 +116,13 @@ const SwapInner: React.FC<{
       }
       const res = marketPrice.data.getExecutionPrice(size, direction);
       ({ sizeFillable, executionPrice } = res);
+    }
+    if (sizeFillable === 0) {
+      return {
+        outputAmount: "",
+        executionPrice,
+        disabledReason: "Input too small",
+      };
     }
     const outputAmount = sizeFillable.toFixed(4);
     return {
@@ -232,6 +240,7 @@ const SwapInner: React.FC<{
           width: 100%;
         `}
         onClick={async () => {
+          if (!executionPrice) return;
           const sizeDecimals =
             direction === BUY
               ? parseFloat(outputAmount)
@@ -242,16 +251,15 @@ const SwapInner: React.FC<{
                 market.lotSize,
             ),
           );
-          const pricePerUnit = u64(
-            Math.floor(
-              (executionPrice! * 10 ** quoteCoinInfo.data.decimals) /
-                market.tickSize,
-            ),
+          const price = u64(
+            fromDecimalPrice({
+              price: executionPrice,
+              lotSize: market.lotSize,
+              tickSize: market.tickSize,
+              baseCoinDecimals: baseCoinInfo.data.decimals,
+              quoteCoinDecimals: quoteCoinInfo.data.decimals,
+            }),
           );
-          // AKA pricePerLot
-          const price = pricePerUnit
-            .mul(u64(market.lotSize))
-            .div(u64(10 ** baseCoinInfo.data.decimals));
           // AKA total number of ticks transacted
           const quote = calculate_max_quote_match_(
             direction,
@@ -267,7 +275,7 @@ const SwapInner: React.FC<{
             MAX_POSSIBLE, // max_base
             quote, // min_quote
             MAX_POSSIBLE, // max_quote
-            direction === BUY ? HI_PRICE : ZERO_U64, // limit_price
+            price,
             market.baseType,
             market.quoteType,
           );
