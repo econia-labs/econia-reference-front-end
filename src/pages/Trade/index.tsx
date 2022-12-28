@@ -1,4 +1,4 @@
-import { parseTypeTagOrThrow } from "@manahippo/move-to-ts";
+import { parseTypeTagOrThrow, u64 } from "@manahippo/move-to-ts";
 
 import React, { useEffect, useState } from "react";
 
@@ -7,6 +7,7 @@ import { css } from "@emotion/react";
 import { Button } from "../../components/Button";
 import { FlexCol } from "../../components/FlexCol";
 import { FlexRow } from "../../components/FlexRow";
+import { useCancelAllOrders } from "../../hooks/useCancelAllOrders";
 import { useRegisterMarket } from "../../hooks/useRegisterMarket";
 import {
   RegisteredMarket,
@@ -27,6 +28,7 @@ export const Trade: React.FC = () => {
       setMarket(registeredMarkets.data[0]);
     }
   }, [registeredMarkets.data]);
+  const cancelAllOrders = useCancelAllOrders();
 
   if (registeredMarkets.isLoading || registeredMarkets.data === undefined) {
     return <DefaultWrapper>Loading...</DefaultWrapper>;
@@ -73,29 +75,53 @@ export const Trade: React.FC = () => {
     <FlexCol
       css={css`
         height: 100%;
+        align-items: center;
+        justify-content: space-between;
       `}
     >
-      <TradeHeader
-        market={market}
-        setSelectedMarket={setMarket}
-        markets={registeredMarkets.data}
-      />
-      <DefaultWrapper
+      <div
         css={css`
-          flex-grow: 1;
+          width: 100%;
         `}
       >
-        <FlexRow>
-          <TradeActions market={market} />
-          <TradeTable market={market} />
-          <TradeChart
-            css={css`
-              flex-grow: 1;
-            `}
-            market={market}
-          />
-        </FlexRow>
-      </DefaultWrapper>
+        <TradeHeader
+          market={market}
+          setSelectedMarket={setMarket}
+          markets={registeredMarkets.data}
+        />
+        <DefaultWrapper
+          css={css`
+            flex-grow: 1;
+          `}
+        >
+          <FlexRow>
+            <TradeActions market={market} />
+            <TradeTable market={market} />
+            <TradeChart
+              css={css`
+                flex-grow: 1;
+              `}
+              market={market}
+            />
+          </FlexRow>
+        </DefaultWrapper>
+      </div>
+      <span
+        css={(theme) => css`
+          font-size: 14px;
+          padding: 8px 8px;
+          cursor: pointer;
+          color: ${theme.colors.red.primary};
+          :hover {
+            background-color: ${theme.colors.grey[600]};
+          }
+        `}
+        onClick={async () => {
+          await cancelAllOrders(u64(market.marketId));
+        }}
+      >
+        Cancel All Orders
+      </span>
     </FlexCol>
   );
 };
