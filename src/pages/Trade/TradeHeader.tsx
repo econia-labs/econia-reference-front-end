@@ -98,14 +98,6 @@ export const TradeHeader: React.FC<{
         `}
       >
         <MarketWrapper>
-          {/* <img
-              css={css`
-                margin-right: 8px;
-                width: 32px;
-                height: 32px;
-              `}
-              src={marketCoin.logo_url}
-            /> */}
           <FlexRow
             css={css`
               justify-content: space-between;
@@ -159,17 +151,19 @@ export const TradeHeader: React.FC<{
 
 const HeaderItemWrapper = styled.div`
   border-right: 1px solid ${({ theme }) => theme.colors.grey[700]};
-  padding: 0 16px;
+  margin: 0 16px;
 `;
 
 const MarketWrapper = styled(HeaderItemWrapper)`
   flex-grow: 1;
   display: flex;
+  margin-left: 0px;
 `;
 
 const MarketNameWrapper = styled(HeaderItemWrapper)`
   display: flex;
   flex-direction: column;
+  margin-left: 0px;
 `;
 
 const PriceWrapper = styled(HeaderItemWrapper)`
