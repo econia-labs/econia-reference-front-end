@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { useQuery } from "react-query";
 
 import { BUY } from "../constants";
-import { toDecimalPrice, toDecimalSize } from "../utils/units";
+import { toDecimalPrice, toDecimalQuote, toDecimalSize } from "../utils/units";
 import { useCoinInfo } from "./useCoinInfo";
 import { useOrderBook } from "./useOrderBook";
 import { RegisteredMarket } from "./useRegisteredMarkets";
@@ -51,6 +51,15 @@ export const useMarketPrice = (market: RegisteredMarket) => {
           quoteCoinDecimals: quoteCoin.data!.decimals,
         });
       }
+      const maxBuyQuote =
+        orderBook.data?.asks.reduce((acc, { size, price }) => {
+          return acc + size.mul(price).toJsNumber();
+        }, 0) ?? 0;
+      const maxSellSize =
+        orderBook.data?.bids.reduce(
+          (acc, { size }) => acc + size.toJsNumber(),
+          0,
+        ) ?? 0;
 
       const getExecutionPrice = (
         size: number,
@@ -93,7 +102,65 @@ export const useMarketPrice = (market: RegisteredMarket) => {
         };
       };
 
-      return { bestAskPrice, bestBidPrice, getExecutionPrice };
+      const getExecutionPriceQuote = (
+        quote: number,
+        direction: boolean,
+      ): {
+        quoteFillable: number;
+        sizeFillable: number;
+        executionPrice: number;
+      } => {
+        const orders =
+          direction === BUY
+            ? orderBook
+                .data!.asks.slice()
+                .sort((a, b) => a.price.sub(b.price).toJsNumber()) // asc
+            : orderBook
+                .data!.bids.slice()
+                .sort((a, b) => b.price.sub(a.price).toJsNumber()); // desc
+        let remainingQuote = quote;
+        let totalSize = 0;
+        for (const { price, size } of orders) {
+          const quoteNum = size.mul(price).toJsNumber();
+          if (remainingQuote >= quoteNum) {
+            totalSize += size.toJsNumber();
+            remainingQuote -= quoteNum;
+          } else {
+            // NOTE: Floor division used here to ensure integer size
+            totalSize += Math.floor(remainingQuote / price.toJsNumber());
+            remainingQuote = remainingQuote % price.toJsNumber();
+            break;
+          }
+        }
+        return {
+          quoteFillable: toDecimalQuote({
+            ticks: quote - remainingQuote,
+            tickSize: market.tickSize,
+            quoteCoinDecimals: quoteCoin.data!.decimals,
+          }),
+          sizeFillable: toDecimalSize({
+            size: totalSize,
+            lotSize: market.lotSize,
+            baseCoinDecimals: baseCoin.data!.decimals,
+          }),
+          executionPrice: toDecimalPrice({
+            price: (quote - remainingQuote) / totalSize,
+            lotSize: market.lotSize,
+            tickSize: market.tickSize,
+            baseCoinDecimals: baseCoin.data!.decimals,
+            quoteCoinDecimals: quoteCoin.data!.decimals,
+          }),
+        };
+      };
+
+      return {
+        bestAskPrice,
+        bestBidPrice,
+        maxBuyQuote,
+        maxSellSize,
+        getExecutionPrice,
+        getExecutionPriceQuote,
+      };
     },
     enabled: !!orderBook.data && !!baseCoin.data && !!quoteCoin.data,
   });

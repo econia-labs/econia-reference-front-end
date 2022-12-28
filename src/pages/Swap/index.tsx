@@ -1,4 +1,7 @@
-import React, { FormEvent, useCallback, useState } from "react";
+import { u64 } from "@manahippo/move-to-ts";
+import { exec } from "child_process";
+
+import React, { FormEvent, useCallback, useMemo, useState } from "react";
 
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
@@ -9,13 +12,20 @@ import { FlexRow } from "../../components/FlexRow";
 import { Input } from "../../components/Input";
 import { Label } from "../../components/Label";
 import { MarketDropdown } from "../../components/MarketDropdown";
+import { BUY, ZERO_U64 } from "../../constants";
 import { useCoinInfo } from "../../hooks/useCoinInfo";
+import { useIncentiveParams } from "../../hooks/useIncentiveParams";
+import { useMarketPrice } from "../../hooks/useMarketPrice";
+import { usePlaceSwap } from "../../hooks/usePlaceSwap";
 import {
   RegisteredMarket,
   useRegisteredMarkets,
 } from "../../hooks/useRegisteredMarkets";
 import { DefaultContainer } from "../../layout/DefaultContainer";
 import { DefaultWrapper } from "../../layout/DefaultWrapper";
+import { calculate_max_quote_match_ } from "../../sdk/src/econia/incentives";
+import { MAX_POSSIBLE } from "../../sdk/src/econia/market";
+import { HI_PRICE } from "../../sdk/src/econia/user";
 
 export const Swap: React.FC = () => {
   const registeredMarkets = useRegisteredMarkets();
@@ -52,25 +62,79 @@ const SwapInner: React.FC<{
   markets: RegisteredMarket[];
 }> = ({ markets }) => {
   const [inputAmount, setInputAmount] = useState("");
-  const [outputAmount, setOutputAmount] = useState("");
-  const [selectedMarket, setSelectedMarket] = useState<RegisteredMarket>(
-    markets[0],
-  );
-  const [reverse, setReverse] = useState(false);
-  const baseCoin = useCoinInfo(selectedMarket.baseType);
-  const quoteCoin = useCoinInfo(selectedMarket.quoteType);
+  const [market, setMarket] = useState<RegisteredMarket>(markets[0]);
+  const [direction, setDirection] = useState(BUY);
+  const baseCoinInfo = useCoinInfo(market.baseType);
+  const quoteCoinInfo = useCoinInfo(market.quoteType);
+  const marketPrice = useMarketPrice(market);
+  const incentiveParams = useIncentiveParams();
+  const placeSwap = usePlaceSwap();
   const onInputChange = useCallback(
     (e: FormEvent<HTMLInputElement>) => {
       setInputAmount(e.currentTarget.value);
-      setOutputAmount(e.currentTarget.value);
     },
     [setInputAmount],
   );
+  const { outputAmount, executionPrice, disabledReason } = useMemo(() => {
+    if (inputAmount === "")
+      return {
+        outputAmount: "",
+        executionPrice: undefined,
+        disabledReason: "Enter an amount",
+      };
+    if (!marketPrice.data || !baseCoinInfo.data || !quoteCoinInfo.data)
+      return { outputAmount: "", disabledReason: "Loading..." };
 
-  if (baseCoin.isLoading || quoteCoin.isLoading) {
+    let sizeFillable, executionPrice;
+    if (direction === BUY) {
+      const quote = Math.floor(
+        (parseFloat(inputAmount) * 10 ** quoteCoinInfo.data.decimals) /
+          market.tickSize,
+      );
+      if (quote > marketPrice.data.maxBuyQuote) {
+        return {
+          outputAmount: "",
+          executionPrice,
+          disabledReason: "Input exceeds liquidity",
+        };
+      }
+      const res = marketPrice.data.getExecutionPriceQuote(quote, direction);
+      ({ sizeFillable, executionPrice } = res);
+      console.log(sizeFillable, executionPrice);
+    } else {
+      const size = Math.floor(
+        (parseFloat(inputAmount) * 10 ** baseCoinInfo.data.decimals) /
+          market.lotSize,
+      );
+      if (size > marketPrice.data.maxSellSize) {
+        return {
+          outputAmount: "",
+          executionPrice,
+          disabledReason: "Input exceeds liquidity",
+        };
+      }
+      const res = marketPrice.data.getExecutionPrice(size, direction);
+      ({ sizeFillable, executionPrice } = res);
+    }
+    const outputAmount = sizeFillable.toFixed(4);
+    return {
+      outputAmount,
+      executionPrice,
+      disabledReason: false,
+    };
+  }, [inputAmount, marketPrice.data, baseCoinInfo.data, direction]);
+
+  if (
+    baseCoinInfo.isLoading ||
+    quoteCoinInfo.isLoading ||
+    marketPrice.isLoading ||
+    incentiveParams.isLoading ||
+    !marketPrice.data ||
+    !incentiveParams.data
+  ) {
     // TODO: Better loading state
     return <DefaultWrapper>Loading...</DefaultWrapper>;
-  } else if (baseCoin.error || quoteCoin.error) {
+  } else if (!baseCoinInfo.data || !quoteCoinInfo.data) {
     // TODO: Better error state
     return <DefaultWrapper>Error loading coin info</DefaultWrapper>;
   }
@@ -92,8 +156,8 @@ const SwapInner: React.FC<{
         </Label>
         <MarketDropdown
           markets={markets}
-          setSelectedMarket={setSelectedMarket}
-          dropdownLabel={`${baseCoin.data?.symbol} / ${quoteCoin.data?.symbol}`}
+          setSelectedMarket={setMarket}
+          dropdownLabel={`${baseCoinInfo.data?.symbol} / ${quoteCoinInfo.data?.symbol}`}
         />
       </div>
       <div
@@ -117,14 +181,18 @@ const SwapInner: React.FC<{
             onChange={onInputChange}
             type="number"
           />
-          <p>{reverse ? quoteCoin.data?.symbol : baseCoin.data?.symbol}</p>
+          <p>
+            {direction === BUY
+              ? quoteCoinInfo.data?.symbol
+              : baseCoinInfo.data?.symbol}
+          </p>
         </FlexRow>
       </div>
       <div>
         <Button
           variant="secondary"
           size="sm"
-          onClick={() => setReverse(!reverse)}
+          onClick={() => setDirection(!direction)}
         >
           ▼
         </Button>
@@ -149,17 +217,63 @@ const SwapInner: React.FC<{
             type="number"
             disabled
           />
-          <p>{reverse ? baseCoin.data?.symbol : quoteCoin.data?.symbol}</p>
+          <p>
+            {direction === BUY
+              ? baseCoinInfo.data?.symbol
+              : quoteCoinInfo.data?.symbol}
+          </p>
         </FlexRow>
       </div>
       <Button
         css={css`
           width: 100%;
         `}
+        onClick={async () => {
+          const sizeDecimals =
+            direction === BUY
+              ? parseFloat(outputAmount)
+              : parseFloat(inputAmount);
+          const size = u64(
+            Math.floor(
+              (sizeDecimals * 10 ** baseCoinInfo.data.decimals) /
+                market.lotSize,
+            ),
+          );
+          const pricePerUnit = u64(
+            Math.floor(
+              (executionPrice! * 10 ** quoteCoinInfo.data.decimals) /
+                market.tickSize,
+            ),
+          );
+          // AKA pricePerLot
+          const price = pricePerUnit
+            .mul(u64(market.lotSize))
+            .div(u64(10 ** baseCoinInfo.data.decimals));
+          // AKA total number of ticks transacted
+          const quote = calculate_max_quote_match_(
+            direction,
+            u64(incentiveParams.data.takerFeeDivisor),
+            size.mul(price),
+            undefined!,
+          );
+
+          await placeSwap(
+            u64(market.marketId),
+            direction,
+            size, // min_base
+            MAX_POSSIBLE, // max_base
+            quote, // min_quote
+            MAX_POSSIBLE, // max_quote
+            direction === BUY ? HI_PRICE : ZERO_U64, // limit_price
+            market.baseType,
+            market.quoteType,
+          );
+        }}
         variant="primary"
         size="sm"
+        disabled={!!disabledReason}
       >
-        Swap
+        {disabledReason ? disabledReason : "SWAP"}
       </Button>
     </>
   );
