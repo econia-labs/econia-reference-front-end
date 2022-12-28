@@ -1,11 +1,13 @@
 import React from "react";
 
-export const EconiaLogo: React.FC<{ width: number; height: number }> = ({
-  width,
-  height,
-}) => {
+export const EconiaLogo: React.FC<{
+  className?: string;
+  width: number;
+  height: number;
+}> = ({ className, width, height }) => {
   return (
     <svg
+      className={className}
       xmlns="http://www.w3.org/2000/svg"
       width={width}
       height={height}

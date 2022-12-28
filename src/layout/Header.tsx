@@ -11,6 +11,7 @@ import { EconiaLogo } from "../assets/EconiaLogo";
 import { Button } from "../components/Button";
 import { DropdownMenu } from "../components/DropdownMenu";
 import { ExternalLink } from "../components/ExternalLink";
+import { FlexRow } from "../components/FlexRow";
 import { useAptos } from "../hooks/useAptos";
 import { useOnClickawayRef } from "../hooks/useOnClickawayRef";
 import { shortenAddress } from "../utils/address";
@@ -50,7 +51,14 @@ export const Header: React.FC = () => {
           margin: 8px 0;
         `}
       >
-        <EconiaLogo width={32} height={32} />
+        <div
+          css={css`
+            justify-content: left;
+            flex: 1;
+          `}
+        >
+          <EconiaLogo width={32} height={32} />
+        </div>
         <NavContainer>
           {HEADER_ITEMS.map(({ label, pathname }, i) => (
             <Link
@@ -69,52 +77,61 @@ export const Header: React.FC = () => {
             Docs
           </ExternalLink>
         </NavContainer>
-        {connected ? (
-          <div ref={disconnectMenuClickawayRef}>
+        <FlexRow
+          css={css`
+            flex: 1;
+            justify-content: end;
+          `}
+        >
+          {connected ? (
+            <div ref={disconnectMenuClickawayRef}>
+              <Button
+                css={css`
+                  width: 200px;
+                `}
+                size="sm"
+                variant="secondary"
+                onClick={() => setShowDisconnectMenu(!showDisconnectMenu)}
+              >
+                {account?.address &&
+                  shortenAddress(HexString.ensure(account.address))}
+              </Button>
+              <DropdownMenu show={showDisconnectMenu}>
+                <div
+                  css={css`
+                    text-align: center;
+                    padding: 16px 0;
+                  `}
+                  onClick={() =>
+                    disconnect().then(() => setShowDisconnectMenu(false))
+                  }
+                >
+                  Disconnect
+                </div>
+              </DropdownMenu>
+            </div>
+          ) : (
             <Button
               css={css`
                 width: 200px;
               `}
               size="sm"
-              variant="secondary"
-              onClick={() => setShowDisconnectMenu(!showDisconnectMenu)}
+              variant="primary"
+              onClick={() => connect()}
             >
-              {account?.address &&
-                shortenAddress(HexString.ensure(account.address))}
+              Connect Wallet
             </Button>
-            <DropdownMenu show={showDisconnectMenu}>
-              <div
-                css={css`
-                  text-align: center;
-                  padding: 16px 0;
-                `}
-                onClick={() =>
-                  disconnect().then(() => setShowDisconnectMenu(false))
-                }
-              >
-                Disconnect
-              </div>
-            </DropdownMenu>
-          </div>
-        ) : (
-          <Button
-            css={css`
-              width: 200px;
-            `}
-            size="sm"
-            variant="primary"
-            onClick={() => connect()}
-          >
-            Connect Wallet
-          </Button>
-        )}
+          )}
+        </FlexRow>
       </DefaultContainer>
     </DefaultWrapper>
   );
 };
 
 const NavContainer = styled.div`
+  flex: 1;
   display: flex;
+  justify-content: center;
   gap: 12px;
 `;
 
