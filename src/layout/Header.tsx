@@ -132,7 +132,7 @@ const NavContainer = styled.div`
   flex: 1;
   display: flex;
   justify-content: center;
-  gap: 12px;
+  gap: 24px;
 `;
 
 const ActiveNavLinkStyle = (theme: Theme) => css`
