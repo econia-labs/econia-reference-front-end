@@ -10,7 +10,8 @@ export const TxButton: React.FC<
     size: "sm" | "md" | "lg";
     variant: "primary" | "secondary";
   }
-> = ({ children, ...rest }) => {
+> = ({ children, onClick, disabled, ...rest }) => {
+  const [loading, setLoading] = React.useState(false);
   const { account, connect } = useAptos();
   if (account === null || account?.publicKey === null) {
     return (
@@ -25,5 +26,22 @@ export const TxButton: React.FC<
       </Button>
     );
   }
-  return <Button {...rest}>{children}</Button>;
+  return (
+    <Button
+      {...rest}
+      onClick={async (e) => {
+        if (onClick) {
+          try {
+            setLoading(true);
+            await onClick(e);
+          } finally {
+            setLoading(false);
+          }
+        }
+      }}
+      disabled={disabled || loading}
+    >
+      {loading ? "Loading..." : children}
+    </Button>
+  );
 };
