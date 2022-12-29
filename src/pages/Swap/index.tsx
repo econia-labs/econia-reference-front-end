@@ -329,13 +329,16 @@ const SwapInner: React.FC<{
               quoteCoinDecimals: quoteCoinInfo.data.decimals,
             }).toFixed(0),
           );
-          // AKA total number of ticks transacted
+          // Give an extra 0.1% to account for rounding errors.
+          // TODO: Find a better way to handle this.
           const quote = calculate_max_quote_match_(
             direction,
             u64(incentiveParams.data.takerFeeDivisor.toNumber()),
             size.mul(price),
             undefined!,
-          );
+          )
+            .mul(u64(100_1))
+            .div(u64(100_0));
 
           await placeSwap(
             u64(market.marketId),
