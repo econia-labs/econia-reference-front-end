@@ -5,8 +5,8 @@ import Modal from "react-modal";
 
 import { css, useTheme } from "@emotion/react";
 
-import { Button } from "./Button";
-import { FlexCol } from "./FlexCol";
+import { Button } from "../Button";
+import { FlexCol } from "../FlexCol";
 
 export const ConnectWalletModal: React.FC<{
   showModal: boolean;

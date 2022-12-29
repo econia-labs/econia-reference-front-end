@@ -13,8 +13,8 @@ import { toast } from "react-toastify";
 
 import { css } from "@emotion/react";
 
-import { ConnectWalletModal } from "../components/ConnectWalletModal";
 import { TxLink } from "../components/TxLink";
+import { ConnectWalletModal } from "../components/modals/ConnectWalletModal";
 
 interface IAptosContext {
   connect: () => void;
@@ -39,6 +39,8 @@ export const AptosContextProvider: React.FC<PropsWithChildren> = (props) => {
 
   const sendTx = useCallback(
     async (payload: TransactionPayload_EntryFunctionPayload) => {
+      // TODO: Add in "waiting for signature" at this step and "sending
+      // transaction" after `signAndSubmitTransaction`
       const initialToast = toast.info("Sending transaction...");
       try {
         const tx = await signAndSubmitTransaction(payload);
@@ -58,9 +60,13 @@ export const AptosContextProvider: React.FC<PropsWithChildren> = (props) => {
           </span>,
         );
       } catch (e) {
-        console.error(e);
         toast.dismiss(initialToast);
-        toast.error("Transaction failed. See console for details.");
+        if (e.message === "The user rejected the request") {
+          toast.info("Transaction cancelled.");
+        } else {
+          console.error(e);
+          toast.error("Transaction failed. See console for details.");
+        }
       }
       queryClient.invalidateQueries();
     },

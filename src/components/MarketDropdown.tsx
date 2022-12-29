@@ -6,10 +6,12 @@ import { useState } from "react";
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 
+import { useAptos } from "../hooks/useAptos";
 import { useOnClickawayRef } from "../hooks/useOnClickawayRef";
 import { useRegisterMarket } from "../hooks/useRegisterMarket";
 import { RegisteredMarket } from "../hooks/useRegisteredMarkets";
 import { DropdownMenu } from "./DropdownMenu";
+import { NewMarketModal } from "./modals/NewMarketModal";
 
 export const MarketDropdown: React.FC<{
   markets: RegisteredMarket[];
@@ -22,14 +24,19 @@ export const MarketDropdown: React.FC<{
   dropdownLabel,
   allowMarketRegistration,
 }) => {
+  const { account } = useAptos();
   const [showMarketMenu, setShowMarketMenu] = useState(false);
   const marketMenuClickawayRef = useOnClickawayRef(() =>
     setShowMarketMenu(false),
   );
-  const registerMarket = useRegisterMarket();
+  const [showNewMarketModal, setShowNewMarketModal] = useState(false);
 
   return (
     <div ref={marketMenuClickawayRef}>
+      <NewMarketModal
+        showModal={showNewMarketModal}
+        closeModal={() => setShowNewMarketModal(false)}
+      />
       <MarketSelector onClick={() => setShowMarketMenu(!showMarketMenu)}>
         {dropdownLabel}
       </MarketSelector>
@@ -50,22 +57,10 @@ export const MarketDropdown: React.FC<{
             {market.baseType.name}-{market.quoteType.name}
           </MarketMenuItem>
         ))}
-        {allowMarketRegistration && (
+        {account !== null && allowMarketRegistration && (
           <MarketMenuItem
-            onClick={async () => {
-              const baseCoin = prompt("Enter base coin address");
-              const quoteCoin = prompt("Enter quote coin address");
-              if (baseCoin === null) {
-                alert("Base coin address is required");
-                return;
-              } else if (quoteCoin === null) {
-                alert("Quote coin address is required");
-                return;
-              }
-              await registerMarket(
-                parseTypeTagOrThrow(baseCoin),
-                parseTypeTagOrThrow(quoteCoin),
-              ).catch((e) => console.error("Error registering market", e));
+            onClick={() => {
+              setShowNewMarketModal(true);
               setShowMarketMenu(false);
             }}
           >
