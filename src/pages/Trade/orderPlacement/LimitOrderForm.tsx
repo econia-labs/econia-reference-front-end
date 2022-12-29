@@ -22,10 +22,10 @@ export const LimitOrderForm: React.FC<{ market: RegisteredMarket }> = ({
   market,
 }) => {
   const [side, setSide] = useState(BID);
+  const [amountStr, setAmountStr] = useState("");
+  const [priceStr, setPriceStr] = useState("");
   const baseCoinInfo = useCoinInfo(market.baseType);
   const quoteCoinInfo = useCoinInfo(market.quoteType);
-  const amountRef = useRef<HTMLInputElement>(null);
-  const priceRef = useRef<HTMLInputElement>(null);
   const placeLimitOrder = usePlaceLimitOrder();
 
   if (baseCoinInfo.isLoading || quoteCoinInfo.isLoading) {
@@ -35,6 +35,12 @@ export const LimitOrderForm: React.FC<{ market: RegisteredMarket }> = ({
     // TODO: Better error state.
     return <div>Failed to load coin info.</div>;
   }
+  const disabledReason =
+    amountStr === ""
+      ? "Enter an amount"
+      : priceStr === ""
+      ? "Enter a price"
+      : undefined;
 
   return (
     <FlexCol
@@ -61,7 +67,7 @@ export const LimitOrderForm: React.FC<{ market: RegisteredMarket }> = ({
           css={css`
             width: 218px;
           `}
-          ref={amountRef}
+          onChange={(e) => setAmountStr(e.target.value)}
           placeholder="0.0000"
           type="number"
         />
@@ -72,30 +78,30 @@ export const LimitOrderForm: React.FC<{ market: RegisteredMarket }> = ({
           css={css`
             width: 218px;
           `}
-          ref={priceRef}
+          onChange={(e) => setPriceStr(e.target.value)}
           placeholder="0.0000"
           type="number"
         />
       </div>
       <TxButton
         onClick={async () => {
-          if (!amountRef.current) {
+          if (amountStr === "") {
             alert("Amount is required");
             return;
-          } else if (!priceRef.current) {
+          } else if (priceStr === "") {
             alert("Price is required");
             return;
           }
           const size = u64(
             fromDecimalSize({
-              size: new BigNumber(amountRef.current.value),
+              size: new BigNumber(amountStr),
               lotSize: market.lotSize,
               baseCoinDecimals: baseCoinInfo.data.decimals,
             }).toFixed(0),
           );
           const price = u64(
             fromDecimalPrice({
-              price: new BigNumber(priceRef.current.value),
+              price: new BigNumber(priceStr),
               lotSize: market.lotSize,
               tickSize: market.tickSize,
               baseCoinDecimals: baseCoinInfo.data.decimals,
@@ -123,11 +129,13 @@ export const LimitOrderForm: React.FC<{ market: RegisteredMarket }> = ({
         }}
         css={css`
           margin-top: 32px;
+          width: 200px;
         `}
         variant="primary"
         size="sm"
+        disabled={!!disabledReason}
       >
-        Place Order
+        {disabledReason ? disabledReason : "Place Order"}
       </TxButton>
     </FlexCol>
   );

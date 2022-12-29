@@ -60,6 +60,8 @@ export const MarketOrderForm: React.FC<{ market: RegisteredMarket }> = ({
     return <div>Failed to load coin info.</div>;
   }
 
+  const disabledReason = amountStr === "" ? "Enter an amount" : undefined;
+
   return (
     <FlexCol
       css={css`
@@ -145,7 +147,6 @@ export const MarketOrderForm: React.FC<{ market: RegisteredMarket }> = ({
         </FlexRow>
       </div>
       <TxButton
-        disabled={!expectedPrice}
         onClick={async () => {
           const size = u64(
             fromDecimalSize({
@@ -194,11 +195,13 @@ export const MarketOrderForm: React.FC<{ market: RegisteredMarket }> = ({
         }}
         css={css`
           margin-top: 32px;
+          width: 200px;
         `}
         variant="primary"
         size="sm"
+        disabled={!expectedPrice || !!disabledReason}
       >
-        Place Order
+        {disabledReason ? disabledReason : "Place Order"}
       </TxButton>
     </FlexCol>
   );
