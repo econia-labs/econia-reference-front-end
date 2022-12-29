@@ -4,7 +4,7 @@ import React, { useRef, useState } from "react";
 
 import { css } from "@emotion/react";
 
-import { Button } from "../../../components/Button";
+import { TxButton } from "../../../components/TxButton";
 import { FlexCol } from "../../../components/FlexCol";
 import { Input } from "../../../components/Input";
 import { Label } from "../../../components/Label";
@@ -76,7 +76,7 @@ export const LimitOrderForm: React.FC<{ market: RegisteredMarket }> = ({
           type="number"
         />
       </div>
-      <Button
+      <TxButton
         onClick={async () => {
           if (!amountRef.current) {
             alert("Amount is required");
@@ -125,7 +125,7 @@ export const LimitOrderForm: React.FC<{ market: RegisteredMarket }> = ({
         size="sm"
       >
         Place Order
-      </Button>
+      </TxButton>
     </FlexCol>
   );
 };

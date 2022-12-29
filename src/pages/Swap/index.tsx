@@ -1,18 +1,17 @@
 import { u64 } from "@manahippo/move-to-ts";
-import { exec } from "child_process";
 
 import React, { FormEvent, useCallback, useMemo, useState } from "react";
 
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 
-import { Button } from "../../components/Button";
 import { FlexCol } from "../../components/FlexCol";
 import { FlexRow } from "../../components/FlexRow";
 import { Input } from "../../components/Input";
 import { Label } from "../../components/Label";
 import { MarketDropdown } from "../../components/MarketDropdown";
-import { BUY, ZERO_U64 } from "../../constants";
+import { TxButton } from "../../components/TxButton";
+import { BUY } from "../../constants";
 import { useCoinInfo } from "../../hooks/useCoinInfo";
 import { useIncentiveParams } from "../../hooks/useIncentiveParams";
 import { useMarketPrice } from "../../hooks/useMarketPrice";
@@ -25,7 +24,6 @@ import { DefaultContainer } from "../../layout/DefaultContainer";
 import { DefaultWrapper } from "../../layout/DefaultWrapper";
 import { calculate_max_quote_match_ } from "../../sdk/src/econia/incentives";
 import { MAX_POSSIBLE } from "../../sdk/src/econia/market";
-import { HI_PRICE } from "../../sdk/src/econia/user";
 import { fromDecimalPrice } from "../../utils/units";
 
 export const Swap: React.FC = () => {
@@ -235,7 +233,7 @@ const SwapInner: React.FC<{
           </p>
         </FlexRow>
       </div>
-      <Button
+      <TxButton
         css={css`
           width: 100%;
         `}
@@ -285,7 +283,7 @@ const SwapInner: React.FC<{
         disabled={!!disabledReason}
       >
         {disabledReason ? disabledReason : "SWAP"}
-      </Button>
+      </TxButton>
     </>
   );
 };

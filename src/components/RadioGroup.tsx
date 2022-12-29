@@ -44,4 +44,7 @@ const RadioButton = styled(Button)<{ selected: boolean }>`
     selected ? theme.colors.grey[800] : theme.colors.grey[700]};
   color: ${({ selected, theme }) =>
     selected ? theme.colors.grey[100] : theme.colors.grey[600]};
+  :hover {
+    background-color: ${({ theme }) => theme.colors.grey[500]};
+  }
 `;

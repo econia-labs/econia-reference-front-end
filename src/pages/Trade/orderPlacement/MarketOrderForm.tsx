@@ -5,12 +5,12 @@ import { useMemo } from "react";
 
 import { css } from "@emotion/react";
 
-import { Button } from "../../../components/Button";
 import { FlexCol } from "../../../components/FlexCol";
 import { FlexRow } from "../../../components/FlexRow";
 import { Input } from "../../../components/Input";
 import { Label } from "../../../components/Label";
 import { RadioGroup } from "../../../components/RadioGroup";
+import { TxButton } from "../../../components/TxButton";
 import { BUY, SELL, ZERO_U64 } from "../../../constants";
 import { useCoinInfo } from "../../../hooks/useCoinInfo";
 import { useIncentiveParams } from "../../../hooks/useIncentiveParams";
@@ -140,7 +140,7 @@ export const MarketOrderForm: React.FC<{ market: RegisteredMarket }> = ({
           </p>
         </FlexRow>
       </div>
-      <Button
+      <TxButton
         disabled={!expectedPrice}
         onClick={async () => {
           const size = u64(
@@ -195,7 +195,7 @@ export const MarketOrderForm: React.FC<{ market: RegisteredMarket }> = ({
         size="sm"
       >
         Place Order
-      </Button>
+      </TxButton>
     </FlexCol>
   );
 };
