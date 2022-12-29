@@ -55,13 +55,13 @@ export const useMarketPrice = (market: RegisteredMarket) => {
       }
       const maxBuyQuote =
         orderBook.data?.asks.reduce((acc, { size, price }) => {
-          return acc + size.mul(price).toJsNumber();
-        }, 0) ?? 0;
+          return acc.plus(size.mul(price).toJsNumber());
+        }, ZERO_BIGNUMBER) ?? ZERO_BIGNUMBER;
       const maxSellSize =
         orderBook.data?.bids.reduce(
-          (acc, { size }) => acc + size.toJsNumber(),
-          0,
-        ) ?? 0;
+          (acc, { size }) => acc.plus(size.toJsNumber()),
+          ZERO_BIGNUMBER,
+        ) ?? ZERO_BIGNUMBER;
 
       const getExecutionPrice = (
         size: BigNumber,

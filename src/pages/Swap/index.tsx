@@ -13,7 +13,9 @@ import { Label } from "../../components/Label";
 import { MarketDropdown } from "../../components/MarketDropdown";
 import { TxButton } from "../../components/TxButton";
 import { BUY } from "../../constants";
+import { useAptos } from "../../hooks/useAptos";
 import { useCoinInfo } from "../../hooks/useCoinInfo";
+import { useCoinStore } from "../../hooks/useCoinStore";
 import { useIncentiveParams } from "../../hooks/useIncentiveParams";
 import { useMarketPrice } from "../../hooks/useMarketPrice";
 import { usePlaceSwap } from "../../hooks/usePlaceSwap";
@@ -29,6 +31,7 @@ import {
   fromDecimalPrice,
   fromDecimalQuote,
   fromDecimalSize,
+  toDecimalCoin,
 } from "../../utils/units";
 
 export const Swap: React.FC = () => {
@@ -73,6 +76,12 @@ const SwapInner: React.FC<{
   const marketPrice = useMarketPrice(market);
   const incentiveParams = useIncentiveParams();
   const placeSwap = usePlaceSwap();
+  const { account } = useAptos();
+  const inputCoinStore = useCoinStore(
+    direction === BUY ? market.quoteType : market.baseType,
+    account?.address,
+  );
+  const inputCoinInfo = direction === BUY ? quoteCoinInfo : baseCoinInfo;
   const onInputChange = useCallback(
     (e: FormEvent<HTMLInputElement>) => {
       setInputAmount(e.currentTarget.value);
@@ -99,12 +108,12 @@ const SwapInner: React.FC<{
           tickSize: market.tickSize,
           quoteCoinDecimals: quoteCoinInfo.data.decimals,
         });
-        if (quote.gt(marketPrice.data.maxBuyQuote)) {
+        if (marketPrice.data.maxBuyQuote.eq(0)) {
           return {
             outputAmount: "",
             executionPrice,
             sizeFillable,
-            disabledReason: "Input exceeds liquidity",
+            disabledReason: "Market has no liquidity",
           };
         }
         const res = marketPrice.data.getExecutionPriceQuote(quote, direction);
@@ -115,12 +124,12 @@ const SwapInner: React.FC<{
           lotSize: market.lotSize,
           baseCoinDecimals: baseCoinInfo.data.decimals,
         });
-        if (size.gt(marketPrice.data.maxSellSize)) {
+        if (marketPrice.data.maxSellSize.eq(0)) {
           return {
             outputAmount: "",
             executionPrice,
             sizeFillable,
-            disabledReason: "Input exceeds liquidity",
+            disabledReason: "Market has no liquidity",
           };
         }
         const res = marketPrice.data.getExecutionPrice(size, direction);
@@ -163,11 +172,7 @@ const SwapInner: React.FC<{
   return (
     <>
       <h2>Swap</h2>
-      <div
-        css={css`
-          width: 100%;
-        `}
-      >
+      <InputContainer>
         <Label
           css={css`
             margin-bottom: 4px;
@@ -180,38 +185,59 @@ const SwapInner: React.FC<{
           setSelectedMarket={setMarket}
           dropdownLabel={`${baseCoinInfo.data?.symbol} / ${quoteCoinInfo.data?.symbol}`}
         />
-      </div>
-      <div
-        css={css`
-          width: 100%;
-        `}
-      >
-        <Label>Input</Label>
-        <FlexRow
-          css={css`
-            align-items: center;
-            gap: 8px;
-          `}
-        >
-          <Input
-            css={css`
-              width: 218px;
-            `}
-            placeholder="0.0000"
-            value={inputAmount}
-            onChange={onInputChange}
-            type="number"
-          />
-          <p>
+      </InputContainer>
+      <InputContainer>
+        <InputSymbolContainer>
+          <div>
+            <FlexRow
+              css={css`
+                justify-content: space-between;
+                align-items: flex-end;
+              `}
+            >
+              <Label>Input</Label>
+              <MaxButton
+                onClick={() => {
+                  if (!inputCoinStore.data) {
+                    return;
+                  }
+                  setInputAmount(
+                    toDecimalCoin({
+                      amount: inputCoinStore.data.balance,
+                      decimals: inputCoinInfo.data.decimals,
+                    }).toString(),
+                  );
+                }}
+              >
+                Max:{" "}
+                {inputCoinStore.data && inputCoinInfo.data
+                  ? toDecimalCoin({
+                      amount: inputCoinStore.data.balance,
+                      decimals: inputCoinInfo.data.decimals,
+                    }).toString()
+                  : "-"}{" "}
+              </MaxButton>
+            </FlexRow>
+            <Input
+              css={css`
+                width: 218px;
+              `}
+              placeholder="0.0000"
+              value={inputAmount}
+              onChange={onInputChange}
+              type="number"
+            />
+          </div>
+          <Symbol>
             {direction === BUY
               ? quoteCoinInfo.data?.symbol
               : baseCoinInfo.data?.symbol}
-          </p>
-        </FlexRow>
-      </div>
+          </Symbol>
+        </InputSymbolContainer>
+      </InputContainer>
       <div
         css={(theme) => css`
-          padding: 4px 8px;
+          padding: 8px 16px;
           cursor: pointer;
           :hover {
             background-color: ${theme.colors.grey[600]};
@@ -221,18 +247,13 @@ const SwapInner: React.FC<{
       >
         ▼
       </div>
-      <div
+      <InputContainer
         css={css`
           width: 100%;
         `}
       >
         <Label>Output</Label>
-        <FlexRow
-          css={css`
-            align-items: center;
-            gap: 8px;
-          `}
-        >
+        <InputSymbolContainer>
           <Input
             css={css`
               width: 218px;
@@ -241,18 +262,18 @@ const SwapInner: React.FC<{
             type="number"
             disabled
           />
-          <p>
+          <Symbol>
             {direction === BUY
               ? baseCoinInfo.data?.symbol
               : quoteCoinInfo.data?.symbol}
-          </p>
-        </FlexRow>
-      </div>
+          </Symbol>
+        </InputSymbolContainer>
+      </InputContainer>
       <div
         css={(theme) =>
           css`
             background-color: ${theme.colors.grey[700]};
-            width: 228px;
+            width: 280px;
             padding: 8px;
             margin-bottom: 16px;
           `
@@ -371,7 +392,29 @@ const SwapContainer = styled(FlexCol)`
     margin-top: 16px;
     margin-bottom: 4px;
   }
-  input {
-    margin-bottom: 16px;
+`;
+
+const InputContainer = styled.div`
+  width: 100%;
+  margin-bottom: 16px;
+`;
+
+const InputSymbolContainer = styled(FlexRow)`
+  align-items: flex-end;
+  gap: 8px;
+`;
+
+const Symbol = styled.p`
+  margin-bottom: 14px;
+`;
+
+const MaxButton = styled.p`
+  font-size: 12px;
+  padding-top: 4px;
+  padding-left: 4px;
+  padding-bottom: 1px;
+  cursor: pointer;
+  :hover {
+    color: ${({ theme }) => theme.colors.grey[500]};
   }
 `;
