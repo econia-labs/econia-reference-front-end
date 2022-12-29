@@ -1,5 +1,5 @@
-import { useWallet } from "@manahippo/aptos-wallet-adapter";
-import { AptosClient, TxnBuilderTypes } from "aptos";
+import { AccountKeys, useWallet } from "@manahippo/aptos-wallet-adapter";
+import { AptosClient, FaucetClient, TxnBuilderTypes } from "aptos";
 import { TransactionPayload_EntryFunctionPayload } from "aptos/src/generated";
 
 import React, {
@@ -19,6 +19,7 @@ import { FlexCol } from "../components/FlexCol";
 interface IAptosContext {
   connect: () => void;
   aptosClient: AptosClient;
+  account: AccountKeys | null;
   createTxLink: (txId: string | number) => string;
   sendTx: (
     payload:
@@ -36,6 +37,7 @@ export const AptosContextProvider: React.FC<PropsWithChildren> = (props) => {
     connect: connectToWallet,
     wallets,
     signAndSubmitTransaction,
+    account,
   } = useWallet();
   const [showConnectModal, setShowConnectModal] = React.useState(false);
   const theme = useTheme();
@@ -110,6 +112,7 @@ export const AptosContextProvider: React.FC<PropsWithChildren> = (props) => {
         value={{
           connect: () => setShowConnectModal(true),
           aptosClient,
+          account,
           createTxLink: (txId) => {
             // TODO: Dynamic by network
             return `https://explorer.aptoslabs.com/txn/${txId}?network=testnet`;

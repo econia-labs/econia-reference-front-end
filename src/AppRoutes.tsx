@@ -1,6 +1,7 @@
 import React from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 
+import { Faucet } from "./pages/Faucet";
 import { NotFound } from "./pages/NotFound";
 import { Swap } from "./pages/Swap";
 import { Trade } from "./pages/Trade";
@@ -16,6 +17,7 @@ export const AppRoutes: React.FC = () => {
       <Routes>
         <Route path="/" element={<Swap />} />
         <Route path="/trade" element={<Trade />} />
+        <Route path="/faucet" element={<Faucet />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>

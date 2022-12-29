@@ -27,6 +27,10 @@ const HEADER_ITEMS = [
     label: "Trade",
     pathname: "/trade",
   },
+  {
+    label: "Faucet",
+    pathname: "/faucet",
+  },
 ];
 
 export const Header: React.FC = () => {
