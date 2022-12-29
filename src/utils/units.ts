@@ -105,3 +105,23 @@ export const fromDecimalQuote = ({
     ),
   );
 };
+
+export const toDecimalCoin = ({
+  amount,
+  decimals,
+}: {
+  amount: BigNumber;
+  decimals: BigNumber;
+}) => {
+  return amount.div(TEN.exponentiatedBy(decimals));
+};
+
+export const fromDecimalCoin = ({
+  amount,
+  decimals,
+}: {
+  amount: BigNumber;
+  decimals: BigNumber;
+}) => {
+  return amount.multipliedBy(TEN.exponentiatedBy(decimals));
+};
