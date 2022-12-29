@@ -1,5 +1,5 @@
 import { AccountKeys, useWallet } from "@manahippo/aptos-wallet-adapter";
-import { AptosClient, FaucetClient, TxnBuilderTypes } from "aptos";
+import { AptosClient, TxnBuilderTypes } from "aptos";
 import { TransactionPayload_EntryFunctionPayload } from "aptos/src/generated";
 
 import React, {
@@ -8,14 +8,12 @@ import React, {
   useCallback,
   useContext,
 } from "react";
-import Modal from "react-modal";
 import { useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 
-import { css, useTheme } from "@emotion/react";
+import { css } from "@emotion/react";
 
-import { Button } from "../components/Button";
-import { FlexCol } from "../components/FlexCol";
+import { ConnectWalletModal } from "../components/ConnectWalletModal";
 import { TxLink } from "../components/TxLink";
 
 interface IAptosContext {
@@ -35,14 +33,8 @@ export const AptosContext = createContext<IAptosContext | undefined>(undefined);
 const aptosClient = new AptosClient("https://fullnode.testnet.aptoslabs.com");
 
 export const AptosContextProvider: React.FC<PropsWithChildren> = (props) => {
-  const {
-    connect: connectToWallet,
-    wallets,
-    signAndSubmitTransaction,
-    account,
-  } = useWallet();
+  const { signAndSubmitTransaction, account } = useWallet();
   const [showConnectModal, setShowConnectModal] = React.useState(false);
-  const theme = useTheme();
   const queryClient = useQueryClient();
 
   const sendTx = useCallback(
@@ -61,8 +53,8 @@ export const AptosContextProvider: React.FC<PropsWithChildren> = (props) => {
               txId={tx.hash}
             >
               TX {tx.hash.substring(0, 6)}
-            </TxLink>
-            {" "} success!
+            </TxLink>{" "}
+            success!
           </span>,
         );
       } catch (e) {
@@ -77,60 +69,10 @@ export const AptosContextProvider: React.FC<PropsWithChildren> = (props) => {
 
   return (
     <>
-      <Modal
-        isOpen={showConnectModal}
-        onRequestClose={() => setShowConnectModal(false)}
-        style={{
-          content: {
-            width: "500px",
-            height: "400px",
-            background: theme.colors.grey[800],
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-          },
-          overlay: {
-            zIndex: 3,
-          },
-        }}
-      >
-        <h1>Connect a wallet</h1>
-        <FlexCol
-          css={css`
-            align-items: center;
-            button {
-              text-align: left;
-              margin-bottom: 16px;
-            }
-          `}
-        >
-          {wallets.map((wallet, i) => (
-            <Button
-              css={(theme) =>
-                css`
-                  background: ${theme.colors.grey[700]}
-                    url(${wallet.adapter.icon});
-                  background-position: 12px 12px;
-                  background-size: 32px 32px;
-                  background-repeat: no-repeat;
-                  padding-left: 64px;
-                  width: 200px;
-                `
-              }
-              size="sm"
-              variant="secondary"
-              onClick={() =>
-                connectToWallet(wallet.adapter.name).then(() =>
-                  setShowConnectModal(false),
-                )
-              }
-              key={i}
-            >
-              {wallet.adapter.name}
-            </Button>
-          ))}
-        </FlexCol>
-      </Modal>
+      <ConnectWalletModal
+        showModal={showConnectModal}
+        closeModal={() => setShowConnectModal(false)}
+      />
       <AptosContext.Provider
         value={{
           connect: () => setShowConnectModal(true),
