@@ -90,6 +90,14 @@ const SwapInner: React.FC<{
   );
   const { outputAmount, executionPrice, sizeFillable, disabledReason } =
     useMemo(() => {
+      if (
+        !marketPrice.data ||
+        !baseCoinInfo.data ||
+        !quoteCoinInfo.data ||
+        !inputCoinInfo.data
+      )
+        return { outputAmount: "", disabledReason: "Loading..." };
+
       if (inputAmount === "")
         return {
           outputAmount: "",
@@ -97,8 +105,6 @@ const SwapInner: React.FC<{
           executionPrice: undefined,
           disabledReason: "Enter an amount",
         };
-      if (!marketPrice.data || !baseCoinInfo.data || !quoteCoinInfo.data)
-        return { outputAmount: "", disabledReason: "Loading..." };
 
       let sizeFillable: BigNumber | undefined,
         executionPrice: BigNumber | undefined;
@@ -143,11 +149,26 @@ const SwapInner: React.FC<{
           disabledReason: "Input too small",
         };
       }
+      const outputAmount =
+        direction === BUY
+          ? sizeFillable.toString()
+          : sizeFillable.multipliedBy(executionPrice).toString();
+      if (inputCoinStore.data) {
+        const balance = toDecimalCoin({
+          amount: inputCoinStore.data.balance,
+          decimals: inputCoinInfo.data.decimals,
+        });
+        if (balance.lt(inputAmount)) {
+          return {
+            outputAmount,
+            sizeFillable,
+            executionPrice,
+            disabledReason: "Insufficient balance",
+          };
+        }
+      }
       return {
-        outputAmount:
-          direction === BUY
-            ? sizeFillable.toString()
-            : sizeFillable.multipliedBy(executionPrice).toString(),
+        outputAmount,
         executionPrice,
         sizeFillable,
         disabledReason: false,
