@@ -45,3 +45,7 @@ If you are looking for something more specific, here is a more granular breakdow
 - `src/sdk` contains [move-to-ts](https://github.com/hippospace/move-to-ts) generated code for [econia](https://github.com/econia-labs/econia), [econia-wrappers](https://github.com/econia-labs/econia-wrappers), and aptos-faucet
 - `src/types` contains custom Typescript declarations and common types
 - `src/utils` contains common utilities
+
+## Misc.
+
+You can also find the Move contracts used for the testnet faucet under the `aptos-faucet` directory.
