@@ -12,9 +12,10 @@ export const TxButton: React.FC<
   }
 > = ({ children, ...rest }) => {
   const { account, connect } = useAptos();
-  if (account === null) {
+  if (account === null || account?.publicKey === null) {
     return (
       <Button
+        className={rest.className}
         size={rest.size}
         variant={rest.variant}
         onClick={() => connect()}

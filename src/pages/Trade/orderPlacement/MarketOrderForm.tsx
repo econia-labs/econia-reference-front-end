@@ -148,6 +148,7 @@ export const MarketOrderForm: React.FC<{ market: RegisteredMarket }> = ({
       </div>
       <TxButton
         onClick={async () => {
+          if (!expectedPrice) return;
           const size = u64(
             fromDecimalSize({
               size: expectedPrice!.sizeFillable,
@@ -173,9 +174,12 @@ export const MarketOrderForm: React.FC<{ market: RegisteredMarket }> = ({
 
           let depositAmount;
           if (direction === BUY) {
-            depositAmount = size
-              .mul(price)
-              .mul(u64(market.tickSize.toNumber()));
+            // Give an extra 0.1% to account for rounding errors.
+            // TODO: Find a better way to handle this.
+            depositAmount = quote
+              .mul(u64(market.tickSize.toNumber()))
+              .mul(u64(100_1))
+              .div(u64(100_0));
           } else {
             depositAmount = size.mul(u64(market.lotSize.toNumber()));
           }
