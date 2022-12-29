@@ -1,5 +1,6 @@
 import { StructTag } from "@manahippo/move-to-ts";
 import { HexString } from "aptos";
+import BigNumber from "bignumber.js";
 
 import { useQuery } from "react-query";
 
@@ -11,11 +12,11 @@ import { useAptos } from "./useAptos";
 export type RegisteredMarket = {
   baseNameGeneric: string;
   baseType: StructTag;
-  lotSize: number;
+  lotSize: BigNumber;
   marketId: number;
-  minSize: number;
+  minSize: BigNumber;
   quoteType: StructTag;
-  tickSize: number;
+  tickSize: BigNumber;
   underwriterId: number;
 };
 
@@ -23,7 +24,7 @@ export type RegisteredMarket = {
 export const useRegisteredMarkets = () => {
   const { aptosClient } = useAptos();
 
-  return useQuery(["useRegisteredMarkets"], async () => {
+  return useQuery<RegisteredMarket[]>(["useRegisteredMarkets"], async () => {
     const events = await aptosClient.getEventsByEventHandle(
       moduleAddress,
       Registry.getTag().getFullname(),
@@ -38,16 +39,16 @@ export const useRegisteredMarkets = () => {
           hexToUtf8(data.base_type.struct_name),
           [],
         ),
-        lotSize: parseInt(data.lot_size),
+        lotSize: new BigNumber(data.lot_size),
         marketId: parseInt(data.market_id),
-        minSize: parseInt(data.min_size),
+        minSize: new BigNumber(data.min_size),
         quoteType: new StructTag(
           new HexString(data.quote_type.account_address),
           hexToUtf8(data.quote_type.module_name),
           hexToUtf8(data.quote_type.struct_name),
           [],
         ),
-        tickSize: parseInt(data.tick_size),
+        tickSize: new BigNumber(data.tick_size),
         underwriterId: parseInt(data.underwriter_id),
       }))
       .reverse(); // TODO: Better default ordering

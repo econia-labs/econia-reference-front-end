@@ -1,4 +1,5 @@
 import { HexString } from "aptos";
+import BigNumber from "bignumber.js";
 
 import { useQuery } from "react-query";
 
@@ -29,9 +30,9 @@ export const useTakerEvents = (marketId: string | number) => {
                 maker: new HexString(data.maker),
                 marketId: parseInt(data.market_id),
                 marketOrderId: data.market_order_id.toString(),
-                price: parseInt(data.price),
+                price: new BigNumber(parseInt(data.price)),
                 side: data.side as boolean,
-                size: parseInt(data.size),
+                size: new BigNumber(parseInt(data.size)),
               };
             });
           });

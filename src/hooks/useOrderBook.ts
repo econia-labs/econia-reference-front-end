@@ -7,7 +7,7 @@ import { query_index_orders_sdk } from "../sdk/src/econia/market";
 import { useAptos } from "./useAptos";
 import { useEconiaSDK } from "./useEconiaSDK";
 
-export const useOrderBook = (marketId: string | number) => {
+export const useOrderBook = (marketId: number) => {
   const { aptosClient } = useAptos();
   const { econia } = useEconiaSDK();
 

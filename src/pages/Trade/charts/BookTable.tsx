@@ -1,7 +1,10 @@
+import BigNumber from "bignumber.js";
+
 import React from "react";
 
 import { css } from "@emotion/react";
 
+import { ZERO_BIGNUMBER } from "../../../constants";
 import { useCoinInfo } from "../../../hooks/useCoinInfo";
 import { useOrderBook } from "../../../hooks/useOrderBook";
 import { RegisteredMarket } from "../../../hooks/useRegisteredMarkets";
@@ -14,17 +17,23 @@ export const BookTable: React.FC<{ market: RegisteredMarket }> = ({
   const orderBook = useOrderBook(market.marketId);
   const baseCoin = useCoinInfo(market.baseType);
   const quoteCoin = useCoinInfo(market.quoteType);
-  const bidsByPrice = new Map<number, number>();
-  const asksByPrice = new Map<number, number>();
+  const bidsByPrice = new Map<number, BigNumber>();
+  const asksByPrice = new Map<number, BigNumber>();
   for (const order of orderBook.data?.bids ?? []) {
     const price = order.price.toJsNumber();
-    if (!bidsByPrice.has(price)) bidsByPrice.set(price, 0);
-    bidsByPrice.set(price, bidsByPrice.get(price)! + order.size.toJsNumber());
+    if (!bidsByPrice.has(price)) bidsByPrice.set(price, ZERO_BIGNUMBER);
+    bidsByPrice.set(
+      price,
+      bidsByPrice.get(price)!.plus(order.size.toJsNumber()),
+    );
   }
   for (const order of orderBook.data?.asks ?? []) {
     const price = order.price.toJsNumber();
-    if (!asksByPrice.has(price)) asksByPrice.set(price, 0);
-    asksByPrice.set(price, asksByPrice.get(price)! + order.size.toJsNumber());
+    if (!asksByPrice.has(price)) asksByPrice.set(price, ZERO_BIGNUMBER);
+    asksByPrice.set(
+      price,
+      asksByPrice.get(price)!.plus(order.size.toJsNumber()),
+    );
   }
 
   if (baseCoin.isLoading || quoteCoin.isLoading)
@@ -75,12 +84,12 @@ export const BookTable: React.FC<{ market: RegisteredMarket }> = ({
                 </td>
                 <td>
                   {toDecimalPrice({
-                    price,
+                    price: new BigNumber(price),
                     lotSize: market.lotSize,
                     tickSize: market.tickSize,
                     baseCoinDecimals: baseCoin.data.decimals,
                     quoteCoinDecimals: quoteCoin.data.decimals,
-                  }).toFixed(2)}
+                  }).toNumber()}
                 </td>
               </tr>
             ))}
@@ -116,12 +125,12 @@ export const BookTable: React.FC<{ market: RegisteredMarket }> = ({
                 </td>
                 <td>
                   {toDecimalPrice({
-                    price,
+                    price: new BigNumber(price),
                     lotSize: market.lotSize,
                     tickSize: market.tickSize,
                     baseCoinDecimals: baseCoin.data.decimals,
                     quoteCoinDecimals: quoteCoin.data.decimals,
-                  }).toFixed(2)}
+                  }).toNumber()}
                 </td>
               </tr>
             ))}

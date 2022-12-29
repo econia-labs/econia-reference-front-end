@@ -6,6 +6,7 @@ import styled from "@emotion/styled";
 import { FlexRow } from "../../components/FlexRow";
 import { Label } from "../../components/Label";
 import { MarketDropdown } from "../../components/MarketDropdown";
+import { ZERO_BIGNUMBER } from "../../constants";
 import { useCoinInfo } from "../../hooks/useCoinInfo";
 import { useMarketPrice } from "../../hooks/useMarketPrice";
 import { RegisteredMarket } from "../../hooks/useRegisteredMarkets";
@@ -47,10 +48,12 @@ export const TradeHeader: React.FC<{
   let totalQuoteVolume;
   if (takerEvents.data) {
     for (const takerEvent of takerEvents.data) {
-      if (!totalBaseVolume) totalBaseVolume = 0;
-      if (!totalQuoteVolume) totalQuoteVolume = 0;
-      totalBaseVolume += takerEvent.size;
-      totalQuoteVolume += takerEvent.size * takerEvent.price;
+      if (!totalBaseVolume) totalBaseVolume = ZERO_BIGNUMBER;
+      if (!totalQuoteVolume) totalQuoteVolume = ZERO_BIGNUMBER;
+      totalBaseVolume = totalBaseVolume.plus(takerEvent.size);
+      totalQuoteVolume = totalQuoteVolume.plus(
+        takerEvent.size.multipliedBy(takerEvent.price),
+      );
     }
     if (totalBaseVolume) {
       totalBaseVolume = toDecimalSize({
@@ -71,9 +74,10 @@ export const TradeHeader: React.FC<{
   const priceChange =
     takerEvents.data && takerEvents.data.length > 1
       ? toDecimalPrice({
-          price:
-            takerEvents.data[takerEvents.data.length - 1].price -
-              takerEvents.data[takerEvents.data.length - 2]?.price ?? 0,
+          price: takerEvents.data[takerEvents.data.length - 1].price.minus(
+            takerEvents.data[takerEvents.data.length - 2]?.price ??
+              ZERO_BIGNUMBER,
+          ),
           lotSize: market.lotSize,
           tickSize: market.tickSize,
           baseCoinDecimals: baseCoinInfo.data.decimals,
@@ -119,25 +123,25 @@ export const TradeHeader: React.FC<{
         </MarketWrapper>
         <PriceWrapper>
           <Label>Price</Label>
-          {marketPrice.data?.bestAskPrice?.toFixed(2)}{" "}
+          {marketPrice.data?.bestAskPrice?.toNumber()}{" "}
           {quoteCoinInfo.data.symbol}
         </PriceWrapper>
         <PriceChangeWrapper>
           <Label>Price Change</Label>
           <ColoredValue
             color={
-              priceChange ? (priceChange >= 0 ? "green" : "red") : undefined
+              priceChange ? (priceChange.gte(0) ? "green" : "red") : undefined
             }
           >
-            {priceChange ? (priceChange > 0 ? "+" : "-") : null}
-            {priceChange ?? "-"} {quoteCoinInfo.data.symbol}
+            {priceChange ? (priceChange.gt(0) ? "+" : "-") : null}
+            {priceChange?.toNumber() ?? "-"} {quoteCoinInfo.data.symbol}
           </ColoredValue>
         </PriceChangeWrapper>
         <VolumeWrapper>
           <Label>Total Volume</Label>
           <span>
-            {totalBaseVolume?.toFixed(2)} {baseCoinInfo.data.symbol} /{" "}
-            {totalQuoteVolume?.toFixed(2)} {quoteCoinInfo.data.symbol}
+            {totalBaseVolume?.toNumber()} {baseCoinInfo.data.symbol} /{" "}
+            {totalQuoteVolume?.toNumber()} {quoteCoinInfo.data.symbol}
           </span>
         </VolumeWrapper>
         <TradesWrapper>

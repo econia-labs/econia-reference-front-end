@@ -1,4 +1,5 @@
 import { u64 } from "@manahippo/move-to-ts";
+import BigNumber from "bignumber.js";
 
 import React, { useState } from "react";
 import { useMemo } from "react";
@@ -19,6 +20,7 @@ import { usePlaceMarketOrder } from "../../../hooks/usePlaceMarketOrder";
 import { RegisteredMarket } from "../../../hooks/useRegisteredMarkets";
 import { calculate_max_quote_match_ } from "../../../sdk/src/econia/incentives";
 import { HI_PRICE, MAX_POSSIBLE } from "../../../sdk/src/econia/market";
+import { fromDecimalPrice, fromDecimalSize } from "../../../utils/units";
 
 export const MarketOrderForm: React.FC<{ market: RegisteredMarket }> = ({
   market,
@@ -33,10 +35,11 @@ export const MarketOrderForm: React.FC<{ market: RegisteredMarket }> = ({
   const expectedPrice = useMemo(() => {
     if (!marketPrice.data || !baseCoinInfo.data || amountStr === "")
       return null;
-    const size = Math.floor(
-      (parseFloat(amountStr) * 10 ** baseCoinInfo.data.decimals) /
-        market.lotSize,
-    );
+    const size = fromDecimalSize({
+      size: new BigNumber(amountStr),
+      lotSize: market.lotSize,
+      baseCoinDecimals: baseCoinInfo.data.decimals,
+    });
     return marketPrice.data.getExecutionPrice(size, direction);
   }, [marketPrice.data, amountStr, baseCoinInfo.data, direction]);
 
@@ -136,7 +139,8 @@ export const MarketOrderForm: React.FC<{ market: RegisteredMarket }> = ({
             Est. Fill
           </p>
           <p>
-            {expectedPrice?.sizeFillable ?? "-"} {baseCoinInfo.data.symbol}
+            {expectedPrice?.sizeFillable.toNumber() ?? "-"}{" "}
+            {baseCoinInfo.data.symbol}
           </p>
         </FlexRow>
       </div>
@@ -144,35 +148,35 @@ export const MarketOrderForm: React.FC<{ market: RegisteredMarket }> = ({
         disabled={!expectedPrice}
         onClick={async () => {
           const size = u64(
-            Math.floor(
-              (expectedPrice!.sizeFillable * 10 ** baseCoinInfo.data.decimals) /
-                market.lotSize,
-            ),
+            fromDecimalSize({
+              size: expectedPrice!.sizeFillable,
+              lotSize: market.lotSize,
+              baseCoinDecimals: baseCoinInfo.data.decimals,
+            }).toFixed(0),
           );
-          const pricePerUnit = u64(
-            Math.floor(
-              (expectedPrice!.executionPrice *
-                10 ** quoteCoinInfo.data.decimals) /
-                market.tickSize,
-            ),
+          const price = u64(
+            fromDecimalPrice({
+              price: expectedPrice!.executionPrice,
+              lotSize: market.lotSize,
+              tickSize: market.tickSize,
+              baseCoinDecimals: baseCoinInfo.data.decimals,
+              quoteCoinDecimals: quoteCoinInfo.data.decimals,
+            }).toFixed(0),
           );
-          // AKA pricePerLot
-          const price = pricePerUnit
-            .mul(u64(market.lotSize))
-            .div(u64(10 ** baseCoinInfo.data.decimals));
-          // AKA total number of ticks transacted
           const quote = calculate_max_quote_match_(
             direction,
-            u64(incentiveParams.data.takerFeeDivisor),
+            u64(incentiveParams.data.takerFeeDivisor.toNumber()),
             size.mul(price),
             undefined!,
           );
 
           let depositAmount;
           if (direction === BUY) {
-            depositAmount = size.mul(price).mul(u64(market.tickSize));
+            depositAmount = size
+              .mul(price)
+              .mul(u64(market.tickSize.toNumber()));
           } else {
-            depositAmount = size.mul(u64(market.lotSize));
+            depositAmount = size.mul(u64(market.lotSize.toNumber()));
           }
           // TODO: Handle slippage
           await placeMarketOrder(

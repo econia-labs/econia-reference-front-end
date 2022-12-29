@@ -1,7 +1,9 @@
+import BigNumber from "bignumber.js";
+
 import { useCallback } from "react";
 import { useQuery } from "react-query";
 
-import { BUY } from "../constants";
+import { BUY, ZERO_BIGNUMBER } from "../constants";
 import { toDecimalPrice, toDecimalQuote, toDecimalSize } from "../utils/units";
 import { useCoinInfo } from "./useCoinInfo";
 import { useOrderBook } from "./useOrderBook";
@@ -15,13 +17,13 @@ export const useMarketPrice = (market: RegisteredMarket) => {
   return useQuery({
     queryKey: ["useMarketPrice", market.marketId],
     queryFn: async () => {
-      let bestAskPrice: number | undefined = undefined;
+      let bestAskPrice: BigNumber | undefined = undefined;
       for (const { price } of orderBook.data!.asks) {
-        const priceNum = price.toJsNumber();
+        const priceBn = new BigNumber(price.toJsNumber());
         if (bestAskPrice === undefined) {
-          bestAskPrice = priceNum;
-        } else if (priceNum < bestAskPrice) {
-          bestAskPrice = priceNum;
+          bestAskPrice = priceBn;
+        } else if (priceBn.lt(bestAskPrice)) {
+          bestAskPrice = priceBn;
         }
       }
       if (bestAskPrice) {
@@ -33,13 +35,13 @@ export const useMarketPrice = (market: RegisteredMarket) => {
           quoteCoinDecimals: quoteCoin.data!.decimals,
         });
       }
-      let bestBidPrice: number | undefined = undefined;
+      let bestBidPrice: BigNumber | undefined = undefined;
       for (const { price } of orderBook.data!.bids) {
-        const priceNum = price.toJsNumber();
+        const priceBn = new BigNumber(price.toJsNumber());
         if (bestBidPrice === undefined) {
-          bestBidPrice = priceNum;
-        } else if (priceNum > bestBidPrice) {
-          bestBidPrice = priceNum;
+          bestBidPrice = priceBn;
+        } else if (priceBn.gt(bestBidPrice)) {
+          bestBidPrice = priceBn;
         }
       }
       if (bestBidPrice) {
@@ -62,9 +64,9 @@ export const useMarketPrice = (market: RegisteredMarket) => {
         ) ?? 0;
 
       const getExecutionPrice = (
-        size: number,
+        size: BigNumber,
         direction: boolean,
-      ): { sizeFillable: number; executionPrice: number } => {
+      ): { sizeFillable: BigNumber; executionPrice: BigNumber } => {
         const orders =
           direction === BUY
             ? orderBook
@@ -74,26 +76,28 @@ export const useMarketPrice = (market: RegisteredMarket) => {
                 .data!.bids.slice()
                 .sort((a, b) => b.price.sub(a.price).toJsNumber()); // desc
         let remainingSize = size;
-        let totalPrice = 0;
+        let totalPrice = ZERO_BIGNUMBER;
         for (const { price, size: orderSize } of orders) {
           const orderSizeNum = orderSize.toJsNumber();
-          if (remainingSize > orderSizeNum) {
-            totalPrice += price.toJsNumber() * orderSizeNum;
-            remainingSize -= orderSizeNum;
+          if (remainingSize.gt(orderSizeNum)) {
+            totalPrice = totalPrice.plus(price.toJsNumber() * orderSizeNum);
+            remainingSize = remainingSize.minus(orderSizeNum);
           } else {
-            totalPrice += price.toJsNumber() * remainingSize;
-            remainingSize = 0;
+            totalPrice = totalPrice.plus(
+              remainingSize.multipliedBy(price.toJsNumber()),
+            );
+            remainingSize = ZERO_BIGNUMBER;
             break;
           }
         }
         return {
           sizeFillable: toDecimalSize({
-            size: size - remainingSize,
+            size: size.minus(remainingSize),
             lotSize: market.lotSize,
             baseCoinDecimals: baseCoin.data!.decimals,
           }),
           executionPrice: toDecimalPrice({
-            price: totalPrice / size,
+            price: totalPrice.div(size),
             lotSize: market.lotSize,
             tickSize: market.tickSize,
             baseCoinDecimals: baseCoin.data!.decimals,
@@ -103,12 +107,12 @@ export const useMarketPrice = (market: RegisteredMarket) => {
       };
 
       const getExecutionPriceQuote = (
-        quote: number,
+        quote: BigNumber,
         direction: boolean,
       ): {
-        quoteFillable: number;
-        sizeFillable: number;
-        executionPrice: number;
+        quoteFillable: BigNumber;
+        sizeFillable: BigNumber;
+        executionPrice: BigNumber;
       } => {
         const orders =
           direction === BUY
@@ -119,22 +123,24 @@ export const useMarketPrice = (market: RegisteredMarket) => {
                 .data!.bids.slice()
                 .sort((a, b) => b.price.sub(a.price).toJsNumber()); // desc
         let remainingQuote = quote;
-        let totalSize = 0;
+        let totalSize = ZERO_BIGNUMBER;
         for (const { price, size } of orders) {
-          const quoteNum = size.mul(price).toJsNumber();
-          if (remainingQuote >= quoteNum) {
-            totalSize += size.toJsNumber();
-            remainingQuote -= quoteNum;
+          const quoteBn = new BigNumber(size.mul(price).toJsNumber());
+          if (remainingQuote.gte(quoteBn)) {
+            totalSize = totalSize.plus(size.toJsNumber());
+            remainingQuote = remainingQuote.minus(quoteBn);
           } else {
             // NOTE: Floor division used here to ensure integer size
-            totalSize += Math.floor(remainingQuote / price.toJsNumber());
-            remainingQuote = remainingQuote % price.toJsNumber();
+            totalSize = totalSize.plus(
+              remainingQuote.div(price.toJsNumber()).toFixed(0),
+            );
+            remainingQuote = remainingQuote.mod(price.toJsNumber());
             break;
           }
         }
         return {
           quoteFillable: toDecimalQuote({
-            ticks: quote - remainingQuote,
+            ticks: quote.minus(remainingQuote),
             tickSize: market.tickSize,
             quoteCoinDecimals: quoteCoin.data!.decimals,
           }),
@@ -144,7 +150,7 @@ export const useMarketPrice = (market: RegisteredMarket) => {
             baseCoinDecimals: baseCoin.data!.decimals,
           }),
           executionPrice: toDecimalPrice({
-            price: (quote - remainingQuote) / totalSize,
+            price: quote.minus(remainingQuote).div(totalSize),
             lotSize: market.lotSize,
             tickSize: market.tickSize,
             baseCoinDecimals: baseCoin.data!.decimals,

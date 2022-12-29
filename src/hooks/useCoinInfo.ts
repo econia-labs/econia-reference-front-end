@@ -1,4 +1,5 @@
 import { StructTag } from "@manahippo/move-to-ts";
+import BigNumber from "bignumber.js";
 
 import { useQuery } from "react-query";
 
@@ -7,7 +8,7 @@ import { useEconiaSDK } from "./useEconiaSDK";
 export type CoinInfo = {
   name: string;
   symbol: string;
-  decimals: number;
+  decimals: BigNumber;
 };
 
 export const useCoinInfo = (coinTypeTag: StructTag) => {
@@ -20,7 +21,7 @@ export const useCoinInfo = (coinTypeTag: StructTag) => {
     return {
       name: coin.name.str(),
       symbol: coin.symbol.str(),
-      decimals: coin.decimals.toJsNumber(),
+      decimals: new BigNumber(coin.decimals.toJsNumber()),
     };
   });
 };

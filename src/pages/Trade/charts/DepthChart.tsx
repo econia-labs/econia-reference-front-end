@@ -1,8 +1,11 @@
+import BigNumber from "bignumber.js";
+
 import React from "react";
 import { Line } from "react-chartjs-2";
 
 import { useTheme } from "@emotion/react";
 
+import { ZERO_BIGNUMBER } from "../../../constants";
 import { CoinInfo } from "../../../hooks/useCoinInfo";
 import { useOrderBook } from "../../../hooks/useOrderBook";
 import { RegisteredMarket } from "../../../hooks/useRegisteredMarkets";
@@ -65,39 +68,41 @@ export const DepthChart: React.FC<{
       );
     }
 
-    let askAcc = 0;
+    let askAcc = ZERO_BIGNUMBER;
     for (let i = 0; i < labels.length; i++) {
       const price = labels[i];
-      if (askPriceToSize.has(price)) askAcc += askPriceToSize.get(price)!;
-      if (askAcc > 0)
+      if (askPriceToSize.has(price))
+        askAcc = askAcc.plus(askPriceToSize.get(price)!);
+      if (askAcc.gt(0))
         askData[i] = toDecimalSize({
           size: askAcc,
           lotSize: market.lotSize,
           baseCoinDecimals: baseCoinInfo.decimals,
-        });
+        }).toNumber();
     }
 
     // We go in reverse order to get the accumulated bid size
-    let bidAcc = 0;
+    let bidAcc = ZERO_BIGNUMBER;
     for (let i = labels.length - 1; i >= 0; i--) {
       const price = labels[i];
-      if (bidPriceToSize.has(price)) bidAcc += bidPriceToSize.get(price)!;
-      if (bidAcc > 0)
+      if (bidPriceToSize.has(price))
+        bidAcc = bidAcc.plus(bidPriceToSize.get(price)!);
+      if (bidAcc.gt(0))
         bidData[i] = toDecimalSize({
           size: bidAcc,
           lotSize: market.lotSize,
           baseCoinDecimals: baseCoinInfo.decimals,
-        });
+        }).toNumber();
     }
 
     labels.forEach((price, i) => {
       labels[i] = toDecimalPrice({
-        price,
+        price: new BigNumber(price),
         lotSize: market.lotSize,
         tickSize: market.tickSize,
         baseCoinDecimals: baseCoinInfo.decimals,
         quoteCoinDecimals: quoteCoinInfo.decimals,
-      });
+      }).toNumber();
     });
   }
 

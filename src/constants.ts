@@ -1,5 +1,6 @@
 import { SimulationKeys, u64 } from "@manahippo/move-to-ts";
 import { HexString } from "aptos";
+import BigNumber from "bignumber.js";
 
 import { moduleAddress as econiaAddr } from "./sdk/src/econia/registry";
 
@@ -29,3 +30,4 @@ export const SELL = true;
 export const BUY = false;
 
 export const ZERO_U64 = u64(0);
+export const ZERO_BIGNUMBER = new BigNumber(0);

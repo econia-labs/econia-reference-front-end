@@ -1,4 +1,5 @@
 import { u64 } from "@manahippo/move-to-ts";
+import BigNumber from "bignumber.js";
 
 import React, { FormEvent, useCallback, useMemo, useState } from "react";
 
@@ -24,7 +25,11 @@ import { DefaultContainer } from "../../layout/DefaultContainer";
 import { DefaultWrapper } from "../../layout/DefaultWrapper";
 import { calculate_max_quote_match_ } from "../../sdk/src/econia/incentives";
 import { MAX_POSSIBLE } from "../../sdk/src/econia/market";
-import { fromDecimalPrice } from "../../utils/units";
+import {
+  fromDecimalPrice,
+  fromDecimalQuote,
+  fromDecimalSize,
+} from "../../utils/units";
 
 export const Swap: React.FC = () => {
   const registeredMarkets = useRegisteredMarkets();
@@ -84,13 +89,14 @@ const SwapInner: React.FC<{
     if (!marketPrice.data || !baseCoinInfo.data || !quoteCoinInfo.data)
       return { outputAmount: "", disabledReason: "Loading..." };
 
-    let sizeFillable, executionPrice;
+    let sizeFillable: BigNumber, executionPrice: BigNumber | undefined;
     if (direction === BUY) {
-      const quote = Math.floor(
-        (parseFloat(inputAmount) * 10 ** quoteCoinInfo.data.decimals) /
-          market.tickSize,
-      );
-      if (quote > marketPrice.data.maxBuyQuote) {
+      const quote = fromDecimalQuote({
+        quote: new BigNumber(inputAmount),
+        tickSize: market.tickSize,
+        quoteCoinDecimals: quoteCoinInfo.data.decimals,
+      });
+      if (quote.gt(marketPrice.data.maxBuyQuote)) {
         return {
           outputAmount: "",
           executionPrice,
@@ -101,11 +107,12 @@ const SwapInner: React.FC<{
       ({ sizeFillable, executionPrice } = res);
       console.log(sizeFillable, executionPrice);
     } else {
-      const size = Math.floor(
-        (parseFloat(inputAmount) * 10 ** baseCoinInfo.data.decimals) /
-          market.lotSize,
-      );
-      if (size > marketPrice.data.maxSellSize) {
+      const size = fromDecimalSize({
+        size: new BigNumber(inputAmount),
+        lotSize: market.lotSize,
+        baseCoinDecimals: baseCoinInfo.data.decimals,
+      });
+      if (size.gt(marketPrice.data.maxSellSize)) {
         return {
           outputAmount: "",
           executionPrice,
@@ -115,16 +122,15 @@ const SwapInner: React.FC<{
       const res = marketPrice.data.getExecutionPrice(size, direction);
       ({ sizeFillable, executionPrice } = res);
     }
-    if (sizeFillable === 0) {
+    if (sizeFillable.eq(0)) {
       return {
         outputAmount: "",
         executionPrice,
         disabledReason: "Input too small",
       };
     }
-    const outputAmount = sizeFillable.toFixed(4);
     return {
-      outputAmount,
+      outputAmount: sizeFillable.toString(),
       executionPrice,
       disabledReason: false,
     };
@@ -241,13 +247,14 @@ const SwapInner: React.FC<{
           if (!executionPrice) return;
           const sizeDecimals =
             direction === BUY
-              ? parseFloat(outputAmount)
-              : parseFloat(inputAmount);
+              ? new BigNumber(outputAmount)
+              : new BigNumber(inputAmount);
           const size = u64(
-            Math.floor(
-              (sizeDecimals * 10 ** baseCoinInfo.data.decimals) /
-                market.lotSize,
-            ),
+            fromDecimalSize({
+              size: sizeDecimals,
+              lotSize: market.lotSize,
+              baseCoinDecimals: baseCoinInfo.data.decimals,
+            }).toFixed(0),
           );
           const price = u64(
             fromDecimalPrice({
@@ -256,12 +263,12 @@ const SwapInner: React.FC<{
               tickSize: market.tickSize,
               baseCoinDecimals: baseCoinInfo.data.decimals,
               quoteCoinDecimals: quoteCoinInfo.data.decimals,
-            }),
+            }).toFixed(0),
           );
           // AKA total number of ticks transacted
           const quote = calculate_max_quote_match_(
             direction,
-            u64(incentiveParams.data.takerFeeDivisor),
+            u64(incentiveParams.data.takerFeeDivisor.toNumber()),
             size.mul(price),
             undefined!,
           );

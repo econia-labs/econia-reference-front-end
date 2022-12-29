@@ -1,3 +1,7 @@
+import BigNumber from "bignumber.js";
+
+const TEN = new BigNumber(10);
+
 export const fromDecimalPrice = ({
   price,
   lotSize,
@@ -5,15 +9,17 @@ export const fromDecimalPrice = ({
   baseCoinDecimals,
   quoteCoinDecimals,
 }: {
-  price: number;
-  lotSize: number;
-  tickSize: number;
-  baseCoinDecimals: number;
-  quoteCoinDecimals: number;
+  price: BigNumber;
+  lotSize: BigNumber;
+  tickSize: BigNumber;
+  baseCoinDecimals: BigNumber;
+  quoteCoinDecimals: BigNumber;
 }) => {
-  const ticksPerUnit = (price * 10 ** quoteCoinDecimals) / tickSize;
-  const lotsPerUnit = 10 ** baseCoinDecimals / lotSize;
-  return ticksPerUnit / lotsPerUnit;
+  const ticksPerUnit = price
+    .multipliedBy(TEN.exponentiatedBy(quoteCoinDecimals))
+    .div(tickSize);
+  const lotsPerUnit = TEN.exponentiatedBy(baseCoinDecimals).div(lotSize);
+  return new BigNumber(Math.floor(ticksPerUnit.div(lotsPerUnit).toNumber()));
 };
 
 export const toDecimalPrice = ({
@@ -23,15 +29,17 @@ export const toDecimalPrice = ({
   baseCoinDecimals,
   quoteCoinDecimals,
 }: {
-  price: number;
-  lotSize: number;
-  tickSize: number;
-  baseCoinDecimals: number;
-  quoteCoinDecimals: number;
+  price: BigNumber;
+  lotSize: BigNumber;
+  tickSize: BigNumber;
+  baseCoinDecimals: BigNumber;
+  quoteCoinDecimals: BigNumber;
 }) => {
-  const lotsPerUnit = 10 ** baseCoinDecimals / lotSize;
-  const pricePerLot = (price * tickSize) / 10 ** quoteCoinDecimals;
-  return pricePerLot * lotsPerUnit;
+  const lotsPerUnit = TEN.exponentiatedBy(baseCoinDecimals).div(lotSize);
+  const pricePerLot = price
+    .multipliedBy(tickSize)
+    .div(TEN.exponentiatedBy(quoteCoinDecimals));
+  return pricePerLot.multipliedBy(lotsPerUnit);
 };
 
 export const fromDecimalSize = ({
@@ -39,11 +47,18 @@ export const fromDecimalSize = ({
   lotSize,
   baseCoinDecimals,
 }: {
-  size: number;
-  lotSize: number;
-  baseCoinDecimals: number;
+  size: BigNumber;
+  lotSize: BigNumber;
+  baseCoinDecimals: BigNumber;
 }) => {
-  return Math.floor((size * 10 ** baseCoinDecimals) / lotSize);
+  return new BigNumber(
+    Math.floor(
+      size
+        .multipliedBy(TEN.exponentiatedBy(baseCoinDecimals))
+        .div(lotSize)
+        .toNumber(),
+    ),
+  );
 };
 
 export const toDecimalSize = ({
@@ -51,11 +66,11 @@ export const toDecimalSize = ({
   lotSize,
   baseCoinDecimals,
 }: {
-  size: number;
-  lotSize: number;
-  baseCoinDecimals: number;
+  size: BigNumber;
+  lotSize: BigNumber;
+  baseCoinDecimals: BigNumber;
 }) => {
-  return (size * lotSize) / 10 ** baseCoinDecimals;
+  return size.multipliedBy(lotSize).div(TEN.exponentiatedBy(baseCoinDecimals));
 };
 
 export const toDecimalQuote = ({
@@ -63,9 +78,30 @@ export const toDecimalQuote = ({
   tickSize,
   quoteCoinDecimals,
 }: {
-  ticks: number;
-  tickSize: number;
-  quoteCoinDecimals: number;
+  ticks: BigNumber;
+  tickSize: BigNumber;
+  quoteCoinDecimals: BigNumber;
 }) => {
-  return (ticks * tickSize) / 10 ** quoteCoinDecimals;
+  return ticks
+    .multipliedBy(tickSize)
+    .div(TEN.exponentiatedBy(quoteCoinDecimals));
+};
+
+export const fromDecimalQuote = ({
+  quote,
+  tickSize,
+  quoteCoinDecimals,
+}: {
+  quote: BigNumber;
+  tickSize: BigNumber;
+  quoteCoinDecimals: BigNumber;
+}) => {
+  return new BigNumber(
+    Math.floor(
+      quote
+        .multipliedBy(TEN.exponentiatedBy(quoteCoinDecimals))
+        .div(tickSize)
+        .toNumber(),
+    ),
+  );
 };

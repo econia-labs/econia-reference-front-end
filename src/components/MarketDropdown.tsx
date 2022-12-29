@@ -8,7 +8,6 @@ import styled from "@emotion/styled";
 
 import { useAptos } from "../hooks/useAptos";
 import { useOnClickawayRef } from "../hooks/useOnClickawayRef";
-import { useRegisterMarket } from "../hooks/useRegisterMarket";
 import { RegisteredMarket } from "../hooks/useRegisteredMarkets";
 import { DropdownMenu } from "./DropdownMenu";
 import { NewMarketModal } from "./modals/NewMarketModal";

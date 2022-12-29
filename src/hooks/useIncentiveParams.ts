@@ -1,4 +1,5 @@
 import { StructTag, u8str } from "@manahippo/move-to-ts";
+import BigNumber from "bignumber.js";
 
 import { useQuery } from "react-query";
 
@@ -6,17 +7,17 @@ import { ECONIA_ADDR } from "../constants";
 import { useEconiaSDK } from "./useEconiaSDK";
 
 export type IntegratorFeeStoreTierParameters = {
-  fee_share_divisor: number;
-  tier_activation_fee: number;
-  withdrawal_fee: number;
+  fee_share_divisor: BigNumber;
+  tier_activation_fee: BigNumber;
+  withdrawal_fee: BigNumber;
 };
 
 export type IncentiveParams = {
   utilityCoinTypeTag: StructTag;
-  marketRegistrationFee: number;
-  underwriterRegistrationFee: number;
-  custodianRegistrationFee: number;
-  takerFeeDivisor: number;
+  marketRegistrationFee: BigNumber;
+  underwriterRegistrationFee: BigNumber;
+  custodianRegistrationFee: BigNumber;
+  takerFeeDivisor: BigNumber;
   integratorFeeStoreTiers: IntegratorFeeStoreTierParameters[];
 };
 
@@ -36,17 +37,25 @@ export const useIncentiveParams = () => {
           u8str(params.utility_coin_type_info.struct_name),
           [],
         ),
-        marketRegistrationFee: params.market_registration_fee.toJsNumber(),
-        underwriterRegistrationFee:
+        marketRegistrationFee: new BigNumber(
+          params.market_registration_fee.toJsNumber(),
+        ),
+        underwriterRegistrationFee: new BigNumber(
           params.underwriter_registration_fee.toJsNumber(),
-        custodianRegistrationFee:
+        ),
+        custodianRegistrationFee: new BigNumber(
           params.custodian_registration_fee.toJsNumber(),
-        takerFeeDivisor: params.taker_fee_divisor.toJsNumber(),
+        ),
+        takerFeeDivisor: new BigNumber(params.taker_fee_divisor.toJsNumber()),
         integratorFeeStoreTiers: params.integrator_fee_store_tiers.map(
           (tier) => ({
-            fee_share_divisor: tier.fee_share_divisor.toJsNumber(),
-            tier_activation_fee: tier.tier_activation_fee.toJsNumber(),
-            withdrawal_fee: tier.withdrawal_fee.toJsNumber(),
+            fee_share_divisor: new BigNumber(
+              tier.fee_share_divisor.toJsNumber(),
+            ),
+            tier_activation_fee: new BigNumber(
+              tier.tier_activation_fee.toJsNumber(),
+            ),
+            withdrawal_fee: new BigNumber(tier.withdrawal_fee.toJsNumber()),
           }),
         ),
       };

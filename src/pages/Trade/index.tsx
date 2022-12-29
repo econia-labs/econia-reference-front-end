@@ -7,6 +7,7 @@ import { css } from "@emotion/react";
 import { Button } from "../../components/Button";
 import { FlexCol } from "../../components/FlexCol";
 import { FlexRow } from "../../components/FlexRow";
+import { NewMarketModal } from "../../components/modals/NewMarketModal";
 import { useCancelAllOrders } from "../../hooks/useCancelAllOrders";
 import { useRegisterMarket } from "../../hooks/useRegisterMarket";
 import {
@@ -23,8 +24,9 @@ export const Trade: React.FC = () => {
   const registeredMarkets = useRegisteredMarkets();
   const registerMarket = useRegisterMarket();
   const [market, setMarket] = useState<RegisteredMarket>();
+  const [showNewMarketModal, setShowNewMarketModal] = useState(false);
   useEffect(() => {
-    if (registeredMarkets.data !== undefined) {
+    if (registeredMarkets.data !== undefined && registeredMarkets.data) {
       setMarket(registeredMarkets.data[0]);
     }
   }, [registeredMarkets.data]);
@@ -39,6 +41,10 @@ export const Trade: React.FC = () => {
           text-align: center;
         `}
       >
+        <NewMarketModal
+          showModal={showNewMarketModal}
+          closeModal={() => setShowNewMarketModal(false)}
+        />
         <p
           css={css`
             margin: 16px 0px;
@@ -49,20 +55,8 @@ export const Trade: React.FC = () => {
         <Button
           variant="primary"
           size="sm"
-          onClick={async () => {
-            const baseCoin = prompt("Enter base coin address");
-            const quoteCoin = prompt("Enter quote coin address");
-            if (baseCoin === null) {
-              alert("Base coin address is required");
-              return;
-            } else if (quoteCoin === null) {
-              alert("Quote coin address is required");
-              return;
-            }
-            await registerMarket(
-              parseTypeTagOrThrow(baseCoin),
-              parseTypeTagOrThrow(quoteCoin),
-            ).catch((e) => console.error("Error registering market", e));
+          onClick={() => {
+            setShowNewMarketModal(true);
           }}
         >
           Create a market

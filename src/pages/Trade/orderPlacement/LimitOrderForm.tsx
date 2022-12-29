@@ -1,14 +1,15 @@
 import { u64 } from "@manahippo/move-to-ts";
+import BigNumber from "bignumber.js";
 
 import React, { useRef, useState } from "react";
 
 import { css } from "@emotion/react";
 
-import { TxButton } from "../../../components/TxButton";
 import { FlexCol } from "../../../components/FlexCol";
 import { Input } from "../../../components/Input";
 import { Label } from "../../../components/Label";
 import { RadioGroup } from "../../../components/RadioGroup";
+import { TxButton } from "../../../components/TxButton";
 import { useCoinInfo } from "../../../hooks/useCoinInfo";
 import { usePlaceLimitOrder } from "../../../hooks/usePlaceLimitOrder";
 import { RegisteredMarket } from "../../../hooks/useRegisteredMarkets";
@@ -87,26 +88,28 @@ export const LimitOrderForm: React.FC<{ market: RegisteredMarket }> = ({
           }
           const size = u64(
             fromDecimalSize({
-              size: parseFloat(amountRef.current.value),
+              size: new BigNumber(amountRef.current.value),
               lotSize: market.lotSize,
               baseCoinDecimals: baseCoinInfo.data.decimals,
-            }),
+            }).toFixed(0),
           );
           const price = u64(
             fromDecimalPrice({
-              price: parseFloat(priceRef.current.value),
+              price: new BigNumber(priceRef.current.value),
               lotSize: market.lotSize,
               tickSize: market.tickSize,
               baseCoinDecimals: baseCoinInfo.data.decimals,
               quoteCoinDecimals: quoteCoinInfo.data.decimals,
-            }),
+            }).toFixed(0),
           );
 
           let depositAmount;
           if (side === BID) {
-            depositAmount = size.mul(price).mul(u64(market.tickSize));
+            depositAmount = size
+              .mul(price)
+              .mul(u64(market.tickSize.toNumber()));
           } else {
-            depositAmount = size.mul(u64(market.lotSize));
+            depositAmount = size.mul(u64(market.lotSize.toNumber()));
           }
           await placeLimitOrder(
             depositAmount,

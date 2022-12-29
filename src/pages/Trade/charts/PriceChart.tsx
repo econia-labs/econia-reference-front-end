@@ -33,7 +33,7 @@ export const PriceChart: React.FC<{
           tickSize: market.tickSize,
           baseCoinDecimals: baseCoinInfo.decimals,
           quoteCoinDecimals: quoteCoinInfo.decimals,
-        }),
+        }).toNumber(),
       );
     }
   }
