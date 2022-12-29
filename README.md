@@ -38,7 +38,7 @@ A good starting point is to look at `src/AppRoutes.tsx`. This file will take you
 If you are looking for something more specific, here is a more granular breakdown:
 
 - `src/assets` contains logos / icons
-- `src/compoennts` contains common components like buttons, dropdowns, inputs...
+- `src/components` contains common components like buttons, dropdowns, inputs...
 - `src/hooks` contains many async IO functionality. Many of these hooks fetch on-chain data and send transactions.
 - `src/layout` contains common UI wrappers
 - `src/pages` contains each page of the app

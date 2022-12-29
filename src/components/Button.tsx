@@ -21,4 +21,8 @@ export const Button = styled.button<{
   font-family: Roboto Mono, sans-serif;
   border: none;
   cursor: pointer;
+  :hover {
+    background-color: ${({ variant, theme }) =>
+      variant === "primary" ? theme.colors.grey[400] : theme.colors.grey[600]};
+  }
 `;
