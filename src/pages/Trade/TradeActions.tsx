@@ -7,6 +7,7 @@ import { RadioGroup } from "../../components/RadioGroup";
 import { useAptos } from "../../hooks/useAptos";
 import { useCoinInfo } from "../../hooks/useCoinInfo";
 import { useCoinStore } from "../../hooks/useCoinStore";
+import { useMarketAccount } from "../../hooks/useMarketAccount";
 import { RegisteredMarket } from "../../hooks/useRegisteredMarkets";
 import { DefaultContainer } from "../../layout/DefaultContainer";
 import { toDecimalCoin } from "../../utils/units";
@@ -26,6 +27,7 @@ export const TradeActions: React.FC<{
   const { account, connected } = useAptos();
   const baseCoinStore = useCoinStore(market.baseType, account?.address);
   const quoteCoinStore = useCoinStore(market.quoteType, account?.address);
+  const marketAccounts = useMarketAccount(market.marketId, account?.address);
 
   return (
     <DefaultContainer
