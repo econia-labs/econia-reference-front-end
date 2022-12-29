@@ -10,11 +10,13 @@ import React, {
 } from "react";
 import Modal from "react-modal";
 import { useQueryClient } from "react-query";
+import { toast } from "react-toastify";
 
 import { css, useTheme } from "@emotion/react";
 
 import { Button } from "../components/Button";
 import { FlexCol } from "../components/FlexCol";
+import { TxLink } from "../components/TxLink";
 
 interface IAptosContext {
   connect: () => void;
@@ -45,8 +47,29 @@ export const AptosContextProvider: React.FC<PropsWithChildren> = (props) => {
 
   const sendTx = useCallback(
     async (payload: TransactionPayload_EntryFunctionPayload) => {
-      const tx = await signAndSubmitTransaction(payload);
-      console.log("tx", tx);
+      const initialToast = toast.info("Sending transaction...");
+      try {
+        const tx = await signAndSubmitTransaction(payload);
+        await aptosClient.waitForTransaction(tx.hash);
+        toast.dismiss(initialToast);
+        toast.success(
+          <span>
+            <TxLink
+              css={css`
+                text-decoration: underline;
+              `}
+              txId={tx.hash}
+            >
+              TX {tx.hash.substring(0, 6)}
+            </TxLink>
+            {" "} success!
+          </span>,
+        );
+      } catch (e) {
+        console.error(e);
+        toast.dismiss(initialToast);
+        toast.error("Transaction failed. See console for details.");
+      }
       queryClient.invalidateQueries();
     },
     [signAndSubmitTransaction],

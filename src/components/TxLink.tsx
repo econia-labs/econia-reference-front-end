@@ -1,16 +1,18 @@
-import React from "react";
+import React, { PropsWithChildren } from "react";
 
 import { useAptos } from "../hooks/useAptos";
 import { ExternalLink } from "./ExternalLink";
 
-export const TxLink: React.FC<{
-  className?: string;
-  txId: string | number;
-}> = ({ className, txId }) => {
+export const TxLink: React.FC<
+  PropsWithChildren & {
+    className?: string;
+    txId: string | number;
+  }
+> = ({ className, txId, children }) => {
   const { createTxLink } = useAptos();
   return (
     <ExternalLink className={className} href={createTxLink(txId)}>
-      {txId}
+      {children ? children : txId}
     </ExternalLink>
   );
 };

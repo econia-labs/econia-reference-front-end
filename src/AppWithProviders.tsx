@@ -8,6 +8,8 @@ import {
 import React from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import { Global, Theme, ThemeProvider, css } from "@emotion/react";
 
@@ -36,6 +38,7 @@ export const AppWithProviders: React.FC = () => {
             <AptosContextProvider>
               <EconiaSDKContextProvider>
                 <App />
+                <ToastContainer theme="dark" />
               </EconiaSDKContextProvider>
             </AptosContextProvider>
           </WalletProvider>
@@ -76,6 +79,7 @@ const GlobalStyles = (theme: Theme) => css`
   p {
     margin: 0;
   }
+
   // Hide arrows
   /* Chrome, Safari, Edge, Opera */
   input::-webkit-outer-spin-button,
@@ -87,5 +91,21 @@ const GlobalStyles = (theme: Theme) => css`
   /* Firefox */
   input[type="number"] {
     -moz-appearance: textfield;
+  }
+
+  // react-toastify
+  :root {
+    --toastify-color: ${theme.colors.grey[800]};
+    --toastify-color-info: ${theme.colors.blue.primary};
+    --toastify-color-success: ${theme.colors.green.primary};
+    --toastify-color-error: ${theme.colors.red.primary};
+    --toastify-color-warning: ${theme.colors.yellow.primary};
+
+    --toastify-icon-color-info: ${theme.colors.blue.primary};
+    --toastify-icon-color-success: ${theme.colors.green.primary};
+    --toastify-icon-color-error: ${theme.colors.red.primary};
+    --toastify-icon-color-warning: ${theme.colors.yellow.primary};
+
+    --toastify-font-family: Roboto Mono, sans-serif;
   }
 `;
