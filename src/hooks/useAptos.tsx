@@ -20,6 +20,7 @@ interface IAptosContext {
   connect: () => void;
   aptosClient: AptosClient;
   account: AccountKeys | null;
+  connected: boolean;
   createTxLink: (txId: string | number) => string;
   sendTx: (
     payload:
@@ -84,6 +85,7 @@ export const AptosContextProvider: React.FC<PropsWithChildren> = (props) => {
           connect: () => setShowConnectModal(true),
           aptosClient,
           account,
+          connected: account !== null && account.publicKey !== null,
           createTxLink: (txId) => {
             // TODO: Dynamic by network
             return `https://explorer.aptoslabs.com/txn/${txId}?network=testnet`;

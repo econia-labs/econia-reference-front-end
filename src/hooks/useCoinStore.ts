@@ -4,10 +4,12 @@ import BigNumber from "bignumber.js";
 
 import { useQuery } from "react-query";
 
+import { toDecimalCoin } from "../utils/units";
 import { useEconiaSDK } from "./useEconiaSDK";
 
 export type CoinStore = {
   balance: BigNumber;
+  symbol: string;
 };
 
 export const useCoinStore = (
@@ -24,8 +26,16 @@ export const useCoinStore = (
         HexString.ensure(ownerAddr),
         [coinTypeTag],
       );
+      // TODO: Don't double fetch this
+      const coinInfo = await stdlib.coin.loadCoinInfo(coinTypeTag.address, [
+        coinTypeTag,
+      ]);
       return {
-        balance: new BigNumber(coinStore.coin.value.toJsNumber()),
+        balance: toDecimalCoin({
+          amount: new BigNumber(coinStore.coin.value.toJsNumber()),
+          decimals: new BigNumber(coinInfo.decimals.toJsNumber()),
+        }),
+        symbol: coinInfo.symbol.str(),
       };
     },
   );

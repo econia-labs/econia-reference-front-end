@@ -12,8 +12,8 @@ export const TxButton: React.FC<
   }
 > = ({ children, onClick, disabled, ...rest }) => {
   const [loading, setLoading] = React.useState(false);
-  const { account, connect } = useAptos();
-  if (account === null || account?.publicKey === null) {
+  const { connect, connected } = useAptos();
+  if (!connected) {
     return (
       <Button
         className={rest.className}
