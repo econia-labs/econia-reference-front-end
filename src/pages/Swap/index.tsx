@@ -31,7 +31,6 @@ import {
   fromDecimalPrice,
   fromDecimalQuote,
   fromDecimalSize,
-  toDecimalCoin,
 } from "../../utils/units";
 
 export const Swap: React.FC = () => {
@@ -154,10 +153,7 @@ const SwapInner: React.FC<{
           ? sizeFillable.toString()
           : sizeFillable.multipliedBy(executionPrice).toString();
       if (inputCoinStore.data) {
-        const balance = toDecimalCoin({
-          amount: inputCoinStore.data.balance,
-          decimals: inputCoinInfo.data.decimals,
-        });
+        const balance = inputCoinStore.data.balance;
         if (balance.lt(inputAmount)) {
           return {
             outputAmount,
@@ -222,20 +218,12 @@ const SwapInner: React.FC<{
                   if (!inputCoinStore.data) {
                     return;
                   }
-                  setInputAmount(
-                    toDecimalCoin({
-                      amount: inputCoinStore.data.balance,
-                      decimals: inputCoinInfo.data.decimals,
-                    }).toString(),
-                  );
+                  setInputAmount(inputCoinStore.data.balance.toString());
                 }}
               >
                 Max:{" "}
                 {inputCoinStore.data && inputCoinInfo.data
-                  ? toDecimalCoin({
-                      amount: inputCoinStore.data.balance,
-                      decimals: inputCoinInfo.data.decimals,
-                    }).toString()
+                  ? inputCoinStore.data.balance.toString()
                   : "-"}{" "}
               </MaxButton>
             </FlexRow>
