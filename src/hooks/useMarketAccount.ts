@@ -23,7 +23,7 @@ export const useMarketAccount = (
   ownerAddr: MaybeHexString | null | undefined,
 ) => {
   const { aptosClient } = useAptos();
-  const { stdlib, econia } = useEconiaSDK();
+  const { econia } = useEconiaSDK();
 
   return useQuery(["useMarketAccount", ownerAddr], async () => {
     if (!ownerAddr) return null;
@@ -54,7 +54,6 @@ export const useMarketAccount = (
       tableLength: parseInt(marketAccount.bids.table.length),
       tableHandle: marketAccount.bids.table.inner.handle.toString(),
     });
-    console.log(asks, bids);
     return {
       asks,
       asksStackTop: parseInt(marketAccount.asks_stack_top),

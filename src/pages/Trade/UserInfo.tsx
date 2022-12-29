@@ -7,6 +7,7 @@ import { useAptos } from "../../hooks/useAptos";
 import { useCoinStore } from "../../hooks/useCoinStore";
 import { useMarketAccount } from "../../hooks/useMarketAccount";
 import { RegisteredMarket } from "../../hooks/useRegisteredMarkets";
+import { toDecimalCoin } from "../../utils/units";
 
 export const UserInfo: React.FC<{ market: RegisteredMarket }> = ({
   market,
@@ -14,12 +15,14 @@ export const UserInfo: React.FC<{ market: RegisteredMarket }> = ({
   const { account, connected } = useAptos();
   const baseCoinStore = useCoinStore(market.baseType, account?.address);
   const quoteCoinStore = useCoinStore(market.quoteType, account?.address);
-  const marketAccounts = useMarketAccount(market.marketId, account?.address);
+  const marketAccount = useMarketAccount(market.marketId, account?.address);
+  console.log(marketAccount.data);
+
   return (
     <UserInfoContainer>
       <h3>User info</h3>
       {connected ? (
-        baseCoinStore.data && quoteCoinStore.data ? (
+        baseCoinStore.data && quoteCoinStore.data && marketAccount.data ? (
           <table
             css={css`
               width: 100%;
@@ -27,36 +30,30 @@ export const UserInfo: React.FC<{ market: RegisteredMarket }> = ({
           >
             <tbody>
               <tr>
-                <td
-                  css={css`
-                    text-align: left;
-                  `}
-                >
-                  {baseCoinStore.data.symbol} bal.
-                </td>
-                <td
-                  css={css`
-                    text-align: right;
-                  `}
-                >
-                  {baseCoinStore.data.balance.toString() ?? "-"}{" "}
-                </td>
+                <LabelTD>{baseCoinStore.data.symbol} wallet bal.</LabelTD>
+                <ValueTD>{baseCoinStore.data.balance.toString()}</ValueTD>
               </tr>
               <tr>
-                <td
-                  css={css`
-                    text-align: left;
-                  `}
-                >
-                  {quoteCoinStore.data.symbol} bal.
-                </td>
-                <td
-                  css={css`
-                    text-align: right;
-                  `}
-                >
-                  {quoteCoinStore.data.balance.toString() ?? "-"}{" "}
-                </td>
+                <LabelTD>{baseCoinStore.data.symbol} market bal.</LabelTD>
+                <ValueTD>
+                  {toDecimalCoin({
+                    amount: marketAccount.data.baseTotal,
+                    decimals: baseCoinStore.data.decimals,
+                  }).toString()}
+                </ValueTD>
+              </tr>
+              <tr>
+                <LabelTD>{quoteCoinStore.data.symbol} wallet bal.</LabelTD>
+                <ValueTD>{quoteCoinStore.data.balance.toString()}</ValueTD>
+              </tr>
+              <tr>
+                <LabelTD>{quoteCoinStore.data.symbol} market bal.</LabelTD>
+                <ValueTD>
+                  {toDecimalCoin({
+                    amount: marketAccount.data.quoteTotal,
+                    decimals: quoteCoinStore.data.decimals,
+                  }).toString()}
+                </ValueTD>
               </tr>
             </tbody>
           </table>
@@ -77,4 +74,11 @@ const UserInfoContainer = styled.div`
   p {
     font-size: 14px;
   }
+`;
+
+const LabelTD = styled.td`
+  text-align: left;
+`;
+const ValueTD = styled.td`
+  text-align: right;
 `;

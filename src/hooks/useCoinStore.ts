@@ -10,6 +10,7 @@ import { useEconiaSDK } from "./useEconiaSDK";
 export type CoinStore = {
   balance: BigNumber;
   symbol: string;
+  decimals: BigNumber;
 };
 
 export const useCoinStore = (
@@ -36,6 +37,7 @@ export const useCoinStore = (
           decimals: new BigNumber(coinInfo.decimals.toJsNumber()),
         }),
         symbol: coinInfo.symbol.str(),
+        decimals: new BigNumber(coinInfo.decimals.toJsNumber()),
       };
     },
   );
