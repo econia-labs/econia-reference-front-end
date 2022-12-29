@@ -15,7 +15,7 @@ export const DepthChart: React.FC<{
 }> = ({ market, baseCoinInfo, quoteCoinInfo }) => {
   const theme = useTheme();
   const orderBook = useOrderBook(market.marketId);
-  const labels = [];
+  const labels: number[] = [];
   const bidData: (number | undefined)[] = [];
   const askData: (number | undefined)[] = [];
   if (orderBook.data) {
@@ -30,67 +30,84 @@ export const DepthChart: React.FC<{
         maxPrice = order.price.toJsNumber();
       }
     }
-    const start = minPrice - 1;
-    const end = maxPrice + 1;
-    for (let price = start; price <= end; price += 1) {
-      labels.push(
-        toDecimalPrice({
-          price,
-          lotSize: market.lotSize,
-          tickSize: market.tickSize,
-          baseCoinDecimals: baseCoinInfo.decimals,
-          quoteCoinDecimals: quoteCoinInfo.decimals,
-        }).toFixed(2),
-      );
-      bidData.push(undefined);
-      askData.push(undefined);
-    }
+
+    // Append prices in ascending order to `labels`
+    orderBook.data.bids
+      .slice()
+      .concat(orderBook.data.asks.slice())
+      .sort((a, b) => a.price.toJsNumber() - b.price.toJsNumber())
+      .forEach((o) => {
+        labels.push(o.price.toJsNumber());
+        bidData.push(undefined);
+        askData.push(undefined);
+      });
+
+    const bidPriceToSize = new Map<number, number>();
+    const askPriceToSize = new Map<number, number>();
     for (const { price, size } of orderBook.data.bids) {
-      const idx = price.toJsNumber() - start;
-      bidData[idx] =
-        (bidData[idx] ?? 0) +
-        toDecimalSize({
-          size: size.toJsNumber(),
-          lotSize: market.lotSize,
-          baseCoinDecimals: baseCoinInfo.decimals,
-        });
+      const priceKey = price.toJsNumber();
+      if (!bidPriceToSize.has(priceKey)) {
+        bidPriceToSize.set(priceKey, 0);
+      }
+      bidPriceToSize.set(
+        priceKey,
+        bidPriceToSize.get(priceKey)! + size.toJsNumber(),
+      );
     }
     for (const { price, size } of orderBook.data.asks) {
-      const idx = price.toJsNumber() - start;
-      askData[idx] =
-        (askData[idx] ?? 0) +
-        toDecimalSize({
-          size: size.toJsNumber(),
+      const priceKey = price.toJsNumber();
+      if (!askPriceToSize.has(priceKey)) {
+        askPriceToSize.set(priceKey, 0);
+      }
+      askPriceToSize.set(
+        priceKey,
+        askPriceToSize.get(priceKey)! + size.toJsNumber(),
+      );
+    }
+
+    let askAcc = 0;
+    for (let i = 0; i < labels.length; i++) {
+      const price = labels[i];
+      if (askPriceToSize.has(price)) askAcc += askPriceToSize.get(price)!;
+      if (askAcc > 0)
+        askData[i] = toDecimalSize({
+          size: askAcc,
           lotSize: market.lotSize,
           baseCoinDecimals: baseCoinInfo.decimals,
         });
     }
-    let seenFirstBid = false;
-    for (let i = bidData.length - 2; i >= 0; i--) {
-      // Move down until bidData[i + 1] is not undefined
-      if (bidData[i + 1] === undefined) continue;
-      if (!seenFirstBid) {
-        bidData[i + 2] = 0;
-        seenFirstBid = true;
-      }
-      bidData[i] = (bidData[i] ?? 0) + bidData[i + 1]!;
+
+    // We go in reverse order to get the accumulated bid size
+    let bidAcc = 0;
+    for (let i = labels.length - 1; i >= 0; i--) {
+      const price = labels[i];
+      if (bidPriceToSize.has(price)) bidAcc += bidPriceToSize.get(price)!;
+      if (bidAcc > 0)
+        bidData[i] = toDecimalSize({
+          size: bidAcc,
+          lotSize: market.lotSize,
+          baseCoinDecimals: baseCoinInfo.decimals,
+        });
     }
-    let seenFirstAsk = false;
-    for (let i = 1; i < askData.length; i++) {
-      // Move up until askData[i - 1] is not undefined
-      if (askData[i - 1] === undefined) continue;
-      if (!seenFirstAsk) {
-        askData[i - 2] = 0;
-        seenFirstAsk = true;
-      }
-      askData[i] = (askData[i] ?? 0) + askData[i - 1]!;
-    }
+
+    labels.forEach((price, i) => {
+      labels[i] = toDecimalPrice({
+        price,
+        lotSize: market.lotSize,
+        tickSize: market.tickSize,
+        baseCoinDecimals: baseCoinInfo.decimals,
+        quoteCoinDecimals: quoteCoinInfo.decimals,
+      });
+    });
   }
 
   return (
     <Line
       options={{
         responsive: true,
+        interaction: {
+          intersect: false,
+        },
         plugins: {
           legend: {
             display: false,
