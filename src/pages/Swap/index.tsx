@@ -79,62 +79,71 @@ const SwapInner: React.FC<{
     },
     [setInputAmount],
   );
-  const { outputAmount, executionPrice, disabledReason } = useMemo(() => {
-    if (inputAmount === "")
-      return {
-        outputAmount: "",
-        executionPrice: undefined,
-        disabledReason: "Enter an amount",
-      };
-    if (!marketPrice.data || !baseCoinInfo.data || !quoteCoinInfo.data)
-      return { outputAmount: "", disabledReason: "Loading..." };
+  const { outputAmount, executionPrice, sizeFillable, disabledReason } =
+    useMemo(() => {
+      if (inputAmount === "")
+        return {
+          outputAmount: "",
+          sizeFillable: undefined,
+          executionPrice: undefined,
+          disabledReason: "Enter an amount",
+        };
+      if (!marketPrice.data || !baseCoinInfo.data || !quoteCoinInfo.data)
+        return { outputAmount: "", disabledReason: "Loading..." };
 
-    let sizeFillable: BigNumber, executionPrice: BigNumber | undefined;
-    if (direction === BUY) {
-      const quote = fromDecimalQuote({
-        quote: new BigNumber(inputAmount),
-        tickSize: market.tickSize,
-        quoteCoinDecimals: quoteCoinInfo.data.decimals,
-      });
-      if (quote.gt(marketPrice.data.maxBuyQuote)) {
+      let sizeFillable: BigNumber | undefined,
+        executionPrice: BigNumber | undefined;
+      if (direction === BUY) {
+        const quote = fromDecimalQuote({
+          quote: new BigNumber(inputAmount),
+          tickSize: market.tickSize,
+          quoteCoinDecimals: quoteCoinInfo.data.decimals,
+        });
+        if (quote.gt(marketPrice.data.maxBuyQuote)) {
+          return {
+            outputAmount: "",
+            executionPrice,
+            sizeFillable,
+            disabledReason: "Input exceeds liquidity",
+          };
+        }
+        const res = marketPrice.data.getExecutionPriceQuote(quote, direction);
+        ({ sizeFillable, executionPrice } = res);
+      } else {
+        const size = fromDecimalSize({
+          size: new BigNumber(inputAmount),
+          lotSize: market.lotSize,
+          baseCoinDecimals: baseCoinInfo.data.decimals,
+        });
+        if (size.gt(marketPrice.data.maxSellSize)) {
+          return {
+            outputAmount: "",
+            executionPrice,
+            sizeFillable,
+            disabledReason: "Input exceeds liquidity",
+          };
+        }
+        const res = marketPrice.data.getExecutionPrice(size, direction);
+        ({ sizeFillable, executionPrice } = res);
+      }
+      if (sizeFillable.eq(0)) {
         return {
           outputAmount: "",
           executionPrice,
-          disabledReason: "Input exceeds liquidity",
+          sizeFillable,
+          disabledReason: "Input too small",
         };
       }
-      const res = marketPrice.data.getExecutionPriceQuote(quote, direction);
-      ({ sizeFillable, executionPrice } = res);
-      console.log(sizeFillable, executionPrice);
-    } else {
-      const size = fromDecimalSize({
-        size: new BigNumber(inputAmount),
-        lotSize: market.lotSize,
-        baseCoinDecimals: baseCoinInfo.data.decimals,
-      });
-      if (size.gt(marketPrice.data.maxSellSize)) {
-        return {
-          outputAmount: "",
-          executionPrice,
-          disabledReason: "Input exceeds liquidity",
-        };
-      }
-      const res = marketPrice.data.getExecutionPrice(size, direction);
-      ({ sizeFillable, executionPrice } = res);
-    }
-    if (sizeFillable.eq(0)) {
       return {
-        outputAmount: "",
+        outputAmount:
+          direction === BUY
+            ? sizeFillable.toString()
+            : sizeFillable.multipliedBy(executionPrice).toString(),
         executionPrice,
-        disabledReason: "Input too small",
+        sizeFillable,
+        disabledReason: false,
       };
-    }
-    return {
-      outputAmount: sizeFillable.toString(),
-      executionPrice,
-      disabledReason: false,
-    };
-  }, [inputAmount, marketPrice.data, baseCoinInfo.data, direction]);
+    }, [inputAmount, marketPrice.data, baseCoinInfo.data, direction]);
 
   if (
     baseCoinInfo.isLoading ||
@@ -239,6 +248,61 @@ const SwapInner: React.FC<{
           </p>
         </FlexRow>
       </div>
+      <div
+        css={(theme) =>
+          css`
+            background-color: ${theme.colors.grey[700]};
+            width: 228px;
+            padding: 8px;
+            margin-bottom: 16px;
+          `
+        }
+      >
+        <FlexRow
+          css={css`
+            justify-content: space-between;
+            align-items: center;
+          `}
+        >
+          <p
+            css={(theme) =>
+              css`
+                color: ${theme.colors.grey[400]};
+                font-size: 14px;
+              `
+            }
+          >
+            Est. Price
+          </p>
+          <p>
+            {executionPrice && !executionPrice.isNaN()
+              ? executionPrice.toNumber()
+              : "-"}{" "}
+            {quoteCoinInfo.data.symbol}
+          </p>
+        </FlexRow>
+        <FlexRow
+          css={css`
+            justify-content: space-between;
+            align-items: center;
+          `}
+        >
+          <p
+            css={(theme) =>
+              css`
+                color: ${theme.colors.grey[400]};
+                font-size: 14px;
+              `
+            }
+          >
+            Est. Fill
+          </p>
+          <p>
+            {sizeFillable?.toNumber() ?? "-"} {baseCoinInfo.data.symbol}
+          </p>
+        </FlexRow>
+      </div>
+
       <TxButton
         css={css`
           width: 100%;

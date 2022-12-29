@@ -4,6 +4,7 @@ import {
   PontemWalletAdapter,
   WalletProvider,
 } from "@manahippo/aptos-wallet-adapter";
+import BigNumber from "bignumber.js";
 
 import React from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
@@ -19,6 +20,9 @@ import { EconiaSDKContextProvider } from "./hooks/useEconiaSDK";
 import { theme } from "./themes";
 
 const queryClient = new QueryClient();
+BigNumber.config({
+  ROUNDING_MODE: BigNumber.ROUND_DOWN,
+});
 
 export const AppWithProviders: React.FC = () => {
   return (

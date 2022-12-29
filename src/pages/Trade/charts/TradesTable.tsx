@@ -66,7 +66,7 @@ export const TradesTable: React.FC<{ market: RegisteredMarket }> = ({
                     size,
                     lotSize: market.lotSize,
                     baseCoinDecimals: baseCoin.data.decimals,
-                  }).toFixed(3)}
+                  }).toNumber()}
                 </td>
                 <td>
                   {toDecimalPrice({
@@ -75,7 +75,7 @@ export const TradesTable: React.FC<{ market: RegisteredMarket }> = ({
                     tickSize: market.tickSize,
                     baseCoinDecimals: baseCoin.data.decimals,
                     quoteCoinDecimals: quoteCoin.data.decimals,
-                  }).toFixed(2)}
+                  }).toNumber()}
                 </td>
                 <td>
                   <TxLink

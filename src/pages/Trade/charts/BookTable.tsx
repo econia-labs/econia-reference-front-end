@@ -80,7 +80,7 @@ export const BookTable: React.FC<{ market: RegisteredMarket }> = ({
                     size,
                     lotSize: market.lotSize,
                     baseCoinDecimals: baseCoin.data.decimals,
-                  }).toFixed(3)}
+                  }).toNumber()}
                 </td>
                 <td>
                   {toDecimalPrice({
@@ -121,7 +121,7 @@ export const BookTable: React.FC<{ market: RegisteredMarket }> = ({
                     size,
                     lotSize: market.lotSize,
                     baseCoinDecimals: baseCoin.data.decimals,
-                  }).toFixed(3)}
+                  }).toNumber()}
                 </td>
                 <td>
                   {toDecimalPrice({
