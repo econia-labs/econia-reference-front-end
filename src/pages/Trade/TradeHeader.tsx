@@ -133,7 +133,7 @@ export const TradeHeader: React.FC<{
               priceChange ? (priceChange.gte(0) ? "green" : "red") : undefined
             }
           >
-            {priceChange ? (priceChange.gt(0) ? "+" : "-") : null}
+            {priceChange ? (priceChange.gt(0) ? "+" : "") : null}
             {priceChange?.toNumber() ?? "-"} {quoteCoinInfo.data.symbol}
           </ColoredValue>
         </PriceChangeWrapper>
