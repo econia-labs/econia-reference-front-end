@@ -6,11 +6,9 @@ import {TypeParamDeclType, FieldDeclType} from "@manahippo/move-to-ts";
 import {AtomicTypeTag, StructTag, TypeTag, VectorTag, SimpleStructTag} from "@manahippo/move-to-ts";
 import {OptionTransaction} from "@manahippo/move-to-ts";
 import {HexString, AptosClient, AptosAccount, TxnBuilderTypes, Types} from "aptos";
-import * as Bcs from "./bcs";
 import * as Error from "./error";
 import * as Features from "./features";
 import * as String from "./string";
-import * as Vector from "./vector";
 export const packageName = "AptosStdlib";
 export const moduleAddress = new HexString("0x1");
 export const moduleName = "type_info";
@@ -90,16 +88,6 @@ export function module_name_ (
   $c: AptosDataCache,
 ): U8[] {
   return $.copy(type_info.module_name);
-}
-
-export function size_of_val_ (
-  val_ref: any,
-  $c: AptosDataCache,
-  $p: TypeTag[], /* <T>*/
-): U64 {
-  let temp$1;
-  temp$1 = Bcs.to_bytes_(val_ref, $c, [$p[0]]);
-  return Vector.length_(temp$1, $c, [AtomicTypeTag.U8]);
 }
 
 export function struct_name_ (

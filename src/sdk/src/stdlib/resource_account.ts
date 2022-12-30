@@ -176,7 +176,7 @@ export function retrieve_resource_account_cap_ (
   source_addr: HexString,
   $c: AptosDataCache,
 ): Account.SignerCapability {
-  let _resource_addr, container, container__1, empty_container, resource_addr, resource_signer_cap, signer_cap;
+  let _resource_addr, container, container__1, empty_container, resource__2, resource_addr, resource_signer_cap, signer_cap;
   if (!$c.exists(new SimpleStructTag(Container), $.copy(source_addr))) {
     throw $.abortCode(Error.not_found_($.copy(ECONTAINER_NOT_PUBLISHED), $c));
   }
@@ -194,7 +194,8 @@ export function retrieve_resource_account_cap_ (
   }
   else{
   }
-  Account.rotate_authentication_key_internal_(resource, $.copy(ZERO_AUTH_KEY), $c);
+  resource__2 = Account.create_signer_with_capability_(resource_signer_cap, $c);
+  Account.rotate_authentication_key_internal_(resource__2, $.copy(ZERO_AUTH_KEY), $c);
   return resource_signer_cap;
 }
 

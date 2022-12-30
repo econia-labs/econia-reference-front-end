@@ -69,7 +69,8 @@ export const AptosContextProvider: React.FC<PropsWithChildren> = (props) => {
           toast.error("Transaction failed. See console for details.");
         }
       }
-      queryClient.invalidateQueries();
+      // Invalidate queries after 1s
+      setTimeout(() => queryClient.invalidateQueries(), 1000);
     },
     [signAndSubmitTransaction],
   );

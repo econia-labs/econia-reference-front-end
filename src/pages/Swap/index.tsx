@@ -306,7 +306,7 @@ const SwapInner: React.FC<{
           </p>
           <p>
             {executionPrice && !executionPrice.isNaN()
-              ? executionPrice.toNumber()
+              ? executionPrice.toFixed(4)
               : "-"}{" "}
             {quoteCoinInfo.data.symbol}
           </p>

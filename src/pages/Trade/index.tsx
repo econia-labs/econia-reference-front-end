@@ -15,6 +15,7 @@ import {
   useRegisteredMarkets,
 } from "../../hooks/useRegisteredMarkets";
 import { DefaultWrapper } from "../../layout/DefaultWrapper";
+import { OrdersTable } from "./OrdersTable";
 import { TradeActions } from "./TradeActions";
 import { TradeChart } from "./TradeChart";
 import { TradeHeader } from "./TradeHeader";
@@ -22,7 +23,6 @@ import { TradeTable } from "./TradeTable";
 
 export const Trade: React.FC = () => {
   const registeredMarkets = useRegisteredMarkets();
-  const registerMarket = useRegisterMarket();
   const [market, setMarket] = useState<RegisteredMarket>();
   const [showNewMarketModal, setShowNewMarketModal] = useState(false);
   useEffect(() => {
@@ -30,7 +30,6 @@ export const Trade: React.FC = () => {
       setMarket(registeredMarkets.data[0]);
     }
   }, [registeredMarkets.data]);
-  const cancelAllOrders = useCancelAllOrders();
 
   if (registeredMarkets.isLoading || registeredMarkets.data === undefined) {
     return <DefaultWrapper>Loading...</DefaultWrapper>;
@@ -90,32 +89,31 @@ export const Trade: React.FC = () => {
         >
           <FlexRow>
             <TradeActions market={market} />
-            <TradeTable market={market} />
-            <TradeChart
+            <FlexCol
               css={css`
                 flex-grow: 1;
               `}
-              market={market}
-            />
+            >
+              <FlexRow>
+                <TradeTable market={market} />
+                <TradeChart
+                  css={css`
+                    flex-grow: 1;
+                  `}
+                  market={market}
+                />
+              </FlexRow>
+              <div
+                css={css`
+                  padding-left: 42px;
+                `}
+              >
+                <OrdersTable market={market} />
+              </div>
+            </FlexCol>
           </FlexRow>
         </DefaultWrapper>
       </div>
-      <span
-        css={(theme) => css`
-          font-size: 14px;
-          padding: 8px 8px;
-          cursor: pointer;
-          color: ${theme.colors.red.primary};
-          :hover {
-            background-color: ${theme.colors.grey[600]};
-          }
-        `}
-        onClick={async () => {
-          await cancelAllOrders(u64(market.marketId));
-        }}
-      >
-        Cancel All Orders
-      </span>
     </FlexCol>
   );
 };

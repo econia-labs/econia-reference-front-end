@@ -109,7 +109,7 @@ const fetchMarketAccountOrders = async ({
       ).toJsNumber(),
     );
     orders.push({
-      marketOrderId: parseInt(order.value.market_order_id),
+      marketOrderId: u128(order.value.market_order_id),
       price,
       counter,
       size: new BigNumber(order.value.size),
