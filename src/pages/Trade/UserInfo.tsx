@@ -13,9 +13,19 @@ import { RegisteredMarket } from "../../hooks/useRegisteredMarkets";
 import { useWithdrawFromMarketAccount } from "../../hooks/useWithdrawFromMarketAccount";
 import { toDecimalCoin } from "../../utils/units";
 
-export const UserInfo: React.FC<{ market: RegisteredMarket }> = ({
-  market,
-}) => {
+export const UserInfo: React.FC<{
+  className?: string;
+  market?: RegisteredMarket;
+}> = ({ className, market }) => {
+  return (
+    <UserInfoContainer className={className}>
+      <h3>User info</h3>
+      {market ? <UserInfoInner market={market} /> : <div>Loading...</div>}
+    </UserInfoContainer>
+  );
+};
+
+const UserInfoInner: React.FC<{ market: RegisteredMarket }> = ({ market }) => {
   const { account, connected } = useAptos();
   const baseCoinStore = useCoinStore(market.baseType, account?.address);
   const quoteCoinStore = useCoinStore(market.quoteType, account?.address);
@@ -23,8 +33,7 @@ export const UserInfo: React.FC<{ market: RegisteredMarket }> = ({
   const withdrawFromMarketAccount = useWithdrawFromMarketAccount();
 
   return (
-    <UserInfoContainer>
-      <h3>User info</h3>
+    <>
       <div
         css={css`
           height: 160px;
@@ -149,7 +158,7 @@ export const UserInfo: React.FC<{ market: RegisteredMarket }> = ({
           </div>
         )}
       </div>
-    </UserInfoContainer>
+    </>
   );
 };
 
@@ -166,9 +175,11 @@ const LabelTD = styled.td`
   font-weight: semi-bold;
   text-align: left;
 `;
+
 const ValueTD = styled.td`
   text-align: right;
 `;
+
 const SymbolTD = styled.td`
   text-align: left;
   color: ${({ theme }) => theme.colors.grey[500]};

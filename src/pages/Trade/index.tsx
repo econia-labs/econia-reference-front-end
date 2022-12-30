@@ -66,54 +66,58 @@ export const Trade: React.FC = () => {
     <FlexCol
       css={css`
         height: 100%;
-        align-items: center;
-        justify-content: space-between;
+        width: 100%;
       `}
     >
-      <div
+      <TradeHeader
         css={css`
-          width: 100%;
+          height: 38.5px;
+        `}
+        market={market}
+        setSelectedMarket={setMarket}
+        markets={registeredMarkets.data}
+      />
+      <DefaultWrapper
+        css={css`
+          flex-grow: 1;
+          height: 100%;
         `}
       >
-        <TradeHeader
+        <FlexRow
           css={css`
-            height: 38.5px;
-          `}
-          market={market}
-          setSelectedMarket={setMarket}
-          markets={registeredMarkets.data}
-        />
-        <DefaultWrapper
-          css={css`
-            flex-grow: 1;
+            height: 100%;
           `}
         >
-          <FlexRow>
-            <TradeActions market={market} />
-            <FlexCol
-              css={css`
-                flex-grow: 1;
-              `}
-            >
-              <FlexRow>
-                <TradeTable market={market} />
-                <TradeChart
-                  css={css`
-                    flex-grow: 1;
-                  `}
-                  market={market}
-                />
-              </FlexRow>
-              <OrdersTable
+          <TradeActions
+            css={css`
+              width: 392px;
+              height: 100%;
+            `}
+            market={market}
+          />
+          <FlexCol
+            css={css`
+              flex-grow: 1;
+            `}
+          >
+            <FlexRow>
+              <TradeTable market={market} />
+              <TradeChart
                 css={css`
-                  padding-left: 42px;
+                  flex-grow: 1;
                 `}
                 market={market}
               />
-            </FlexCol>
-          </FlexRow>
-        </DefaultWrapper>
-      </div>
+            </FlexRow>
+            <OrdersTable
+              css={css`
+                padding-left: 42px;
+              `}
+              market={market}
+            />
+          </FlexCol>
+        </FlexRow>
+      </DefaultWrapper>
     </FlexCol>
   );
 };

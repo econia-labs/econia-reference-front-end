@@ -20,11 +20,6 @@ export const TradeActions: React.FC<{
 }> = ({ className, market }) => {
   const [selectedOption, setSelectedOption] = useState(Mode.Limit);
 
-  if (!market)
-    return (
-      <DefaultContainer className={className}>Loading...</DefaultContainer>
-    );
-
   return (
     <DefaultContainer
       className={className}
@@ -50,10 +45,14 @@ export const TradeActions: React.FC<{
           margin-top: 32px;
         `}
       >
-        {selectedOption === Mode.Limit ? (
-          <LimitOrderForm market={market} />
+        {market ? (
+          selectedOption === Mode.Limit ? (
+            <LimitOrderForm market={market} />
+          ) : (
+            <MarketOrderForm market={market} />
+          )
         ) : (
-          <MarketOrderForm market={market} />
+          "Loading..."
         )}
       </div>
     </DefaultContainer>
