@@ -130,7 +130,7 @@ export const OrdersTable: React.FC<{
       {allOrders.length > 0 ? (
         <div
           css={css`
-            max-height: 240px;
+            height: 220px;
             overflow-x: scroll;
             // This padding prevents the scrollbar from overlapping the table
             padding-right: 8px;

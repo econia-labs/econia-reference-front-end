@@ -28,7 +28,7 @@ export const UserInfo: React.FC<{ market: RegisteredMarket }> = ({
       <h3>User info</h3>
       <div
         css={css`
-          min-height: 180px;
+          height: 160px;
           width: 360px;
         `}
       >
