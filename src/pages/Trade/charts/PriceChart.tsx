@@ -58,6 +58,9 @@ export const PriceChart: React.FC<{
     <Line
       options={{
         responsive: true,
+        interaction: {
+          intersect: false,
+        },
         plugins: {
           legend: {
             display: false,
