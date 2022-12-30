@@ -42,13 +42,25 @@ export const TradeTable: React.FC<{
       />
       <div
         css={css`
-          margin-top: 32px;
+          margin-top: 8px;
         `}
       >
         {selectedOption === Mode.Book ? (
-          <BookTable market={market} />
+          <BookTable
+            css={css`
+              height: 240px;
+              overflow-y: scroll;
+            `}
+            market={market}
+          />
         ) : (
-          <TradesTable market={market} />
+          <TradesTable
+            css={css`
+              height: 240px;
+              overflow-y: scroll;
+            `}
+            market={market}
+          />
         )}
       </div>
     </DefaultContainer>

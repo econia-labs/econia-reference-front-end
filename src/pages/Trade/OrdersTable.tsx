@@ -83,9 +83,10 @@ const TableRow: React.FC<{
 };
 
 export const OrdersTable: React.FC<{
+  className?: string;
   market: RegisteredMarket;
   showClosed?: boolean;
-}> = ({ market, showClosed }) => {
+}> = ({ className, market, showClosed }) => {
   const { account, connected } = useAptos();
   const marketAccount = useMarketAccount(market.marketId, account?.address);
   const baseCoinInfo = useCoinInfo(market.baseType);
@@ -122,6 +123,7 @@ export const OrdersTable: React.FC<{
 
   return (
     <div
+      className={className}
       css={css`
         width: 100%;
       `}

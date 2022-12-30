@@ -11,9 +11,10 @@ import { RegisteredMarket } from "../../../hooks/useRegisteredMarkets";
 import { DefaultWrapper } from "../../../layout/DefaultWrapper";
 import { toDecimalPrice, toDecimalSize } from "../../../utils/units";
 
-export const BookTable: React.FC<{ market: RegisteredMarket }> = ({
-  market,
-}) => {
+export const BookTable: React.FC<{
+  className?: string;
+  market: RegisteredMarket;
+}> = ({ className, market }) => {
   const orderBook = useOrderBook(market.marketId);
   const baseCoin = useCoinInfo(market.baseType);
   const quoteCoin = useCoinInfo(market.quoteType);
@@ -42,11 +43,17 @@ export const BookTable: React.FC<{ market: RegisteredMarket }> = ({
     return <DefaultWrapper>No data for coins</DefaultWrapper>;
   }
   return (
-    <DefaultWrapper>
+    <DefaultWrapper className={className}>
       <table
-        css={css`
+        css={(theme) => css`
           width: 100%;
           text-align: right;
+          thead {
+            position: sticky;
+            top: 0px;
+            z-index: 1;
+            background: ${theme.colors.grey[800]};
+          }
         `}
       >
         <thead>

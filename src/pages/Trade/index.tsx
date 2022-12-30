@@ -103,13 +103,12 @@ export const Trade: React.FC = () => {
                   market={market}
                 />
               </FlexRow>
-              <div
+              <OrdersTable
                 css={css`
                   padding-left: 42px;
                 `}
-              >
-                <OrdersTable market={market} />
-              </div>
+                market={market}
+              />
             </FlexCol>
           </FlexRow>
         </DefaultWrapper>
