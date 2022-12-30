@@ -48,7 +48,7 @@ export const Swap: React.FC = () => {
           height: 100%;
           flex-direction: column;
           align-items: center;
-          justify-content: center;
+          margin-top: 120px;
         `}
       >
         <SwapContainer>
@@ -188,7 +188,6 @@ const SwapInner: React.FC<{
 
   return (
     <>
-      <h2>Swap</h2>
       <InputContainer>
         <Label
           css={css`
@@ -394,6 +393,7 @@ const SwapInner: React.FC<{
 
 const SwapContainer = styled(FlexCol)`
   border: 1px solid ${({ theme }) => theme.colors.grey[700]};
+  background: ${({ theme }) => theme.colors.grey[700]};
   padding: 16px 32px;
   width: fit-content;
   align-items: center;
