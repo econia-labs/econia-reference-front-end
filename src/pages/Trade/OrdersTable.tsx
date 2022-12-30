@@ -85,7 +85,7 @@ const TableRow: React.FC<{
 
 export const OrdersTable: React.FC<{
   className?: string;
-  market: RegisteredMarket;
+  market?: RegisteredMarket;
   showClosed?: boolean;
 }> = ({ className, market, showClosed }) => {
   if (!market) return <div className={className}>Loading...</div>;
