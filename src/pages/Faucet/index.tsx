@@ -94,7 +94,6 @@ export const Faucet: React.FC = () => {
 };
 
 const FaucetContainer = styled(FlexRow)`
-  border: 1px solid ${({ theme }) => theme.colors.grey[700]};
   padding: 16px 32px;
   width: fit-content;
   align-items: center;
