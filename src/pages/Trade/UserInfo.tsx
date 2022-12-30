@@ -1,12 +1,11 @@
 import { u64 } from "@manahippo/move-to-ts";
-import { connect } from "http2";
 
 import React from "react";
 
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 
-import { Button } from "../../components/Button";
+import { ConnectWalletButton } from "../../hooks/ConnectWalletButton";
 import { useAptos } from "../../hooks/useAptos";
 import { useCoinStore } from "../../hooks/useCoinStore";
 import { useMarketAccount } from "../../hooks/useMarketAccount";
@@ -17,7 +16,7 @@ import { toDecimalCoin } from "../../utils/units";
 export const UserInfo: React.FC<{ market: RegisteredMarket }> = ({
   market,
 }) => {
-  const { account, connected, connect } = useAptos();
+  const { account, connected } = useAptos();
   const baseCoinStore = useCoinStore(market.baseType, account?.address);
   const quoteCoinStore = useCoinStore(market.quoteType, account?.address);
   const marketAccount = useMarketAccount(market.marketId, account?.address);
@@ -140,16 +139,13 @@ export const UserInfo: React.FC<{ market: RegisteredMarket }> = ({
             >
               Connect your Aptos wallet to view your balances.
             </p>
-            <Button
+            <ConnectWalletButton
               css={css`
                 margin-bottom: 16px;
               `}
               size="sm"
               variant="primary"
-              onClick={connect}
-            >
-              Connect Wallet
-            </Button>
+            />
           </div>
         )}
       </div>

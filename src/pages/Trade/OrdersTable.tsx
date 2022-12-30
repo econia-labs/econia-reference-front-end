@@ -1,4 +1,4 @@
-import { U64, U128, u64, u128 } from "@manahippo/move-to-ts";
+import { U64, U128, u64 } from "@manahippo/move-to-ts";
 import BigNumber from "bignumber.js";
 
 import React from "react";
@@ -7,6 +7,7 @@ import { css } from "@emotion/react";
 
 import { TxButton } from "../../components/TxButton";
 import { ASK, BID } from "../../constants";
+import { ConnectWalletButton } from "../../hooks/ConnectWalletButton";
 import { useAptos } from "../../hooks/useAptos";
 // import { useCancelAllOrders } from "../../hooks/useCancelAllOrders";
 import { useCancelOrder } from "../../hooks/useCancelOrder";
@@ -94,7 +95,20 @@ export const OrdersTable: React.FC<{
   //   const cancelAllOrders = useCancelAllOrders();
   const cancelOrder = useCancelOrder();
 
-  if (!connected) return null;
+  if (!connected)
+    return (
+      <div className={className}>
+        <h3>Open Orders</h3>
+        <p
+          css={css`
+            margin-bottom: 8px;
+          `}
+        >
+          Connect your Aptos wallet to view your open orders.
+        </p>
+        <ConnectWalletButton variant="primary" size="sm" />
+      </div>
+    );
   if (marketAccount.isLoading || !marketAccount.data)
     return <div>Loading orders...</div>;
   else if (
