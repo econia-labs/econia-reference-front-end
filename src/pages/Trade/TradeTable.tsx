@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 import { css } from "@emotion/react";
 
+import { FlexCol } from "../../components/FlexCol";
 import { RadioGroup } from "../../components/RadioGroup";
 import { RegisteredMarket } from "../../hooks/useRegisteredMarkets";
 import { DefaultContainer } from "../../layout/DefaultContainer";
@@ -20,13 +21,12 @@ export const TradeTable: React.FC<{
   const [selectedOption, setSelectedOption] = useState(Mode.Book);
 
   return (
-    <DefaultContainer
+    <FlexCol
       className={className}
       css={(theme) => css`
         width: fit-content;
         border-left: 1px solid ${theme.colors.grey[700]};
         border-right: 1px solid ${theme.colors.grey[700]};
-        border-bottom: 1px solid ${theme.colors.grey[700]};
       `}
     >
       <RadioGroup
@@ -41,30 +41,20 @@ export const TradeTable: React.FC<{
       <div
         css={css`
           margin-top: 8px;
+          flex-grow: 1;
+          overflow-y: scroll;
         `}
       >
         {market ? (
           selectedOption === Mode.Book ? (
-            <BookTable
-              css={css`
-                height: 240px;
-                overflow-y: scroll;
-              `}
-              market={market}
-            />
+            <BookTable market={market} />
           ) : (
-            <TradesTable
-              css={css`
-                height: 240px;
-                overflow-y: scroll;
-              `}
-              market={market}
-            />
+            <TradesTable market={market} />
           )
         ) : (
           "Loading..."
         )}
       </div>
-    </DefaultContainer>
+    </FlexCol>
   );
 };

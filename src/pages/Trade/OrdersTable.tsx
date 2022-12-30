@@ -88,21 +88,27 @@ export const OrdersTable: React.FC<{
   market?: RegisteredMarket;
   showClosed?: boolean;
 }> = ({ className, market, showClosed }) => {
-  if (!market) return <div className={className}>Loading...</div>;
   return (
-    <OrdersTableInner
+    <div
       className={className}
-      market={market}
-      showClosed={showClosed}
-    />
+      css={css`
+        width: 100%;
+      `}
+    >
+      <h3>Open Orders</h3>
+      {market ? (
+        <OrdersTableInner market={market} showClosed={showClosed} />
+      ) : (
+        "Loading..."
+      )}
+    </div>
   );
 };
 
 const OrdersTableInner: React.FC<{
-  className?: string;
   market: RegisteredMarket;
   showClosed?: boolean;
-}> = ({ className, market, showClosed }) => {
+}> = ({ market, showClosed }) => {
   const { account, connected } = useAptos();
   const marketAccount = useMarketAccount(market.marketId, account?.address);
   const baseCoinInfo = useCoinInfo(market.baseType);
@@ -112,8 +118,7 @@ const OrdersTableInner: React.FC<{
 
   if (!connected)
     return (
-      <div className={className}>
-        <h3>Open Orders</h3>
+      <>
         <p
           css={css`
             margin-bottom: 8px;
@@ -122,7 +127,7 @@ const OrdersTableInner: React.FC<{
           Connect your Aptos wallet to view your open orders.
         </p>
         <ConnectWalletButton variant="primary" size="sm" />
-      </div>
+      </>
     );
   if (marketAccount.isLoading || !marketAccount.data)
     return <div>Loading orders...</div>;
@@ -151,12 +156,7 @@ const OrdersTableInner: React.FC<{
   }
 
   return (
-    <div
-      className={className}
-      css={css`
-        width: 100%;
-      `}
-    >
+    <>
       <h3>Open Orders</h3>
       {allOrders.length > 0 ? (
         <div
@@ -241,6 +241,6 @@ const OrdersTableInner: React.FC<{
           Cancel All Orders
         </span>
       )} */}
-    </div>
+    </>
   );
 };

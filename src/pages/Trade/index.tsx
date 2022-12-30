@@ -100,10 +100,14 @@ export const Trade: React.FC = () => {
               flex-grow: 1;
             `}
           >
-            <FlexRow>
+            <FlexRow
+              css={css`
+                height: 340px;
+              `}
+            >
               <TradeTable
                 css={css`
-                  height: 296.5px;
+                  height: 100%;
                 `}
                 market={market}
               />
