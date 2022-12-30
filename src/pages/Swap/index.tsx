@@ -395,7 +395,8 @@ const SwapContainer = styled(FlexCol)`
   border: 1px solid ${({ theme }) => theme.colors.grey[700]};
   background: ${({ theme }) => theme.colors.grey[700]};
   padding: 16px 32px;
-  width: fit-content;
+  width: 300px;
+  height: 442px;
   align-items: center;
   label {
     margin-top: 16px;
