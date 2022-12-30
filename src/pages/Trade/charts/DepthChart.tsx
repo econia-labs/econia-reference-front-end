@@ -1,4 +1,5 @@
 import BigNumber from "bignumber.js";
+import { isTemplateExpression } from "typescript";
 
 import React, { useMemo } from "react";
 import { Line } from "react-chartjs-2";
@@ -119,6 +120,19 @@ export const DepthChart: React.FC<{
         plugins: {
           legend: {
             display: false,
+          },
+          tooltip: {
+            callbacks: {
+              label: (item) => {
+                return [
+                  `Price: ${item.label} ${quoteCoinInfo.symbol}`,
+                  `Size: ${item.raw} ${baseCoinInfo.symbol}`,
+                ];
+              },
+              title: () => "",
+            },
+            displayColors: false,
+            bodyAlign: "right",
           },
         },
         scales: {

@@ -65,6 +65,19 @@ export const PriceChart: React.FC<{
           legend: {
             display: false,
           },
+          tooltip: {
+            callbacks: {
+              label: (item) => {
+                return [
+                  `Version: ${item.label}`,
+                  `Price: ${item.raw} ${quoteCoinInfo.symbol}`,
+                ];
+              },
+              title: () => "",
+            },
+            displayColors: false,
+            bodyAlign: "left",
+          },
         },
       }}
       data={{
