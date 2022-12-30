@@ -7,8 +7,6 @@ import { RegisteredMarket } from "../../hooks/useRegisteredMarkets";
 import { DefaultContainer } from "../../layout/DefaultContainer";
 import { BookTable } from "./charts/BookTable";
 import { TradesTable } from "./charts/TradesTable";
-import { LimitOrderForm } from "./orderPlacement/LimitOrderForm";
-import { MarketOrderForm } from "./orderPlacement/MarketOrderForm";
 
 enum Mode {
   Book = "Book",
@@ -20,11 +18,6 @@ export const TradeTable: React.FC<{
   market?: RegisteredMarket;
 }> = ({ className, market }) => {
   const [selectedOption, setSelectedOption] = useState(Mode.Book);
-
-  if (!market)
-    return (
-      <DefaultContainer className={className}>Loading...</DefaultContainer>
-    );
 
   return (
     <DefaultContainer
@@ -50,22 +43,26 @@ export const TradeTable: React.FC<{
           margin-top: 8px;
         `}
       >
-        {selectedOption === Mode.Book ? (
-          <BookTable
-            css={css`
-              height: 240px;
-              overflow-y: scroll;
-            `}
-            market={market}
-          />
+        {market ? (
+          selectedOption === Mode.Book ? (
+            <BookTable
+              css={css`
+                height: 240px;
+                overflow-y: scroll;
+              `}
+              market={market}
+            />
+          ) : (
+            <TradesTable
+              css={css`
+                height: 240px;
+                overflow-y: scroll;
+              `}
+              market={market}
+            />
+          )
         ) : (
-          <TradesTable
-            css={css`
-              height: 240px;
-              overflow-y: scroll;
-            `}
-            market={market}
-          />
+          "Loading..."
         )}
       </div>
     </DefaultContainer>

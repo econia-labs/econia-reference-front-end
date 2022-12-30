@@ -101,7 +101,12 @@ export const Trade: React.FC = () => {
             `}
           >
             <FlexRow>
-              <TradeTable market={market} />
+              <TradeTable
+                css={css`
+                  height: 296.5px;
+                `}
+                market={market}
+              />
               <TradeChart
                 css={css`
                   flex-grow: 1;
