@@ -1,5 +1,4 @@
 import BigNumber from "bignumber.js";
-import { isTemplateExpression } from "typescript";
 
 import React, { useMemo } from "react";
 import { Line } from "react-chartjs-2";
@@ -19,14 +18,14 @@ export const DepthChart: React.FC<{
 }> = ({ market, baseCoinInfo, quoteCoinInfo }) => {
   const theme = useTheme();
   const orderBook = useOrderBook(market.marketId);
-  const { labels, bidData, askData } = useMemo(() => {
+  const { labels, bidData, askData, minPrice, maxPrice } = useMemo(() => {
     const labels: number[] = [];
     const bidData: (number | undefined)[] = [];
     const askData: (number | undefined)[] = [];
+    let minPrice = Infinity;
+    let maxPrice = -Infinity;
     if (orderBook.data) {
       // Get min and max price to set a range
-      let minPrice = Infinity;
-      let maxPrice = -Infinity;
       for (const order of orderBook.data.bids.concat(orderBook.data.asks)) {
         if (order.price.toJsNumber() < minPrice) {
           minPrice = order.price.toJsNumber();
@@ -107,7 +106,25 @@ export const DepthChart: React.FC<{
         }).toNumber();
       });
     }
-    return { labels, bidData, askData };
+    return {
+      labels,
+      bidData,
+      askData,
+      minPrice: toDecimalPrice({
+        price: new BigNumber(minPrice),
+        lotSize: market.lotSize,
+        tickSize: market.tickSize,
+        baseCoinDecimals: baseCoinInfo.decimals,
+        quoteCoinDecimals: quoteCoinInfo.decimals,
+      }),
+      maxPrice: toDecimalPrice({
+        price: new BigNumber(maxPrice),
+        lotSize: market.lotSize,
+        tickSize: market.tickSize,
+        baseCoinDecimals: baseCoinInfo.decimals,
+        quoteCoinDecimals: quoteCoinInfo.decimals,
+      }),
+    };
   }, [market, baseCoinInfo, quoteCoinInfo, orderBook.data]);
 
   return (
@@ -126,7 +143,7 @@ export const DepthChart: React.FC<{
               label: (item) => {
                 return [
                   `Price: ${item.label} ${quoteCoinInfo.symbol}`,
-                  `Size: ${item.raw} ${baseCoinInfo.symbol}`,
+                  `Total Size: ${item.raw} ${baseCoinInfo.symbol}`,
                 ];
               },
               title: () => "",
@@ -136,7 +153,22 @@ export const DepthChart: React.FC<{
           },
         },
         scales: {
+          x: {
+            grid: {
+              display: true,
+              color: theme.colors.grey[700],
+            },
+            // We don't use linear for now because it doesn't ensure that the graph fits nicely in tick sizes
+            // type: "linear",
+            // ticks: {
+            //   stepSize,
+            // },
+          },
           y: {
+            grid: {
+              display: true,
+              color: theme.colors.grey[700],
+            },
             beginAtZero: true,
           },
         },

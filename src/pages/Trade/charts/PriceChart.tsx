@@ -14,6 +14,8 @@ enum PriceStatus {
   NEGATIVE,
 }
 
+const MAX_TICKS_LIMIT = 7;
+
 export const PriceChart: React.FC<{
   market: RegisteredMarket;
   baseCoinInfo: CoinInfo;
@@ -77,6 +79,24 @@ export const PriceChart: React.FC<{
             },
             displayColors: false,
             bodyAlign: "left",
+          },
+        },
+        scales: {
+          x: {
+            grid: {
+              display: true,
+              color: theme.colors.grey[700],
+            },
+            // Linear ticks works best when there is active trading
+            // type: "linear",
+            ticks: { maxTicksLimit: MAX_TICKS_LIMIT },
+          },
+          y: {
+            grid: {
+              display: true,
+              color: theme.colors.grey[700],
+            },
+            beginAtZero: true,
           },
         },
       }}
