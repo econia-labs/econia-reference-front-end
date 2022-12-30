@@ -7,7 +7,6 @@ import { FlexRow } from "../../components/FlexRow";
 import { RadioGroup } from "../../components/RadioGroup";
 import { useCoinInfo } from "../../hooks/useCoinInfo";
 import { RegisteredMarket } from "../../hooks/useRegisteredMarkets";
-import { DefaultContainer } from "../../layout/DefaultContainer";
 import { DepthChart } from "./charts/DepthChart";
 import { PriceChart } from "./charts/PriceChart";
 
@@ -15,18 +14,37 @@ export const TradeChart: React.FC<{
   className?: string;
   market?: RegisteredMarket;
 }> = ({ className, market }) => {
-  if (!market)
-    return (
-      <DefaultContainer className={className}>Loading...</DefaultContainer>
-    );
-  return <TradeChartInner className={className} market={market} />;
+  const [mode, setMode] = React.useState<string>("Depth");
+  return (
+    <div
+      css={css`
+        height: 100%;
+      `}
+      className={className}
+    >
+      <FlexRow
+        css={css`
+          justify-content: flex-end;
+        `}
+      >
+        <RadioGroup
+          css={css`
+            margin-bottom: 16px;
+          `}
+          options={["Price", "Depth"]}
+          value={mode}
+          onChange={setMode}
+        />
+      </FlexRow>
+      {market ? <TradeChartInner market={market} mode={mode} /> : "Loading..."}
+    </div>
+  );
 };
 
 const TradeChartInner: React.FC<{
-  className?: string;
   market: RegisteredMarket;
-}> = ({ className, market }) => {
-  const [mode, setMode] = React.useState<string>("Depth");
+  mode: string;
+}> = ({ market, mode }) => {
   const baseCoinInfo = useCoinInfo(market.baseType);
   const quoteCoinInfo = useCoinInfo(market.quoteType);
 
@@ -39,27 +57,8 @@ const TradeChartInner: React.FC<{
   }
 
   return (
-    <div
-      css={css`
-        height: 100%;
-      `}
-      className={className}
-    >
+    <>
       <FlexCol>
-        <FlexRow
-          css={css`
-            justify-content: flex-end;
-          `}
-        >
-          <RadioGroup
-            css={css`
-              margin-bottom: 16px;
-            `}
-            options={["Price", "Depth"]}
-            value={mode}
-            onChange={setMode}
-          />
-        </FlexRow>
         <div
           css={css`
             max-width: 1000px;
@@ -81,6 +80,6 @@ const TradeChartInner: React.FC<{
           )}
         </div>
       </FlexCol>
-    </div>
+    </>
   );
 };
