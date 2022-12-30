@@ -16,9 +16,14 @@ enum Mode {
 
 export const TradeActions: React.FC<{
   className?: string;
-  market: RegisteredMarket;
+  market?: RegisteredMarket;
 }> = ({ className, market }) => {
   const [selectedOption, setSelectedOption] = useState(Mode.Limit);
+
+  if (!market)
+    return (
+      <DefaultContainer className={className}>Loading...</DefaultContainer>
+    );
 
   return (
     <DefaultContainer

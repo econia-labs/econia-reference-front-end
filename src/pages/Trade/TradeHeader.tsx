@@ -1,3 +1,5 @@
+import BigNumber from "bignumber.js";
+
 import React from "react";
 
 import { css } from "@emotion/react";
@@ -19,34 +21,59 @@ import {
   toDecimalSize,
 } from "../../utils/units";
 
+// Notes:
+// TradeHeaderView has no logic, it is only display and knows how to handle undefined values
+// TradeHeaderInner has logic for fetching via hooks and ultimately renders TradeHeaderView
+// TradeHeader is a wrapper that handles the case where market is undefined
+// TODO: Can probably use this kind of pattern less if the hooks can take in undefined values
+
 export const TradeHeader: React.FC<{
+  className?: string;
+  market?: RegisteredMarket;
+  setSelectedMarket: (market: RegisteredMarket) => void;
+  markets?: RegisteredMarket[];
+}> = ({ className, market, setSelectedMarket, markets }) => {
+  if (market === undefined || markets === undefined)
+    return (
+      <TradeHeaderView
+        className={className}
+        baseSymbol={undefined}
+        quoteSymbol={undefined}
+        markets={markets}
+        price={undefined}
+        priceChange={undefined}
+        totalBaseVolume={undefined}
+        totalQuoteVolume={undefined}
+        totalTrades={undefined}
+        setSelectedMarket={setSelectedMarket}
+      />
+    );
+  return (
+    <TradeHeaderInner
+      className={className}
+      market={market}
+      setSelectedMarket={setSelectedMarket}
+      markets={markets}
+    />
+  );
+};
+
+const TradeHeaderInner: React.FC<{
+  className?: string;
   market: RegisteredMarket;
   setSelectedMarket: (market: RegisteredMarket) => void;
   markets: RegisteredMarket[];
-}> = ({ market, setSelectedMarket, markets }) => {
-  const baseCoinInfo = useCoinInfo(market.baseType);
-  const quoteCoinInfo = useCoinInfo(market.quoteType);
+}> = ({ className, market, setSelectedMarket, markets }) => {
+  const baseCoinInfo = useCoinInfo(market?.baseType);
+  const quoteCoinInfo = useCoinInfo(market?.quoteType);
   const marketPrice = useMarketPrice(market);
   const takerEvents = useTakerEvents(market.marketId);
   const totalTrades = takerEvents.data?.length;
 
-  if (
-    baseCoinInfo.isLoading ||
-    quoteCoinInfo.isLoading ||
-    marketPrice.isLoading
-  ) {
-    // TODO: Better loading state
-    return <DefaultWrapper>Loading...</DefaultWrapper>;
-  } else if (baseCoinInfo.error || quoteCoinInfo.error || marketPrice.error) {
-    // TODO: Better error states
-    return <DefaultWrapper>Market price not found</DefaultWrapper>;
-  } else if (!baseCoinInfo.data || !quoteCoinInfo.data) {
-    return <DefaultWrapper>Coin info not found.</DefaultWrapper>;
-  }
-
   let totalBaseVolume;
   let totalQuoteVolume;
-  if (takerEvents.data) {
+  let priceChange;
+  if (baseCoinInfo.data && quoteCoinInfo.data && takerEvents.data) {
     for (const takerEvent of takerEvents.data) {
       if (!totalBaseVolume) totalBaseVolume = ZERO_BIGNUMBER;
       if (!totalQuoteVolume) totalQuoteVolume = ZERO_BIGNUMBER;
@@ -69,25 +96,63 @@ export const TradeHeader: React.FC<{
         quoteCoinDecimals: quoteCoinInfo.data.decimals,
       });
     }
+    priceChange =
+      takerEvents.data && takerEvents.data.length > 1
+        ? toDecimalPrice({
+            price: takerEvents.data[takerEvents.data.length - 1].price.minus(
+              takerEvents.data[takerEvents.data.length - 2]?.price ??
+                ZERO_BIGNUMBER,
+            ),
+            lotSize: market.lotSize,
+            tickSize: market.tickSize,
+            baseCoinDecimals: baseCoinInfo.data.decimals,
+            quoteCoinDecimals: quoteCoinInfo.data.decimals,
+          })
+        : undefined;
   }
 
-  const priceChange =
-    takerEvents.data && takerEvents.data.length > 1
-      ? toDecimalPrice({
-          price: takerEvents.data[takerEvents.data.length - 1].price.minus(
-            takerEvents.data[takerEvents.data.length - 2]?.price ??
-              ZERO_BIGNUMBER,
-          ),
-          lotSize: market.lotSize,
-          tickSize: market.tickSize,
-          baseCoinDecimals: baseCoinInfo.data.decimals,
-          quoteCoinDecimals: quoteCoinInfo.data.decimals,
-        })
-      : null;
+  return (
+    <TradeHeaderView
+      className={className}
+      baseSymbol={baseCoinInfo.data?.symbol}
+      quoteSymbol={quoteCoinInfo.data?.symbol}
+      markets={markets}
+      price={marketPrice.data?.bestAskPrice}
+      priceChange={priceChange}
+      totalBaseVolume={totalBaseVolume}
+      totalQuoteVolume={totalQuoteVolume}
+      totalTrades={totalTrades}
+      setSelectedMarket={setSelectedMarket}
+    />
+  );
+};
 
-  // TODO: Header items shouldn't change widths after loading
+const TradeHeaderView: React.FC<{
+  className?: string;
+  baseSymbol?: string;
+  quoteSymbol?: string;
+  markets?: RegisteredMarket[];
+  price?: BigNumber;
+  priceChange?: BigNumber;
+  totalBaseVolume?: BigNumber;
+  totalQuoteVolume?: BigNumber;
+  totalTrades?: number;
+  setSelectedMarket: (market: RegisteredMarket) => void;
+}> = ({
+  className,
+  baseSymbol,
+  quoteSymbol,
+  markets,
+  price,
+  priceChange,
+  totalBaseVolume,
+  totalQuoteVolume,
+  totalTrades,
+  setSelectedMarket,
+}) => {
   return (
     <DefaultWrapper
+      className={className}
       css={(theme) => css`
         border-bottom: 1px solid ${theme.colors.grey[700]};
         border-left: 1px solid ${theme.colors.grey[700]};
@@ -111,42 +176,89 @@ export const TradeHeader: React.FC<{
           >
             <MarketNameWrapper>
               <Label>Market</Label>
-              {baseCoinInfo.data.symbol} / {quoteCoinInfo.data.symbol}
+              {baseSymbol && quoteSymbol
+                ? `${baseSymbol} / ${quoteSymbol}`
+                : "Loading..."}
             </MarketNameWrapper>
-            <MarketDropdown
-              markets={markets}
-              setSelectedMarket={setSelectedMarket}
-              dropdownLabel="All markets ▼"
-              allowMarketRegistration
-            />
+            {markets ? (
+              <MarketDropdown
+                markets={markets}
+                setSelectedMarket={setSelectedMarket}
+                dropdownLabel="All markets ▼"
+                allowMarketRegistration
+              />
+            ) : (
+              <div />
+            )}
           </FlexRow>
         </MarketWrapper>
         <PriceWrapper>
           <Label>Price</Label>
-          {marketPrice.data?.bestAskPrice?.toNumber()}{" "}
-          {quoteCoinInfo.data.symbol}
+          <div
+            css={css`
+              width: 120px;
+            `}
+          >
+            {price ? `${price.toPrecision(4)} ${quoteSymbol}` : "Loading..."}
+          </div>
         </PriceWrapper>
         <PriceChangeWrapper>
           <Label>Price Change</Label>
-          <ColoredValue
-            color={
-              priceChange ? (priceChange.gte(0) ? "green" : "red") : undefined
-            }
+          <div
+            css={css`
+              width: 120px;
+            `}
           >
-            {priceChange ? (priceChange.gt(0) ? "+" : "") : null}
-            {priceChange?.toNumber() ?? "-"} {quoteCoinInfo.data.symbol}
-          </ColoredValue>
+            {priceChange ? (
+              <ColoredValue color={priceChange.gte(0) ? "green" : "red"}>
+                {priceChange.gt(0) ? "+" : ""}
+                {priceChange.toPrecision(4) ?? "-"} {quoteSymbol}
+              </ColoredValue>
+            ) : (
+              "Loading..."
+            )}
+          </div>
         </PriceChangeWrapper>
         <VolumeWrapper>
           <Label>Total Volume</Label>
-          <span>
-            {totalBaseVolume?.toNumber()} {baseCoinInfo.data.symbol} /{" "}
-            {totalQuoteVolume?.toNumber()} {quoteCoinInfo.data.symbol}
-          </span>
+          <div
+            css={css`
+              // May not work if the volume is too large or too small
+              width: 280px;
+            `}
+          >
+            {totalBaseVolume && totalQuoteVolume ? (
+              <FlexRow
+                css={css`
+                  gap: 4px;
+                `}
+              >
+                <span>
+                  {totalBaseVolume.toPrecision(4)} {baseSymbol}
+                </span>
+                <span>/</span>
+                <span>
+                  {totalQuoteVolume.toPrecision(4)} {quoteSymbol}
+                </span>
+              </FlexRow>
+            ) : (
+              "Loading..."
+            )}
+          </div>
         </VolumeWrapper>
         <TradesWrapper>
           <Label>Total Trades</Label>
-          <span>{totalTrades}</span>
+          <div
+            css={css`
+              width: 92px;
+            `}
+          >
+            {totalTrades !== undefined ? (
+              <span>{totalTrades}</span>
+            ) : (
+              "Loading..."
+            )}
+          </div>
         </TradesWrapper>
       </DefaultContainer>
     </DefaultWrapper>

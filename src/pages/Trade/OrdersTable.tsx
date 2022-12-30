@@ -88,6 +88,21 @@ export const OrdersTable: React.FC<{
   market: RegisteredMarket;
   showClosed?: boolean;
 }> = ({ className, market, showClosed }) => {
+  if (!market) return <div className={className}>Loading...</div>;
+  return (
+    <OrdersTableInner
+      className={className}
+      market={market}
+      showClosed={showClosed}
+    />
+  );
+};
+
+const OrdersTableInner: React.FC<{
+  className?: string;
+  market: RegisteredMarket;
+  showClosed?: boolean;
+}> = ({ className, market, showClosed }) => {
   const { account, connected } = useAptos();
   const marketAccount = useMarketAccount(market.marketId, account?.address);
   const baseCoinInfo = useCoinInfo(market.baseType);

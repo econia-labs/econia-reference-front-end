@@ -27,9 +27,11 @@ export const Trade: React.FC = () => {
     }
   }, [registeredMarkets.data]);
 
-  if (registeredMarkets.isLoading || registeredMarkets.data === undefined) {
-    return <DefaultWrapper>Loading...</DefaultWrapper>;
-  } else if (market === undefined) {
+  if (
+    !registeredMarkets.isLoading &&
+    registeredMarkets.data &&
+    registeredMarkets.data.length === 0
+  ) {
     return (
       <DefaultWrapper
         css={css`
@@ -74,6 +76,9 @@ export const Trade: React.FC = () => {
         `}
       >
         <TradeHeader
+          css={css`
+            height: 38.5px;
+          `}
           market={market}
           setSelectedMarket={setMarket}
           markets={registeredMarkets.data}

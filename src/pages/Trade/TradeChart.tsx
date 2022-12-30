@@ -7,10 +7,22 @@ import { FlexRow } from "../../components/FlexRow";
 import { RadioGroup } from "../../components/RadioGroup";
 import { useCoinInfo } from "../../hooks/useCoinInfo";
 import { RegisteredMarket } from "../../hooks/useRegisteredMarkets";
+import { DefaultContainer } from "../../layout/DefaultContainer";
 import { DepthChart } from "./charts/DepthChart";
 import { PriceChart } from "./charts/PriceChart";
 
 export const TradeChart: React.FC<{
+  className?: string;
+  market?: RegisteredMarket;
+}> = ({ className, market }) => {
+  if (!market)
+    return (
+      <DefaultContainer className={className}>Loading...</DefaultContainer>
+    );
+  return <TradeChartInner className={className} market={market} />;
+};
+
+const TradeChartInner: React.FC<{
   className?: string;
   market: RegisteredMarket;
 }> = ({ className, market }) => {

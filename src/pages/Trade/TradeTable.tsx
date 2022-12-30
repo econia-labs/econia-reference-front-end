@@ -17,9 +17,14 @@ enum Mode {
 
 export const TradeTable: React.FC<{
   className?: string;
-  market: RegisteredMarket;
+  market?: RegisteredMarket;
 }> = ({ className, market }) => {
   const [selectedOption, setSelectedOption] = useState(Mode.Book);
+
+  if (!market)
+    return (
+      <DefaultContainer className={className}>Loading...</DefaultContainer>
+    );
 
   return (
     <DefaultContainer
