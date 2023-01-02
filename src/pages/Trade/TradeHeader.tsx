@@ -38,14 +38,6 @@ export const TradeHeader: React.FC<{
     return (
       <TradeHeaderView
         className={className}
-        baseSymbol={undefined}
-        quoteSymbol={undefined}
-        markets={markets}
-        price={undefined}
-        priceChange={undefined}
-        totalBaseVolume={undefined}
-        totalQuoteVolume={undefined}
-        totalTrades={undefined}
         setSelectedMarket={setSelectedMarket}
       />
     );
