@@ -2,10 +2,14 @@ import styled from "@emotion/styled";
 
 export const Button = styled.button<{
   size: "sm" | "md" | "lg";
-  variant: "primary" | "secondary";
+  variant: "primary" | "secondary" | "outline";
 }>`
   background-color: ${({ variant, theme }) =>
-    variant === "primary" ? theme.colors.grey[100] : theme.colors.grey[700]};
+    variant === "primary"
+      ? theme.colors.grey[100]
+      : variant === "secondary"
+      ? theme.colors.grey[700]
+      : theme.colors.grey[800]}; // outline
   color: ${({ variant, theme }) =>
     variant === "primary" ? theme.colors.grey[700] : theme.colors.grey[100]};
   padding: ${({ size }) =>
@@ -19,7 +23,8 @@ export const Button = styled.button<{
   text-transform: uppercase;
   font-weight: 500;
   font-family: Roboto Mono, sans-serif;
-  border: none;
+  border: ${({ variant, theme }) =>
+    variant === "outline" ? `1px solid ${theme.colors.grey[600]}` : "none"};
   cursor: pointer;
   :hover {
     background-color: ${({ variant, theme }) =>

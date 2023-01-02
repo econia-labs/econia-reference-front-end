@@ -7,6 +7,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Theme, css } from "@emotion/react";
 import styled from "@emotion/styled";
 
+import { EconiaIcon } from "../assets/EconiaIcon";
 import { EconiaLogo } from "../assets/EconiaLogo";
 import { Button } from "../components/Button";
 import { DropdownMenu } from "../components/DropdownMenu";
@@ -44,7 +45,7 @@ export const Header: React.FC = () => {
   return (
     <DefaultWrapper
       css={(theme) => css`
-        border-bottom: 1px solid ${theme.colors.grey[700]};
+        border-bottom: 1px solid ${theme.colors.grey[600]};
       `}
     >
       <DefaultContainer
@@ -61,7 +62,9 @@ export const Header: React.FC = () => {
             flex: 1;
           `}
         >
-          <EconiaLogo width={32} height={32} />
+          <Link to="/">
+            <EconiaLogo />
+          </Link>
         </div>
         <NavContainer>
           {HEADER_ITEMS.map(({ label, pathname }, i) => (
@@ -120,7 +123,7 @@ export const Header: React.FC = () => {
                 width: 200px;
               `}
               size="sm"
-              variant="primary"
+              variant="outline"
               onClick={() => connect()}
             >
               Connect Wallet
@@ -139,12 +142,16 @@ const NavContainer = styled.div`
   gap: 24px;
 `;
 
-const ActiveNavLinkStyle = (theme: Theme) => css`
-  text-decoration: underline 2px solid ${theme.colors.grey[100]};
+const NavLinkStyle = (theme: Theme) => css`
+  font-size: 18px;
+  line-height: 20px;
+  :hover {
+    color: ${theme.colors.purple.primary};
+  }
 `;
 
-const NavLinkStyle = (theme: Theme) => css`
-  :hover {
-    text-decoration: underline 2px solid ${theme.colors.grey[100]};
-  }
+const ActiveNavLinkStyle = (theme: Theme) => css`
+  font-size: 18px;
+  line-height: 20px;
+  color: ${theme.colors.purple.primary};
 `;
