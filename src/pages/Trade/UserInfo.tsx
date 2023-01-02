@@ -26,7 +26,13 @@ export const UserInfo: React.FC<{
         width: 360px;
       `}
     >
-      <h3>User info</h3>
+      <h3
+        css={css`
+          margin-top: 16px;
+        `}
+      >
+        User info
+      </h3>
       {market ? (
         <UserInfoInner market={market} />
       ) : (
@@ -160,7 +166,7 @@ const UserInfoInner: React.FC<{ market: RegisteredMarket }> = ({ market }) => {
               margin-bottom: 16px;
             `}
             size="sm"
-            variant="primary"
+            variant="outline"
           />
         </div>
       )}

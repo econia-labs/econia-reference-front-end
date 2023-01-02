@@ -96,7 +96,13 @@ export const OrdersTable: React.FC<{
         width: 100%;
       `}
     >
-      <h3>Open Orders</h3>
+      <h3
+        css={css`
+          margin-top: 16px;
+        `}
+      >
+        Open Orders
+      </h3>
       {market ? (
         <OrdersTableInner market={market} showClosed={showClosed} />
       ) : (
@@ -127,7 +133,7 @@ const OrdersTableInner: React.FC<{
         >
           Connect your Aptos wallet to view your open orders.
         </p>
-        <ConnectWalletButton variant="primary" size="sm" />
+        <ConnectWalletButton variant="outline" size="sm" />
       </>
     );
   if (marketAccount.isLoading || !marketAccount.data)
@@ -158,7 +164,6 @@ const OrdersTableInner: React.FC<{
 
   return (
     <>
-      <h3>Open Orders</h3>
       {allOrders.length > 0 ? (
         <div
           css={css`

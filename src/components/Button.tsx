@@ -23,7 +23,8 @@ export const Button = styled.button<{
   text-transform: uppercase;
   font-weight: 500;
   font-family: Roboto Mono, sans-serif;
-  border: ${({ variant, theme }) =>
+  border: none;
+  outline: ${({ variant, theme }) =>
     variant === "outline" ? `1px solid ${theme.colors.grey[600]}` : "none"};
   cursor: pointer;
   :hover {
@@ -37,7 +38,8 @@ export const Button = styled.button<{
       variant === "outline"
         ? theme.colors.purple.primary
         : theme.colors.grey[100]};
-    border: ${({ variant, theme }) =>
+    border: none;
+    outline: ${({ variant, theme }) =>
       variant === "outline"
         ? `1px solid ${theme.colors.purple.primary}`
         : "none"};

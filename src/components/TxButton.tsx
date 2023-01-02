@@ -1,5 +1,6 @@
 import React, { ButtonHTMLAttributes } from "react";
 
+import { ConnectWalletButton } from "../hooks/ConnectWalletButton";
 import { useAptos } from "../hooks/useAptos";
 import { Button } from "./Button";
 
@@ -12,18 +13,14 @@ export const TxButton: React.FC<
   }
 > = ({ children, onClick, disabled, ...rest }) => {
   const [loading, setLoading] = React.useState(false);
-  const { connect, connected } = useAptos();
+  const { connected } = useAptos();
   if (!connected) {
     return (
-      <Button
+      <ConnectWalletButton
         className={rest.className}
         size={rest.size}
-        variant={rest.variant}
-        onClick={() => connect()}
-        disabled={false}
-      >
-        Connect Wallet
-      </Button>
+        variant="outline"
+      />
     );
   }
   return (

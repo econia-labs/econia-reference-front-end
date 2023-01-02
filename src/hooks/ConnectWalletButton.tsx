@@ -5,7 +5,7 @@ import { useAptos } from "./useAptos";
 
 export const ConnectWalletButton: React.FC<{
   size: "sm" | "md" | "lg";
-  variant: "primary" | "secondary";
+  variant: "primary" | "secondary" | "outline";
   className?: string;
 }> = ({ className, size, variant }) => {
   const { connect } = useAptos();
