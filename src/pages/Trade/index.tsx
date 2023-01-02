@@ -70,9 +70,6 @@ export const Trade: React.FC = () => {
       `}
     >
       <TradeHeader
-        css={css`
-          height: 38.5px;
-        `}
         market={market}
         setSelectedMarket={setMarket}
         markets={registeredMarkets.data}
