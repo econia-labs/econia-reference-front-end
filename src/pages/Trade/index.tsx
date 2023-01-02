@@ -100,7 +100,7 @@ export const Trade: React.FC = () => {
           >
             <FlexRow
               css={(theme) => css`
-                height: 500px;
+                height: 400px;
                 border-right: 1px solid ${theme.colors.grey[600]};
                 border-bottom: 1px solid ${theme.colors.grey[600]};
               `}
