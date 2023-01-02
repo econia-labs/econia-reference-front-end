@@ -2,13 +2,14 @@ import React from "react";
 
 export const CodeIcon: React.FC<{
   className?: string;
-  width: number;
-  height: number;
+  width?: number;
+  height?: number;
 }> = ({ className, width, height }) => {
   return (
     <svg
-      width={width}
-      height={height}
+      className={className}
+      width={width ?? 40}
+      height={height ?? 41}
       viewBox="0 0 40 41"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

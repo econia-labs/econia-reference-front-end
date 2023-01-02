@@ -28,6 +28,18 @@ export const Button = styled.button<{
   cursor: pointer;
   :hover {
     background-color: ${({ variant, theme }) =>
-      variant === "primary" ? theme.colors.grey[400] : theme.colors.grey[600]};
+      variant === "primary"
+        ? theme.colors.grey[400]
+        : variant === "secondary"
+        ? theme.colors.grey[600]
+        : theme.colors.grey[800]}; // outline
+    color: ${({ variant, theme }) =>
+      variant === "outline"
+        ? theme.colors.purple.primary
+        : theme.colors.grey[100]};
+    border: ${({ variant, theme }) =>
+      variant === "outline"
+        ? `1px solid ${theme.colors.purple.primary}`
+        : "none"};
   }
 `;

@@ -13,11 +13,13 @@ import { DropdownMenu } from "./DropdownMenu";
 import { NewMarketModal } from "./modals/NewMarketModal";
 
 export const MarketDropdown: React.FC<{
+  className?: string;
   markets: RegisteredMarket[];
   setSelectedMarket: (market: RegisteredMarket) => void;
   dropdownLabel: string;
   allowMarketRegistration?: boolean;
 }> = ({
+  className,
   markets,
   setSelectedMarket,
   dropdownLabel,
@@ -31,7 +33,7 @@ export const MarketDropdown: React.FC<{
   const [showNewMarketModal, setShowNewMarketModal] = useState(false);
 
   return (
-    <div ref={marketMenuClickawayRef}>
+    <div className={className} ref={marketMenuClickawayRef}>
       <NewMarketModal
         showModal={showNewMarketModal}
         closeModal={() => setShowNewMarketModal(false)}
@@ -72,11 +74,11 @@ export const MarketDropdown: React.FC<{
 };
 
 const MarketSelector = styled.span`
-  color: ${({ theme }) => theme.colors.grey[600]};
+  color: ${({ theme }) => theme.colors.grey[100]};
   padding: 4px 8px;
   cursor: pointer;
   :hover {
-    background-color: ${({ theme }) => theme.colors.grey[700]};
+    background-color: ${({ theme }) => theme.colors.grey[600]};
   }
 `;
 

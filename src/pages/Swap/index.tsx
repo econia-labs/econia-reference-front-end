@@ -6,6 +6,7 @@ import React, { FormEvent, useCallback, useMemo, useState } from "react";
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 
+import { SyncIcon } from "../../assets/SyncIcon";
 import { FlexCol } from "../../components/FlexCol";
 import { FlexRow } from "../../components/FlexRow";
 import { Input } from "../../components/Input";
@@ -41,6 +42,7 @@ export const Swap: React.FC = () => {
     <DefaultWrapper
       css={css`
         height: 100%;
+        overflow-y: hidden;
       `}
     >
       <DefaultContainer
@@ -49,7 +51,7 @@ export const Swap: React.FC = () => {
           height: 100%;
           flex-direction: column;
           align-items: center;
-          margin-top: 2%;
+          margin-top: 48px;
         `}
       >
         <div
@@ -205,121 +207,86 @@ const SwapInner: React.FC<{
 
   return (
     <>
-      <InputContainer>
-        <Label
-          css={css`
-            margin-bottom: 4px;
-          `}
-        >
-          Market
-        </Label>
+      <FormContainer>
         <MarketDropdown
           markets={markets}
           setSelectedMarket={setMarket}
           dropdownLabel={`${baseCoinInfo.data?.symbol} / ${quoteCoinInfo.data?.symbol}`}
         />
-      </InputContainer>
-      <InputContainer>
-        <InputSymbolContainer>
-          <div>
-            <FlexRow
-              css={css`
-                justify-content: space-between;
-                align-items: flex-end;
-              `}
-            >
-              <Label>Input</Label>
-              <MaxButton
-                onClick={() => {
-                  if (!inputCoinStore.data) {
-                    return;
-                  }
-                  setInputAmount(inputCoinStore.data.balance.toString());
-                }}
-              >
-                Max:{" "}
-                {inputCoinStore.data && inputCoinInfo.data
-                  ? inputCoinStore.data.balance.toString()
-                  : "-"}{" "}
-              </MaxButton>
-            </FlexRow>
+        <InputContainer>
+          <InputSymbolContainer>
             <Input
               css={css`
-                width: 218px;
+                width: 100%;
               `}
               placeholder="0.0000"
               value={inputAmount}
               onChange={onInputChange}
               type="number"
             />
-          </div>
-          <Symbol>
-            {direction === BUY
-              ? quoteCoinInfo.data?.symbol
-              : baseCoinInfo.data?.symbol}
-          </Symbol>
-        </InputSymbolContainer>
-      </InputContainer>
-      <div
-        css={(theme) => css`
-          padding: 8px 16px;
-          cursor: pointer;
-          :hover {
-            background-color: ${theme.colors.grey[600]};
-          }
-        `}
-        onClick={() => setDirection(!direction)}
-      >
-        ▼
-      </div>
-      <InputContainer
-        css={css`
-          width: 100%;
-        `}
-      >
-        <Label>Output</Label>
-        <InputSymbolContainer>
-          <Input
-            css={css`
-              width: 218px;
-            `}
-            value={outputAmount}
-            type="number"
-            disabled
-          />
-          <Symbol>
-            {direction === BUY
-              ? baseCoinInfo.data?.symbol
-              : quoteCoinInfo.data?.symbol}
-          </Symbol>
-        </InputSymbolContainer>
-      </InputContainer>
-      <div
-        css={(theme) =>
-          css`
-            background-color: ${theme.colors.grey[700]};
-            width: 280px;
-            padding: 8px;
-            margin-bottom: 16px;
-          `
-        }
-      >
+            <Symbol>
+              {direction === BUY
+                ? quoteCoinInfo.data?.symbol
+                : baseCoinInfo.data?.symbol}
+            </Symbol>
+          </InputSymbolContainer>
+        </InputContainer>
+        <div
+          css={(theme) => css`
+            padding: 8px 16px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            :hover {
+              path {
+                fill: ${theme.colors.purple.primary};
+              }
+            }
+          `}
+          onClick={() => setDirection(!direction)}
+        >
+          <SyncIcon />
+        </div>
+        <InputContainer>
+          <InputSymbolContainer>
+            <Input
+              css={css`
+                width: 100%;
+              `}
+              placeholder="0.0000"
+              value={outputAmount}
+              type="number"
+              disabled
+            />
+            <Symbol>
+              {direction === BUY
+                ? baseCoinInfo.data?.symbol
+                : quoteCoinInfo.data?.symbol}
+            </Symbol>
+          </InputSymbolContainer>
+        </InputContainer>
+      </FormContainer>
+      <SwapDetailsContainer>
         <FlexRow
           css={css`
             justify-content: space-between;
             align-items: center;
           `}
         >
-          <p
-            css={(theme) =>
-              css`
-                color: ${theme.colors.grey[400]};
-                font-size: 14px;
-              `
-            }
-          >
-            Est. Price
+          <p>Balance</p>
+          <p>
+            {inputCoinStore.data?.balance
+              ? inputCoinStore.data?.balance.toFixed(4)
+              : "-"}{" "}
+            {quoteCoinInfo.data.symbol}
           </p>
+        </FlexRow>
+        <FlexRow
+          css={css`
+            justify-content: space-between;
+            align-items: center;
+          `}
+        >
+          <p>Est. Price</p>
           <p>
             {executionPrice && !executionPrice.isNaN()
               ? executionPrice.toFixed(4)
@@ -333,21 +300,12 @@ const SwapInner: React.FC<{
             align-items: center;
           `}
         >
-          <p
-            css={(theme) =>
-              css`
-                color: ${theme.colors.grey[400]};
-                font-size: 14px;
-              `
-            }
-          >
-            Est. Fill
-          </p>
+          <p>Est. Fill</p>
           <p>
             {sizeFillable?.toNumber() ?? "-"} {baseCoinInfo.data.symbol}
           </p>
         </FlexRow>
-      </div>
+      </SwapDetailsContainer>
 
       <TxButton
         css={css`
@@ -398,7 +356,7 @@ const SwapInner: React.FC<{
             market.quoteType,
           );
         }}
-        variant="primary"
+        variant="outline"
         size="sm"
         disabled={!!disabledReason}
       >
@@ -409,11 +367,10 @@ const SwapInner: React.FC<{
 };
 
 const SwapContainer = styled(FlexCol)`
-  border: 1px solid ${({ theme }) => theme.colors.grey[700]};
-  background: ${({ theme }) => theme.colors.grey[700]};
-  padding: 16px 32px;
-  width: 300px;
-  height: 442px;
+  border: 1px solid ${({ theme }) => theme.colors.purple.primary};
+  padding: 50px;
+  width: 470px;
+  height: 458px;
   align-items: center;
   label {
     margin-top: 16px;
@@ -421,27 +378,36 @@ const SwapContainer = styled(FlexCol)`
   }
 `;
 
+const FormContainer = styled(FlexCol)`
+  width: 100%;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 36px;
+`;
+
 const InputContainer = styled.div`
   width: 100%;
-  margin-bottom: 16px;
 `;
 
 const InputSymbolContainer = styled(FlexRow)`
+  position: relative;
+  width: 100%;
   align-items: flex-end;
   gap: 8px;
 `;
 
 const Symbol = styled.p`
+  position: absolute;
+  bottom: 0;
+  right: 16px;
   margin-bottom: 14px;
 `;
 
-const MaxButton = styled.p`
+const SwapDetailsContainer = styled(FlexCol)`
+  width: 100%;
+  margin-bottom: 16px;
   font-size: 12px;
-  padding-top: 4px;
-  padding-left: 4px;
-  padding-bottom: 1px;
-  cursor: pointer;
-  :hover {
-    color: ${({ theme }) => theme.colors.grey[500]};
-  }
+  font-weight: 300;
+  gap: 8px;
+  margin-bottom: 45px;
 `;

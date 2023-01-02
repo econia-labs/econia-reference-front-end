@@ -8,7 +8,7 @@ import { Button } from "./Button";
 export const TxButton: React.FC<
   ButtonHTMLAttributes<HTMLButtonElement> & {
     size: "sm" | "md" | "lg";
-    variant: "primary" | "secondary";
+    variant: "primary" | "secondary" | "outline";
   }
 > = ({ children, onClick, disabled, ...rest }) => {
   const [loading, setLoading] = React.useState(false);
