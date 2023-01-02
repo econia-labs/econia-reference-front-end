@@ -22,7 +22,7 @@ export const UserInfo: React.FC<{
     <UserInfoContainer
       className={className}
       css={css`
-        height: 160px;
+        height: 200px;
         width: 360px;
       `}
     >
