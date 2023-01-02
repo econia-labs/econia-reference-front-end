@@ -15,6 +15,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { Global, Theme, ThemeProvider, css } from "@emotion/react";
 
 import { App } from "./App";
+import { ForkProjectButton } from "./components/ForkProjectButton";
 import { AptosContextProvider } from "./hooks/useAptos";
 import { EconiaSDKContextProvider } from "./hooks/useEconiaSDK";
 import { theme } from "./themes";
@@ -43,6 +44,7 @@ export const AppWithProviders: React.FC = () => {
               <EconiaSDKContextProvider>
                 <App />
                 <ToastContainer theme="dark" />
+                <ForkProjectButton />
               </EconiaSDKContextProvider>
             </AptosContextProvider>
           </WalletProvider>
