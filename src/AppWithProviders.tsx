@@ -1,7 +1,9 @@
 import {
   AptosWalletAdapter,
+  FewchaWalletAdapter,
   MartianWalletAdapter,
   PontemWalletAdapter,
+  RiseWalletAdapter,
   WalletProvider,
 } from "@manahippo/aptos-wallet-adapter";
 import BigNumber from "bignumber.js";
@@ -24,6 +26,13 @@ const queryClient = new QueryClient();
 BigNumber.config({
   ROUNDING_MODE: BigNumber.ROUND_DOWN,
 });
+const WALLETS = [
+  new AptosWalletAdapter(),
+  new PontemWalletAdapter(),
+  new MartianWalletAdapter(),
+  new RiseWalletAdapter(),
+  new FewchaWalletAdapter(),
+];
 
 export const AppWithProviders: React.FC = () => {
   return (
@@ -32,14 +41,7 @@ export const AppWithProviders: React.FC = () => {
         <ReactQueryDevtools initialIsOpen={false} />
         <ThemeProvider theme={theme}>
           <Global styles={GlobalStyles} />
-          <WalletProvider
-            wallets={[
-              new AptosWalletAdapter(),
-              new MartianWalletAdapter(),
-              new PontemWalletAdapter(),
-            ]}
-            autoConnect={true}
-          >
+          <WalletProvider wallets={WALLETS} autoConnect={true}>
             <AptosContextProvider>
               <EconiaSDKContextProvider>
                 <App />
@@ -55,8 +57,6 @@ export const AppWithProviders: React.FC = () => {
 };
 
 const GlobalStyles = (theme: Theme) => css`
-  * {
-  }
   html,
   body {
     min-width: 990px;
@@ -75,13 +75,21 @@ const GlobalStyles = (theme: Theme) => css`
     }
     background-color: ${theme.colors.grey[800]};
   }
+
   a {
     text-decoration: none;
     color: #ffffff;
   }
-  h1 h2 h3 h4 h5 {
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
     font-family: Jost, sans-serif;
+    margin: 0px;
   }
+
   p {
     margin: 0;
   }
