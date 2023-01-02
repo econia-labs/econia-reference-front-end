@@ -45,11 +45,8 @@ export const Faucet: React.FC = () => {
             <h2>tETH</h2>
             <p>
               Balance:{" "}
-              {tETHCoinStore.data && tETHCoinInfo.data
-                ? toDecimalCoin({
-                    amount: tETHCoinStore.data.balance,
-                    decimals: tETHCoinInfo.data.decimals,
-                  }).toString()
+              {tETHCoinStore.data?.balance
+                ? tETHCoinStore.data.balance.toString()
                 : "-"}{" "}
               tETH
             </p>
@@ -68,11 +65,8 @@ export const Faucet: React.FC = () => {
             <h2>tUSDC</h2>
             <p>
               Balance:{" "}
-              {tUSDCoinStore.data && tUSDCoinInfo.data
-                ? toDecimalCoin({
-                    amount: tUSDCoinStore.data.balance,
-                    decimals: tUSDCoinInfo.data.decimals,
-                  }).toString()
+              {tUSDCoinStore.data?.balance
+                ? tUSDCoinStore.data.balance.toString()
                 : "-"}{" "}
               tUSDC
             </p>
