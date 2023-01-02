@@ -17,28 +17,23 @@ export const TradeChart: React.FC<{
 }> = ({ className, market }) => {
   const [mode, setMode] = React.useState<string>("Depth");
   return (
-    <div
+    <FlexCol
       css={css`
         height: 100%;
+        align-items: flex-end;
       `}
       className={className}
     >
-      <FlexRow
+      <RadioGroup
         css={css`
-          justify-content: flex-end;
+          margin-bottom: 16px;
         `}
-      >
-        <RadioGroup
-          css={css`
-            margin-bottom: 16px;
-          `}
-          options={["Price", "Depth"]}
-          value={mode}
-          onChange={setMode}
-        />
-      </FlexRow>
+        options={["Price", "Depth"]}
+        value={mode}
+        onChange={setMode}
+      />
       {market ? <TradeChartInner market={market} mode={mode} /> : <Loading />}
-    </div>
+    </FlexCol>
   );
 };
 
@@ -51,11 +46,7 @@ const TradeChartInner: React.FC<{
 
   if (baseCoinInfo.isLoading || quoteCoinInfo.isLoading) {
     // TODO: Better loading state
-    return (
-      <div>
-        <Loading />
-      </div>
-    );
+    return <Loading />;
   } else if (!baseCoinInfo.data || !quoteCoinInfo.data) {
     // TODO: Better error state
     return <div>Error loading coin info</div>;
@@ -63,28 +54,26 @@ const TradeChartInner: React.FC<{
 
   return (
     <>
-      <FlexCol>
-        <div
-          css={css`
-            max-width: 1000px;
-            max-height: 500px;
-          `}
-        >
-          {mode === "Price" ? (
-            <PriceChart
-              market={market}
-              baseCoinInfo={baseCoinInfo.data}
-              quoteCoinInfo={quoteCoinInfo.data}
-            />
-          ) : (
-            <DepthChart
-              market={market}
-              baseCoinInfo={baseCoinInfo.data}
-              quoteCoinInfo={quoteCoinInfo.data}
-            />
-          )}
-        </div>
-      </FlexCol>
+      <div
+        css={css`
+          width: 688px;
+          height: 350px;
+        `}
+      >
+        {mode === "Price" ? (
+          <PriceChart
+            market={market}
+            baseCoinInfo={baseCoinInfo.data}
+            quoteCoinInfo={quoteCoinInfo.data}
+          />
+        ) : (
+          <DepthChart
+            market={market}
+            baseCoinInfo={baseCoinInfo.data}
+            quoteCoinInfo={quoteCoinInfo.data}
+          />
+        )}
+      </div>
     </>
   );
 };

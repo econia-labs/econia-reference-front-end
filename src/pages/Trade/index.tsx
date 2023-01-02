@@ -74,7 +74,7 @@ export const Trade: React.FC = () => {
         setSelectedMarket={setMarket}
         markets={registeredMarkets.data}
       />
-      <DefaultWrapper
+      <div
         css={css`
           flex-grow: 1;
           height: 100%;
@@ -95,19 +95,17 @@ export const Trade: React.FC = () => {
           <FlexCol
             css={css`
               flex-grow: 1;
+              margin-right: 1px;
             `}
           >
             <FlexRow
-              css={css`
-                height: 340px;
+              css={(theme) => css`
+                height: 500px;
+                border-right: 1px solid ${theme.colors.grey[600]};
+                border-bottom: 1px solid ${theme.colors.grey[600]};
               `}
             >
-              <TradeTable
-                css={css`
-                  height: 100%;
-                `}
-                market={market}
-              />
+              <TradeTable market={market} />
               <TradeChart
                 css={css`
                   flex-grow: 1;
@@ -116,14 +114,17 @@ export const Trade: React.FC = () => {
               />
             </FlexRow>
             <OrdersTable
-              css={css`
+              css={(theme) => css`
+                height: 100%;
                 padding-left: 42px;
+                border-right: 1px solid ${theme.colors.grey[600]};
+                border-bottom: 1px solid ${theme.colors.grey[600]};
               `}
               market={market}
             />
           </FlexCol>
         </FlexRow>
-      </DefaultWrapper>
+      </div>
     </FlexCol>
   );
 };

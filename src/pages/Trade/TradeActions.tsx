@@ -26,15 +26,15 @@ export const TradeActions: React.FC<{
       className={className}
       css={(theme) => css`
         width: fit-content;
-        border-left: 1px solid ${theme.colors.grey[700]};
-        border-right: 1px solid ${theme.colors.grey[700]};
-        border-bottom: 1px solid ${theme.colors.grey[700]};
+        border-left: 1px solid ${theme.colors.grey[600]};
+        border-right: 1px solid ${theme.colors.grey[600]};
+        border-bottom: 1px solid ${theme.colors.grey[600]};
       `}
     >
       <UserInfo market={market} />
       <RadioGroup
         css={(theme) => css`
-          border-bottom: 1px solid ${theme.colors.grey[700]};
+          border-bottom: 1px solid ${theme.colors.grey[600]};
           width: 100%;
         `}
         options={[Mode.Limit, Mode.Market]}

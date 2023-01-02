@@ -25,8 +25,7 @@ export const TradeTable: React.FC<{
       className={className}
       css={(theme) => css`
         width: fit-content;
-        border-left: 1px solid ${theme.colors.grey[700]};
-        border-right: 1px solid ${theme.colors.grey[700]};
+        border-right: 1px solid ${theme.colors.grey[600]};
       `}
     >
       <RadioGroup

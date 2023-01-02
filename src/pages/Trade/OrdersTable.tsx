@@ -90,12 +90,7 @@ export const OrdersTable: React.FC<{
   showClosed?: boolean;
 }> = ({ className, market, showClosed }) => {
   return (
-    <div
-      className={className}
-      css={css`
-        width: 100%;
-      `}
-    >
+    <div className={className}>
       <h3
         css={css`
           margin-top: 16px;
