@@ -108,6 +108,7 @@ export const Header: React.FC = () => {
                   css={css`
                     text-align: center;
                     padding: 16px 0;
+                    width: 200px;
                   `}
                   onClick={() =>
                     disconnect().then(() => setShowDisconnectMenu(false))

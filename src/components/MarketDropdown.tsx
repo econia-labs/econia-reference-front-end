@@ -1,4 +1,5 @@
 import { parseTypeTagOrThrow } from "@manahippo/move-to-ts";
+import BigNumber from "bignumber.js";
 
 import React from "react";
 import { useState } from "react";
@@ -10,7 +11,9 @@ import { useAptos } from "../hooks/useAptos";
 import { useCoinInfo } from "../hooks/useCoinInfo";
 import { useOnClickawayRef } from "../hooks/useOnClickawayRef";
 import { RegisteredMarket } from "../hooks/useRegisteredMarkets";
+import { toDecimalQuote, toDecimalSize } from "../utils/units";
 import { DropdownMenu } from "./DropdownMenu";
+import { FlexRow } from "./FlexRow";
 import { NewMarketModal } from "./modals/NewMarketModal";
 
 export const MarketDropdown: React.FC<{
@@ -65,7 +68,13 @@ export const MarketDropdown: React.FC<{
               setShowMarketMenu(false);
             }}
           >
-            New market
+            <div
+              css={css`
+                padding: 8px;
+              `}
+            >
+              New market
+            </div>
           </MenuItem>
         )}
       </DropdownMenu>
@@ -87,9 +96,32 @@ const MarketMenuItem: React.FC<{
   ) {
     return null;
   }
+  const lotSize = toDecimalSize({
+    size: new BigNumber(1),
+    lotSize: market.lotSize,
+    baseCoinDecimals: baseCoinInfo.data.decimals,
+  });
+  const tickSize = toDecimalQuote({
+    ticks: new BigNumber(1),
+    tickSize: market.tickSize,
+    quoteCoinDecimals: quoteCoinInfo.data.decimals,
+  });
+  const minSize = lotSize.multipliedBy(market.minSize);
   return (
     <MenuItem onClick={onClick}>
-      {baseCoinInfo.data.symbol}-{quoteCoinInfo.data.symbol}
+      <FlexRow
+        css={css`
+          justify-content: space-between;
+          padding: 8px;
+        `}
+      >
+        <p>
+          {baseCoinInfo.data.symbol}-{quoteCoinInfo.data.symbol}
+        </p>
+        <p>
+          {lotSize.toNumber()}-{tickSize.toNumber()}-{minSize.toNumber()}
+        </p>
+      </FlexRow>
     </MenuItem>
   );
 };
@@ -104,6 +136,9 @@ const MarketSelector = styled.span`
 `;
 
 const MenuItem = styled.div`
-  background-color: ${({ theme }) => theme.colors.grey[800]};
-  padding: 8px;
+  width: 300px;
+  white-space: nowrap;
+  :hover {
+    background-color: ${({ theme }) => theme.colors.grey[600]};
+  }
 `;
