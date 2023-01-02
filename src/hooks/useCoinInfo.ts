@@ -3,6 +3,7 @@ import BigNumber from "bignumber.js";
 
 import { useQuery } from "react-query";
 
+import { App as StdLib } from "../sdk/src/stdlib";
 import { useEconiaSDK } from "./useEconiaSDK";
 
 export type CoinInfo = {

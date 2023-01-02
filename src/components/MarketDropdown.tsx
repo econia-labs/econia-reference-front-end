@@ -7,6 +7,7 @@ import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 
 import { useAptos } from "../hooks/useAptos";
+import { useCoinInfo } from "../hooks/useCoinInfo";
 import { useOnClickawayRef } from "../hooks/useOnClickawayRef";
 import { RegisteredMarket } from "../hooks/useRegisteredMarkets";
 import { DropdownMenu } from "./DropdownMenu";
@@ -53,23 +54,43 @@ export const MarketDropdown: React.FC<{
               setSelectedMarket(market);
               setShowMarketMenu(false);
             }}
+            market={market}
             key={i}
-          >
-            {market.baseType.name}-{market.quoteType.name}
-          </MarketMenuItem>
+          />
         ))}
         {account !== null && allowMarketRegistration && (
-          <MarketMenuItem
+          <MenuItem
             onClick={() => {
               setShowNewMarketModal(true);
               setShowMarketMenu(false);
             }}
           >
             New market
-          </MarketMenuItem>
+          </MenuItem>
         )}
       </DropdownMenu>
     </div>
+  );
+};
+
+const MarketMenuItem: React.FC<{
+  market: RegisteredMarket;
+  onClick: () => void;
+}> = ({ market, onClick }) => {
+  const baseCoinInfo = useCoinInfo(market.baseType);
+  const quoteCoinInfo = useCoinInfo(market.quoteType);
+  if (
+    baseCoinInfo.isLoading ||
+    quoteCoinInfo.isLoading ||
+    !baseCoinInfo.data ||
+    !quoteCoinInfo.data
+  ) {
+    return null;
+  }
+  return (
+    <MenuItem onClick={onClick}>
+      {baseCoinInfo.data.symbol}-{quoteCoinInfo.data.symbol}
+    </MenuItem>
   );
 };
 
@@ -82,7 +103,7 @@ const MarketSelector = styled.span`
   }
 `;
 
-const MarketMenuItem = styled.div`
+const MenuItem = styled.div`
   background-color: ${({ theme }) => theme.colors.grey[800]};
   padding: 8px;
 `;
