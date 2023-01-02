@@ -20,6 +20,7 @@ import { App } from "./App";
 import { ForkProjectButton } from "./components/ForkProjectButton";
 import { AptosContextProvider } from "./hooks/useAptos";
 import { EconiaSDKContextProvider } from "./hooks/useEconiaSDK";
+import { IsMobileContextProvider } from "./hooks/useIsMobile";
 import { theme } from "./themes";
 
 const queryClient = new QueryClient();
@@ -37,21 +38,23 @@ const WALLETS = [
 export const AppWithProviders: React.FC = () => {
   return (
     <React.StrictMode>
-      <QueryClientProvider client={queryClient}>
-        <ReactQueryDevtools initialIsOpen={false} />
-        <ThemeProvider theme={theme}>
-          <Global styles={GlobalStyles} />
-          <WalletProvider wallets={WALLETS} autoConnect={true}>
-            <AptosContextProvider>
-              <EconiaSDKContextProvider>
-                <App />
-                <ToastContainer theme="dark" />
-                <ForkProjectButton />
-              </EconiaSDKContextProvider>
-            </AptosContextProvider>
-          </WalletProvider>
-        </ThemeProvider>
-      </QueryClientProvider>
+      <IsMobileContextProvider>
+        <QueryClientProvider client={queryClient}>
+          <ReactQueryDevtools initialIsOpen={false} />
+          <ThemeProvider theme={theme}>
+            <Global styles={GlobalStyles} />
+            <WalletProvider wallets={WALLETS} autoConnect={true}>
+              <AptosContextProvider>
+                <EconiaSDKContextProvider>
+                  <App />
+                  <ToastContainer theme="dark" />
+                  <ForkProjectButton />
+                </EconiaSDKContextProvider>
+              </AptosContextProvider>
+            </WalletProvider>
+          </ThemeProvider>
+        </QueryClientProvider>
+      </IsMobileContextProvider>
     </React.StrictMode>
   );
 };
