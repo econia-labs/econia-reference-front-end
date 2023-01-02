@@ -1,13 +1,14 @@
 import { u64 } from "@manahippo/move-to-ts";
 import BigNumber from "bignumber.js";
 
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 
 import { css } from "@emotion/react";
 
 import { FlexCol } from "../../../components/FlexCol";
 import { Input } from "../../../components/Input";
 import { Label } from "../../../components/Label";
+import { Loading } from "../../../components/Loading";
 import { RadioGroup } from "../../../components/RadioGroup";
 import { TxButton } from "../../../components/TxButton";
 import { useCoinInfo } from "../../../hooks/useCoinInfo";
@@ -30,7 +31,7 @@ export const LimitOrderForm: React.FC<{ market: RegisteredMarket }> = ({
 
   if (baseCoinInfo.isLoading || quoteCoinInfo.isLoading) {
     // TODO: Better loading state.
-    return <div>Loading...</div>;
+    return <Loading />;
   } else if (!baseCoinInfo.data || !quoteCoinInfo.data) {
     // TODO: Better error state.
     return <div>Failed to load coin info.</div>;

@@ -3,9 +3,9 @@ import React, { useState } from "react";
 import { css } from "@emotion/react";
 
 import { FlexCol } from "../../components/FlexCol";
+import { Loading } from "../../components/Loading";
 import { RadioGroup } from "../../components/RadioGroup";
 import { RegisteredMarket } from "../../hooks/useRegisteredMarkets";
-import { DefaultContainer } from "../../layout/DefaultContainer";
 import { BookTable } from "./charts/BookTable";
 import { TradesTable } from "./charts/TradesTable";
 
@@ -52,7 +52,7 @@ export const TradeTable: React.FC<{
             <TradesTable market={market} />
           )
         ) : (
-          "Loading..."
+          <Loading />
         )}
       </div>
     </FlexCol>

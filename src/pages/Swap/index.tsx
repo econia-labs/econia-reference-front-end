@@ -10,6 +10,7 @@ import { FlexCol } from "../../components/FlexCol";
 import { FlexRow } from "../../components/FlexRow";
 import { Input } from "../../components/Input";
 import { Label } from "../../components/Label";
+import { Loading } from "../../components/Loading";
 import { MarketDropdown } from "../../components/MarketDropdown";
 import { TxButton } from "../../components/TxButton";
 import { BUY } from "../../constants";
@@ -55,7 +56,7 @@ export const Swap: React.FC = () => {
           {registeredMarkets.data && registeredMarkets.data.length > 0 ? (
             <SwapInner markets={registeredMarkets.data} />
           ) : (
-            <p>Loading...</p>
+            <Loading />
           )}
         </SwapContainer>
       </DefaultContainer>
@@ -180,7 +181,11 @@ const SwapInner: React.FC<{
     !incentiveParams.data
   ) {
     // TODO: Better loading state
-    return <DefaultWrapper>Loading...</DefaultWrapper>;
+    return (
+      <DefaultWrapper>
+        <Loading />
+      </DefaultWrapper>
+    );
   } else if (!baseCoinInfo.data || !quoteCoinInfo.data) {
     // TODO: Better error state
     return <DefaultWrapper>Error loading coin info</DefaultWrapper>;

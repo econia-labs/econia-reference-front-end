@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 import { css } from "@emotion/react";
 
+import { Loading } from "../../components/Loading";
 import { RadioGroup } from "../../components/RadioGroup";
 import { RegisteredMarket } from "../../hooks/useRegisteredMarkets";
 import { DefaultContainer } from "../../layout/DefaultContainer";
@@ -52,7 +53,7 @@ export const TradeActions: React.FC<{
             <MarketOrderForm market={market} />
           )
         ) : (
-          "Loading..."
+          <Loading />
         )}
       </div>
     </DefaultContainer>

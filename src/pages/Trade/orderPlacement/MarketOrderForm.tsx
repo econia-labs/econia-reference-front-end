@@ -10,6 +10,7 @@ import { FlexCol } from "../../../components/FlexCol";
 import { FlexRow } from "../../../components/FlexRow";
 import { Input } from "../../../components/Input";
 import { Label } from "../../../components/Label";
+import { Loading } from "../../../components/Loading";
 import { RadioGroup } from "../../../components/RadioGroup";
 import { TxButton } from "../../../components/TxButton";
 import { BUY, SELL, ZERO_U64 } from "../../../constants";
@@ -50,7 +51,7 @@ export const MarketOrderForm: React.FC<{ market: RegisteredMarket }> = ({
     incentiveParams.isLoading
   ) {
     // TODO: Better loading state.
-    return <div>Loading...</div>;
+    return <Loading />;
   } else if (
     !baseCoinInfo.data ||
     !quoteCoinInfo.data ||

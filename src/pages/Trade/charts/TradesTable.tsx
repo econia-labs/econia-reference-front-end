@@ -2,6 +2,7 @@ import React from "react";
 
 import { css } from "@emotion/react";
 
+import { Loading } from "../../../components/Loading";
 import { TxLink } from "../../../components/TxLink";
 import { BID } from "../../../constants";
 import { useCoinInfo } from "../../../hooks/useCoinInfo";
@@ -20,7 +21,7 @@ export const TradesTable: React.FC<{
 
   if (takerEvents.isLoading || baseCoin.isLoading || quoteCoin.isLoading)
     // TODO: Better loading state
-    return <DefaultWrapper>Loading...</DefaultWrapper>;
+    return <Loading />;
   else if (!takerEvents.data || !baseCoin.data || !quoteCoin.data) {
     // TODO: Better error state
     return <DefaultWrapper>Error getting data</DefaultWrapper>;

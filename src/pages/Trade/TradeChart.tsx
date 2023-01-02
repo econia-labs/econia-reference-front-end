@@ -4,6 +4,7 @@ import { css } from "@emotion/react";
 
 import { FlexCol } from "../../components/FlexCol";
 import { FlexRow } from "../../components/FlexRow";
+import { Loading } from "../../components/Loading";
 import { RadioGroup } from "../../components/RadioGroup";
 import { useCoinInfo } from "../../hooks/useCoinInfo";
 import { RegisteredMarket } from "../../hooks/useRegisteredMarkets";
@@ -36,7 +37,7 @@ export const TradeChart: React.FC<{
           onChange={setMode}
         />
       </FlexRow>
-      {market ? <TradeChartInner market={market} mode={mode} /> : "Loading..."}
+      {market ? <TradeChartInner market={market} mode={mode} /> : <Loading />}
     </div>
   );
 };
@@ -50,7 +51,11 @@ const TradeChartInner: React.FC<{
 
   if (baseCoinInfo.isLoading || quoteCoinInfo.isLoading) {
     // TODO: Better loading state
-    return <div>Loading...</div>;
+    return (
+      <div>
+        <Loading />
+      </div>
+    );
   } else if (!baseCoinInfo.data || !quoteCoinInfo.data) {
     // TODO: Better error state
     return <div>Error loading coin info</div>;

@@ -5,6 +5,7 @@ import React from "react";
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 
+import { Loading } from "../../components/Loading";
 import { ConnectWalletButton } from "../../hooks/ConnectWalletButton";
 import { useAptos } from "../../hooks/useAptos";
 import { useCoinStore } from "../../hooks/useCoinStore";
@@ -26,7 +27,13 @@ export const UserInfo: React.FC<{
       `}
     >
       <h3>User info</h3>
-      {market ? <UserInfoInner market={market} /> : <div>Loading...</div>}
+      {market ? (
+        <UserInfoInner market={market} />
+      ) : (
+        <div>
+          <Loading />
+        </div>
+      )}
     </UserInfoContainer>
   );
 };
@@ -137,7 +144,7 @@ const UserInfoInner: React.FC<{ market: RegisteredMarket }> = ({ market }) => {
             </tbody>
           </table>
         ) : (
-          <div>Loading...</div>
+          <Loading />
         )
       ) : (
         <div>

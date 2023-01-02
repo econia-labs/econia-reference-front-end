@@ -5,6 +5,7 @@ import React from "react";
 
 import { css } from "@emotion/react";
 
+import { Loading } from "../../components/Loading";
 import { TxButton } from "../../components/TxButton";
 import { ASK, BID } from "../../constants";
 import { ConnectWalletButton } from "../../hooks/ConnectWalletButton";
@@ -99,7 +100,7 @@ export const OrdersTable: React.FC<{
       {market ? (
         <OrdersTableInner market={market} showClosed={showClosed} />
       ) : (
-        "Loading..."
+        <Loading />
       )}
     </div>
   );

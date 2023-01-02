@@ -4,6 +4,7 @@ import React from "react";
 
 import { css } from "@emotion/react";
 
+import { Loading } from "../../../components/Loading";
 import { ZERO_BIGNUMBER } from "../../../constants";
 import { useCoinInfo } from "../../../hooks/useCoinInfo";
 import { useOrderBook } from "../../../hooks/useOrderBook";
@@ -37,8 +38,7 @@ export const BookTable: React.FC<{
     );
   }
 
-  if (baseCoin.isLoading || quoteCoin.isLoading)
-    return <DefaultWrapper>Loading...</DefaultWrapper>;
+  if (baseCoin.isLoading || quoteCoin.isLoading) return <Loading />;
   else if (!baseCoin.data || !quoteCoin.data) {
     return <DefaultWrapper>No data for coins</DefaultWrapper>;
   }

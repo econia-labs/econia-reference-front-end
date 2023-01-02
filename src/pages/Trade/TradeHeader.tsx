@@ -7,6 +7,7 @@ import styled from "@emotion/styled";
 
 import { FlexRow } from "../../components/FlexRow";
 import { Label } from "../../components/Label";
+import { Loading } from "../../components/Loading";
 import { MarketDropdown } from "../../components/MarketDropdown";
 import { ZERO_BIGNUMBER } from "../../constants";
 import { useCoinInfo } from "../../hooks/useCoinInfo";
@@ -176,9 +177,11 @@ const TradeHeaderView: React.FC<{
           >
             <MarketNameWrapper>
               <Label>Market</Label>
-              {baseSymbol && quoteSymbol
-                ? `${baseSymbol} / ${quoteSymbol}`
-                : "Loading..."}
+              {baseSymbol && quoteSymbol ? (
+                `${baseSymbol} / ${quoteSymbol}`
+              ) : (
+                <Loading />
+              )}
             </MarketNameWrapper>
             {markets ? (
               <MarketDropdown
@@ -199,7 +202,7 @@ const TradeHeaderView: React.FC<{
               width: 120px;
             `}
           >
-            {price ? `${price.toPrecision(4)} ${quoteSymbol}` : "Loading..."}
+            {price ? `${price.toPrecision(4)} ${quoteSymbol}` : <Loading />}
           </div>
         </PriceWrapper>
         <PriceChangeWrapper>
@@ -215,7 +218,7 @@ const TradeHeaderView: React.FC<{
                 {priceChange.toPrecision(4) ?? "-"} {quoteSymbol}
               </ColoredValue>
             ) : (
-              "Loading..."
+              <Loading />
             )}
           </div>
         </PriceChangeWrapper>
@@ -242,7 +245,7 @@ const TradeHeaderView: React.FC<{
                 </span>
               </FlexRow>
             ) : (
-              "Loading..."
+              <Loading />
             )}
           </div>
         </VolumeWrapper>
@@ -256,7 +259,7 @@ const TradeHeaderView: React.FC<{
             {totalTrades !== undefined ? (
               <span>{totalTrades}</span>
             ) : (
-              "Loading..."
+              <Loading />
             )}
           </div>
         </TradesWrapper>
