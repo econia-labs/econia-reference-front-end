@@ -49,9 +49,21 @@ export const Swap: React.FC = () => {
           height: 100%;
           flex-direction: column;
           align-items: center;
-          margin-top: 120px;
+          margin-top: 2%;
         `}
       >
+        <div
+          css={(theme) => css`
+            max-width: 600px;
+            margin-bottom: 48px;
+            border: 1px solid ${theme.colors.grey[600]};
+            padding: 8px 16px;
+          `}
+        >
+          This is a testnet interface. All coins are used for testing purposes
+          and have no real value. If you are connecting a wallet, make sure it
+          is connected to Aptos testnet.
+        </div>
         <SwapContainer>
           {registeredMarkets.data && registeredMarkets.data.length > 0 ? (
             <SwapInner markets={registeredMarkets.data} />
