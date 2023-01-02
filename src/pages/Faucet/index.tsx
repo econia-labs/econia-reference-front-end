@@ -37,7 +37,7 @@ export const Faucet: React.FC = () => {
           height: 100%;
           flex-direction: column;
           align-items: center;
-          justify-content: center;
+          margin-top: 100px;
         `}
       >
         <FaucetContainer>
