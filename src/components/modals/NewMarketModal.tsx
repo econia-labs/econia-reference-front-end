@@ -37,8 +37,12 @@ export const NewMarketModal: React.FC<{
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
+          border: `1px solid ${theme.colors.purple.primary}`,
+          borderRadius: "0px",
         },
         overlay: {
+          background: "none",
+          backdropFilter: "blur(5px)",
           zIndex: 3,
         },
       }}
