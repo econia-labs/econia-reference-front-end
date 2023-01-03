@@ -3,7 +3,7 @@ import { Line } from "react-chartjs-2";
 
 import { useTheme } from "@emotion/react";
 
-import { CoinInfo } from "../../../hooks/useCoinInfo";
+import { CoinInfo } from "../../../hooks/useCoinInfos";
 import { RegisteredMarket } from "../../../hooks/useRegisteredMarkets";
 import { useTakerEvents } from "../../../hooks/useTakerEvents";
 import { toDecimalPrice } from "../../../utils/units";

@@ -5,7 +5,6 @@ import Modal from "react-modal";
 
 import { css, useTheme } from "@emotion/react";
 
-import { none_ } from "../../sdk/src/stdlib/option";
 import { Button } from "../Button";
 import { FlexCol } from "../FlexCol";
 

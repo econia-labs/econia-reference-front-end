@@ -1,0 +1,31 @@
+import { StructTag } from "@manahippo/move-to-ts";
+import BigNumber from "bignumber.js";
+
+import { useQuery } from "react-query";
+
+import { useEconiaSDK } from "./useEconiaSDK";
+
+export type CoinInfo = {
+  name: string;
+  symbol: string;
+  decimals: BigNumber;
+};
+
+export const useCoinInfos = (coinTypeTags: StructTag[]) => {
+  const { stdlib } = useEconiaSDK();
+
+  return useQuery<CoinInfo[]>(["useCoinInfos", ...coinTypeTags], async () => {
+    const coins = [];
+    for (const coinTypeTag of coinTypeTags) {
+      const coin = await stdlib.coin.loadCoinInfo(coinTypeTag.address, [
+        coinTypeTag,
+      ]);
+      coins.push({
+        name: coin.name.str(),
+        symbol: coin.symbol.str(),
+        decimals: new BigNumber(coin.decimals.toJsNumber()),
+      });
+    }
+    return coins;
+  });
+};

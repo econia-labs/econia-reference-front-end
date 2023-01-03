@@ -13,6 +13,7 @@ import { Input } from "../../components/Input";
 import { Loading } from "../../components/Loading";
 import { MarketDropdown } from "../../components/MarketDropdown";
 import { TxButton } from "../../components/TxButton";
+import { MarketSelectByCoinModal } from "../../components/modals/MarketSelectByCoinModal";
 import { BUY } from "../../constants";
 import { useAptos } from "../../hooks/useAptos";
 import { useCoinInfo } from "../../hooks/useCoinInfo";

@@ -6,7 +6,7 @@ import { Line } from "react-chartjs-2";
 import { useTheme } from "@emotion/react";
 
 import { ZERO_BIGNUMBER } from "../../../constants";
-import { CoinInfo } from "../../../hooks/useCoinInfo";
+import { CoinInfo } from "../../../hooks/useCoinInfos";
 import { useOrderBook } from "../../../hooks/useOrderBook";
 import { RegisteredMarket } from "../../../hooks/useRegisteredMarkets";
 import { toDecimalPrice, toDecimalSize } from "../../../utils/units";
