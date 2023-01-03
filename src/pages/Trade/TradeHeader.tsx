@@ -144,6 +144,7 @@ const TradeHeaderView: React.FC<{
 }) => {
   return (
     <FlexRow
+    className={className}
       css={css`
         display: flex;
         flex-wrap: wrap;

@@ -131,8 +131,7 @@ const OrdersTableInner: React.FC<{
         <ConnectWalletButton variant="outline" size="sm" />
       </>
     );
-  if (marketAccount.isLoading || !marketAccount.data)
-    return <div>Loading orders...</div>;
+  if (marketAccount.isLoading) return <div>Loading orders...</div>;
   else if (
     baseCoinInfo.isLoading ||
     !baseCoinInfo.data ||
@@ -140,6 +139,9 @@ const OrdersTableInner: React.FC<{
     !quoteCoinInfo.data
   )
     return <div>Loading coin information...</div>;
+  else if (!marketAccount.data) {
+    return <div>No open orders.</div>;
+  }
 
   const allOrders = [];
   for (const ask of marketAccount.data.asks) {

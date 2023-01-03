@@ -10,7 +10,6 @@ import { SyncIcon } from "../../assets/SyncIcon";
 import { FlexCol } from "../../components/FlexCol";
 import { FlexRow } from "../../components/FlexRow";
 import { Input } from "../../components/Input";
-import { Label } from "../../components/Label";
 import { Loading } from "../../components/Loading";
 import { MarketDropdown } from "../../components/MarketDropdown";
 import { TxButton } from "../../components/TxButton";
@@ -105,12 +104,15 @@ const SwapInner: React.FC<{
   const { outputAmount, executionPrice, sizeFillable, disabledReason } =
     useMemo(() => {
       if (
-        !marketPrice.data ||
+        marketPrice.data === undefined ||
         !baseCoinInfo.data ||
         !quoteCoinInfo.data ||
         !inputCoinInfo.data
       )
         return { outputAmount: "", disabledReason: "Loading..." };
+      else if (marketPrice.data === null) {
+        return { outputAmount: "", disabledReason: "Insufficient liquidity" };
+      }
 
       if (inputAmount === "")
         return {
@@ -191,15 +193,10 @@ const SwapInner: React.FC<{
     quoteCoinInfo.isLoading ||
     marketPrice.isLoading ||
     incentiveParams.isLoading ||
-    !marketPrice.data ||
     !incentiveParams.data
   ) {
     // TODO: Better loading state
-    return (
-      <DefaultWrapper>
-        <Loading />
-      </DefaultWrapper>
-    );
+    return <Loading />;
   } else if (!baseCoinInfo.data || !quoteCoinInfo.data) {
     // TODO: Better error state
     return <DefaultWrapper>Error loading coin info</DefaultWrapper>;

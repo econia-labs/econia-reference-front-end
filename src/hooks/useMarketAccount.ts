@@ -36,43 +36,49 @@ export const useMarketAccount = (
       NO_CUSTODIAN,
       undefined!,
     );
-    const marketAccount = await aptosClient.getTableItem(
-      marketAccounts.map.handle.toString(),
-      {
-        key_type: "u128",
-        value_type: MarketAccount.getTag().getFullname(),
-        key: marketAccountId.toBigInt().toString(),
-      },
-    );
-    const asks = await fetchMarketAccountOrders({
-      aptosClient,
-      tableLength: parseInt(marketAccount.asks.table.length),
-      tableHandle: marketAccount.asks.table.inner.handle.toString(),
-    });
-    const bids = await fetchMarketAccountOrders({
-      aptosClient,
-      tableLength: parseInt(marketAccount.bids.table.length),
-      tableHandle: marketAccount.bids.table.inner.handle.toString(),
-    });
-    return {
-      asks,
-      asksStackTop: parseInt(marketAccount.asks_stack_top),
-      baseAvailable: new BigNumber(marketAccount.base_available),
-      baseCeiling: new BigNumber(marketAccount.base_ceiling),
-      baseNameGeneric: marketAccount.base_name_generic,
-      baseTotal: new BigNumber(marketAccount.base_total),
-      baseType: marketAccount.base_type,
-      bids,
-      bidsStackTop: parseInt(marketAccount.bids_stack_top),
-      lotSize: new BigNumber(marketAccount.lot_size),
-      minSize: new BigNumber(marketAccount.min_size),
-      quoteAvailable: new BigNumber(marketAccount.quote_available),
-      quoteCeiling: new BigNumber(marketAccount.quote_ceiling),
-      quoteTotal: new BigNumber(marketAccount.quote_total),
-      quoteType: marketAccount.quote_type,
-      tickSize: new BigNumber(marketAccount.tick_size),
-      underwriterId: parseInt(marketAccount.underwriter_id),
-    };
+
+    try {
+      const marketAccount = await aptosClient.getTableItem(
+        marketAccounts.map.handle.toString(),
+        {
+          key_type: "u128",
+          value_type: MarketAccount.getTag().getFullname(),
+          key: marketAccountId.toBigInt().toString(),
+        },
+      );
+      const asks = await fetchMarketAccountOrders({
+        aptosClient,
+        tableLength: parseInt(marketAccount.asks.table.length),
+        tableHandle: marketAccount.asks.table.inner.handle.toString(),
+      });
+      const bids = await fetchMarketAccountOrders({
+        aptosClient,
+        tableLength: parseInt(marketAccount.bids.table.length),
+        tableHandle: marketAccount.bids.table.inner.handle.toString(),
+      });
+      return {
+        asks,
+        asksStackTop: parseInt(marketAccount.asks_stack_top),
+        baseAvailable: new BigNumber(marketAccount.base_available),
+        baseCeiling: new BigNumber(marketAccount.base_ceiling),
+        baseNameGeneric: marketAccount.base_name_generic,
+        baseTotal: new BigNumber(marketAccount.base_total),
+        baseType: marketAccount.base_type,
+        bids,
+        bidsStackTop: parseInt(marketAccount.bids_stack_top),
+        lotSize: new BigNumber(marketAccount.lot_size),
+        minSize: new BigNumber(marketAccount.min_size),
+        quoteAvailable: new BigNumber(marketAccount.quote_available),
+        quoteCeiling: new BigNumber(marketAccount.quote_ceiling),
+        quoteTotal: new BigNumber(marketAccount.quote_total),
+        quoteType: marketAccount.quote_type,
+        tickSize: new BigNumber(marketAccount.tick_size),
+        underwriterId: parseInt(marketAccount.underwriter_id),
+      };
+    } catch (e) {
+      console.error(e);
+      return null;
+    }
   });
 };
 
