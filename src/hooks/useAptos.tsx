@@ -1,4 +1,5 @@
 import { AccountKeys, useWallet } from "@manahippo/aptos-wallet-adapter";
+import { CoinListClient } from "@manahippo/coin-list";
 import { AptosClient, TxnBuilderTypes } from "aptos";
 import { TransactionPayload_EntryFunctionPayload } from "aptos/src/generated";
 
@@ -27,11 +28,13 @@ interface IAptosContext {
       | TxnBuilderTypes.TransactionPayloadEntryFunction
       | TransactionPayload_EntryFunctionPayload,
   ) => Promise<void>;
+  coinListClient: CoinListClient;
 }
 
 export const AptosContext = createContext<IAptosContext | undefined>(undefined);
 // TODO: Dynamic by network
 const aptosClient = new AptosClient("https://fullnode.testnet.aptoslabs.com");
+const coinListClient = new CoinListClient("testnet");
 
 export const AptosContextProvider: React.FC<PropsWithChildren> = (props) => {
   const { signAndSubmitTransaction, account } = useWallet();
@@ -92,6 +95,7 @@ export const AptosContextProvider: React.FC<PropsWithChildren> = (props) => {
             return `https://explorer.aptoslabs.com/txn/${txId}?network=testnet`;
           },
           sendTx,
+          coinListClient,
         }}
       >
         {props.children}

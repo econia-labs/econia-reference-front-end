@@ -9,6 +9,7 @@ export type CoinInfo = {
   name: string;
   symbol: string;
   decimals: BigNumber;
+  typeTag: StructTag;
 };
 
 export const useCoinInfos = (coinTypeTags: StructTag[]) => {
@@ -24,6 +25,7 @@ export const useCoinInfos = (coinTypeTags: StructTag[]) => {
         name: coin.name.str(),
         symbol: coin.symbol.str(),
         decimals: new BigNumber(coin.decimals.toJsNumber()),
+        typeTag: coinTypeTag,
       });
     }
     return coins;

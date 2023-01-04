@@ -14,7 +14,7 @@ export type CoinStore = {
 };
 
 export const useCoinStore = (
-  coinTypeTag: StructTag,
+  coinTypeTag: StructTag | null | undefined,
   ownerAddr: MaybeHexString | null | undefined,
 ) => {
   const { stdlib } = useEconiaSDK();
@@ -22,7 +22,7 @@ export const useCoinStore = (
   return useQuery<CoinStore | null>(
     ["useCoinStore", coinTypeTag, ownerAddr],
     async () => {
-      if (!ownerAddr) return null;
+      if (!ownerAddr || !coinTypeTag) return null;
       const coinStore = await stdlib.coin.loadCoinStore(
         HexString.ensure(ownerAddr),
         [coinTypeTag],

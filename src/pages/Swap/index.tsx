@@ -6,20 +6,21 @@ import React, { FormEvent, useCallback, useMemo, useState } from "react";
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 
+import { ChevronDownIcon } from "../../assets/ChevronDownIcon";
 import { SyncIcon } from "../../assets/SyncIcon";
 import { FlexCol } from "../../components/FlexCol";
 import { FlexRow } from "../../components/FlexRow";
 import { Input } from "../../components/Input";
 import { Loading } from "../../components/Loading";
-import { MarketDropdown } from "../../components/MarketDropdown";
 import { TxButton } from "../../components/TxButton";
-import { MarketSelectByCoinModal } from "../../components/modals/MarketSelectByCoinModal";
+import { CoinSelectModal } from "../../components/modals/CoinSelectModal";
 import { BUY } from "../../constants";
 import { useAptos } from "../../hooks/useAptos";
 import { useCoinInfo } from "../../hooks/useCoinInfo";
 import { useCoinStore } from "../../hooks/useCoinStore";
 import { useIncentiveParams } from "../../hooks/useIncentiveParams";
 import { useMarketPrice } from "../../hooks/useMarketPrice";
+import { useMarketSelectByCoin } from "../../hooks/useMarketSelectByCoin";
 import { usePlaceSwap } from "../../hooks/usePlaceSwap";
 import {
   RegisteredMarket,
@@ -83,16 +84,23 @@ const SwapInner: React.FC<{
   markets: RegisteredMarket[];
 }> = ({ markets }) => {
   const [inputAmount, setInputAmount] = useState("");
-  const [market, setMarket] = useState<RegisteredMarket>(markets[0]);
   const [direction, setDirection] = useState(BUY);
-  const baseCoinInfo = useCoinInfo(market.baseType);
-  const quoteCoinInfo = useCoinInfo(market.quoteType);
+  const { setInputCoin, setOutputCoin, allCoinInfos, outputCoinInfos, market } =
+    useMarketSelectByCoin(markets);
+  const [showInputModal, setShowInputModal] = useState(false);
+  const [showOutputModal, setShowOutputModal] = useState(false);
+  const baseCoinInfo = useCoinInfo(market?.baseType);
+  const quoteCoinInfo = useCoinInfo(market?.quoteType);
   const marketPrice = useMarketPrice(market);
   const incentiveParams = useIncentiveParams();
   const placeSwap = usePlaceSwap();
   const { account } = useAptos();
   const inputCoinStore = useCoinStore(
-    direction === BUY ? market.quoteType : market.baseType,
+    market
+      ? direction === BUY
+        ? market.quoteType
+        : market.baseType
+      : undefined,
     account?.address,
   );
   const inputCoinInfo = direction === BUY ? quoteCoinInfo : baseCoinInfo;
@@ -105,6 +113,7 @@ const SwapInner: React.FC<{
   const { outputAmount, executionPrice, sizeFillable, disabledReason } =
     useMemo(() => {
       if (
+        !market ||
         marketPrice.data === undefined ||
         !baseCoinInfo.data ||
         !quoteCoinInfo.data ||
@@ -206,11 +215,6 @@ const SwapInner: React.FC<{
   return (
     <>
       <FormContainer>
-        <MarketDropdown
-          markets={markets}
-          setSelectedMarket={setMarket}
-          dropdownLabel={`${baseCoinInfo.data?.symbol} / ${quoteCoinInfo.data?.symbol}`}
-        />
         <InputContainer>
           <InputSymbolContainer>
             <Input
@@ -222,10 +226,13 @@ const SwapInner: React.FC<{
               onChange={onInputChange}
               type="number"
             />
-            <Symbol>
-              {direction === BUY
-                ? quoteCoinInfo.data?.symbol
-                : baseCoinInfo.data?.symbol}
+            <Symbol onClick={() => setShowInputModal(true)}>
+              <p>
+                {direction === BUY
+                  ? quoteCoinInfo.data?.symbol
+                  : baseCoinInfo.data?.symbol}
+              </p>
+              <ChevronDownIcon />
             </Symbol>
           </InputSymbolContainer>
         </InputContainer>
@@ -255,10 +262,13 @@ const SwapInner: React.FC<{
               type="number"
               disabled
             />
-            <Symbol>
-              {direction === BUY
-                ? baseCoinInfo.data?.symbol
-                : quoteCoinInfo.data?.symbol}
+            <Symbol onClick={() => setShowOutputModal(true)}>
+              <p>
+                {direction === BUY
+                  ? baseCoinInfo.data?.symbol
+                  : quoteCoinInfo.data?.symbol}
+              </p>
+              <ChevronDownIcon />
             </Symbol>
           </InputSymbolContainer>
         </InputContainer>
@@ -310,7 +320,13 @@ const SwapInner: React.FC<{
           width: 100%;
         `}
         onClick={async () => {
-          if (!executionPrice) return;
+          if (
+            !market ||
+            !executionPrice ||
+            !baseCoinInfo.data ||
+            !quoteCoinInfo.data
+          )
+            return;
           const sizeDecimals =
             direction === BUY
               ? new BigNumber(outputAmount)
@@ -360,6 +376,18 @@ const SwapInner: React.FC<{
       >
         {disabledReason ? disabledReason : "SWAP"}
       </TxButton>
+      <CoinSelectModal
+        showModal={showInputModal}
+        closeModal={() => setShowInputModal(false)}
+        coins={allCoinInfos}
+        onCoinSelected={(c) => setInputCoin(c)}
+      />
+      <CoinSelectModal
+        showModal={showOutputModal}
+        closeModal={() => setShowOutputModal(false)}
+        coins={outputCoinInfos}
+        onCoinSelected={(c) => setOutputCoin(c)}
+      />
     </>
   );
 };
@@ -390,15 +418,27 @@ const InputContainer = styled.div`
 const InputSymbolContainer = styled(FlexRow)`
   position: relative;
   width: 100%;
-  align-items: flex-end;
+  align-items: baseline;
   gap: 8px;
 `;
 
-const Symbol = styled.p`
+const Symbol = styled(FlexRow)`
   position: absolute;
-  bottom: 0;
+  bottom: 12px;
   right: 16px;
-  margin-bottom: 14px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border: 1px solid ${({ theme }) => theme.colors.grey[600]};
+  align-items: center;
+  gap: 8px;
+  font-weight: 300;
+  font-size: 12px;
+  :hover {
+    border: 1px solid ${({ theme }) => theme.colors.purple.primary};
+    path {
+      stroke: ${({ theme }) => theme.colors.purple.primary};
+    }
+  }
 `;
 
 const SwapDetailsContainer = styled(FlexCol)`

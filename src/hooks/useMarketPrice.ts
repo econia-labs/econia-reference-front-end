@@ -1,6 +1,5 @@
 import BigNumber from "bignumber.js";
 
-import { useCallback } from "react";
 import { useQuery } from "react-query";
 
 import { BUY, ZERO_BIGNUMBER } from "../constants";
@@ -9,15 +8,16 @@ import { useCoinInfo } from "./useCoinInfo";
 import { useOrderBook } from "./useOrderBook";
 import { RegisteredMarket } from "./useRegisteredMarkets";
 
-export const useMarketPrice = (market: RegisteredMarket) => {
-  const orderBook = useOrderBook(market.marketId);
-  const baseCoin = useCoinInfo(market.baseType);
-  const quoteCoin = useCoinInfo(market.quoteType);
+export const useMarketPrice = (market?: RegisteredMarket) => {
+  const orderBook = useOrderBook(market?.marketId);
+  const baseCoin = useCoinInfo(market?.baseType);
+  const quoteCoin = useCoinInfo(market?.quoteType);
 
   const query = useQuery({
-    queryKey: ["useMarketPrice", market.marketId],
+    queryKey: ["useMarketPrice", market?.marketId],
     queryFn: async () => {
       if (
+        market === undefined ||
         !orderBook.data ||
         !baseCoin.data ||
         !quoteCoin.data ||
@@ -80,14 +80,20 @@ export const useMarketPrice = (market: RegisteredMarket) => {
         size: BigNumber,
         direction: boolean,
       ): { sizeFillable: BigNumber; executionPrice: BigNumber } => {
-        const orders =
-          direction === BUY
+        if (!orderBook.data || !baseCoin.data || !quoteCoin.data)
+          return {
+            sizeFillable: ZERO_BIGNUMBER,
+            executionPrice: ZERO_BIGNUMBER,
+          };
+        const orders = orderBook.data
+          ? direction === BUY
             ? orderBook.data.asks
                 .slice()
                 .sort((a, b) => a.price.sub(b.price).toJsNumber()) // asc
             : orderBook.data.bids
                 .slice()
-                .sort((a, b) => b.price.sub(a.price).toJsNumber()); // desc
+                .sort((a, b) => b.price.sub(a.price).toJsNumber()) // desc
+          : [];
         let remainingSize = size;
         let totalPrice = ZERO_BIGNUMBER;
         for (const { price, size: orderSize } of orders) {
@@ -127,6 +133,12 @@ export const useMarketPrice = (market: RegisteredMarket) => {
         sizeFillable: BigNumber;
         executionPrice: BigNumber;
       } => {
+        if (!orderBook.data || !baseCoin.data || !quoteCoin.data)
+          return {
+            quoteFillable: ZERO_BIGNUMBER,
+            sizeFillable: ZERO_BIGNUMBER,
+            executionPrice: ZERO_BIGNUMBER,
+          };
         const orders =
           direction === BUY
             ? orderBook.data.asks

@@ -93,6 +93,31 @@ const GlobalStyles = (theme: Theme) => css`
     margin: 0px;
   }
 
+  h1 {
+    font-size: 100px;
+    line-height: 110px;
+  }
+
+  h2 {
+    font-size: 48px;
+    line-height: 58px;
+  }
+
+  h3 {
+    font-size: 36px;
+    line-height: 46px;
+  }
+
+  h4 {
+    font-size: 28px;
+    line-height: 38px;
+  }
+
+  h5 {
+    font-size: 24px;
+    line-height: 34px;
+  }
+
   p {
     margin: 0;
   }
