@@ -1,10 +1,11 @@
 import React, { PropsWithChildren } from "react";
 import Modal from "react-modal";
 
-import { useTheme } from "@emotion/react";
+import { css, useTheme } from "@emotion/react";
 
 export const BaseModal: React.FC<Modal.Props & PropsWithChildren> = ({
   style,
+  children,
   ...props
 }) => {
   let content = {};
@@ -46,6 +47,8 @@ export const BaseModal: React.FC<Modal.Props & PropsWithChildren> = ({
         },
         ...restStyle,
       }}
-    />
+    >
+      {children}
+    </Modal>
   );
 };
