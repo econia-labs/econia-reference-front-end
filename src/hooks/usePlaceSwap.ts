@@ -30,6 +30,7 @@ export const usePlaceSwap = () => {
         max_quote,
         limit_price,
         [baseCoin, quoteCoin],
+        true,
       );
       await sendTx(payload);
     },
