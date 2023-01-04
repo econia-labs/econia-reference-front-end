@@ -32,9 +32,19 @@ interface IAptosContext {
 }
 
 export const AptosContext = createContext<IAptosContext | undefined>(undefined);
-// TODO: Dynamic by network
-const aptosClient = new AptosClient("https://fullnode.testnet.aptoslabs.com");
-const coinListClient = new CoinListClient("testnet");
+const { REACT_APP_RPC_URL, REACT_APP_NETWORK_NAME } = process.env;
+if (!REACT_APP_RPC_URL) {
+  throw new Error("REACT_APP_RPC_URL is not defined");
+} else if (!REACT_APP_NETWORK_NAME) {
+  throw new Error("REACT_APP_NETWORK_NAME is not defined");
+} else if (
+  REACT_APP_NETWORK_NAME !== "mainnet" &&
+  REACT_APP_NETWORK_NAME !== "testnet"
+) {
+  throw new Error("REACT_APP_NETWORK_NAME must be mainnet or testnet");
+}
+const aptosClient = new AptosClient(REACT_APP_RPC_URL);
+const coinListClient = new CoinListClient(REACT_APP_NETWORK_NAME);
 
 export const AptosContextProvider: React.FC<PropsWithChildren> = (props) => {
   const { signAndSubmitTransaction, account } = useWallet();
