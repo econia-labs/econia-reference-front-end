@@ -1,7 +1,4 @@
-import { RawCoinInfo } from "@manahippo/coin-list";
-
 import React, { useMemo, useState } from "react";
-import Modal from "react-modal";
 
 import { css, useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
@@ -9,11 +6,10 @@ import styled from "@emotion/styled";
 import { useAptos } from "../../hooks/useAptos";
 import { CoinInfo } from "../../hooks/useCoinInfos";
 import { useCoinStore } from "../../hooks/useCoinStore";
-import { Button } from "../Button";
 import { FlexCol } from "../FlexCol";
 import { FlexRow } from "../FlexRow";
-import { Input } from "../Input";
 import { SearchInput } from "../SearchInput";
+import { BaseModal } from "./BaseModal";
 
 // Precondition: coins is not empty
 export const CoinSelectModal: React.FC<{
@@ -30,24 +26,13 @@ export const CoinSelectModal: React.FC<{
     [coins, search],
   );
   return (
-    <Modal
+    <BaseModal
       isOpen={showModal}
       onRequestClose={closeModal}
       style={{
         content: {
           width: "800px",
           height: "620px",
-          background: theme.colors.grey[800],
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          border: `1px solid ${theme.colors.purple.primary}`,
-          borderRadius: "0px",
-        },
-        overlay: {
-          background: "none",
-          backdropFilter: "blur(5px)",
-          zIndex: 3,
         },
       }}
     >
@@ -95,7 +80,7 @@ export const CoinSelectModal: React.FC<{
           ))}
         </FlexCol>
       </FlexCol>
-    </Modal>
+    </BaseModal>
   );
 };
 

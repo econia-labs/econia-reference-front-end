@@ -1,12 +1,12 @@
 import { useWallet } from "@manahippo/aptos-wallet-adapter";
 
 import React from "react";
-import Modal from "react-modal";
 
 import { css, useTheme } from "@emotion/react";
 
 import { Button } from "../Button";
 import { FlexCol } from "../FlexCol";
+import { BaseModal } from "./BaseModal";
 
 export const ConnectWalletModal: React.FC<{
   showModal: boolean;
@@ -16,24 +16,13 @@ export const ConnectWalletModal: React.FC<{
   const theme = useTheme();
 
   return (
-    <Modal
+    <BaseModal
       isOpen={showModal}
       onRequestClose={closeModal}
       style={{
         content: {
           width: "815px",
           height: "743px",
-          background: theme.colors.grey[800],
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          border: `1px solid ${theme.colors.purple.primary}`,
-          borderRadius: "0px",
-        },
-        overlay: {
-          background: "none",
-          backdropFilter: "blur(5px)",
-          zIndex: 3,
         },
       }}
     >
@@ -42,13 +31,13 @@ export const ConnectWalletModal: React.FC<{
           text-align: center;
         `}
       >
-        <h1
+        <h3
           css={css`
             margin-top: 52px;
           `}
         >
           Connect a Wallet
-        </h1>
+        </h3>
         <p
           css={css`
             font-weight: 300;
@@ -95,6 +84,6 @@ export const ConnectWalletModal: React.FC<{
           ))}
         </FlexCol>
       </div>
-    </Modal>
+    </BaseModal>
   );
 };
