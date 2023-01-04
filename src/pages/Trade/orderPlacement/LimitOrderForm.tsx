@@ -86,13 +86,7 @@ export const LimitOrderForm: React.FC<{ market: RegisteredMarket }> = ({
       </div>
       <TxButton
         onClick={async () => {
-          if (amountStr === "") {
-            alert("Amount is required");
-            return;
-          } else if (priceStr === "") {
-            alert("Price is required");
-            return;
-          }
+          if (!baseCoinInfo.data || !quoteCoinInfo.data) return;
           const size = u64(
             fromDecimalSize({
               size: new BigNumber(amountStr),

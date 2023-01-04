@@ -57,46 +57,49 @@ export const TradesTable: React.FC<{
         <tbody>
           {takerEvents.data
             .sort(({ version: vA }, { version: vB }) => vB - vA)
-            .map(({ price, size, side, version }, i) => (
-              <tr key={i}>
-                <td
-                  css={(theme) => css`
-                    text-align: left;
-                    color: ${side === BID
-                      ? theme.colors.green.primary
-                      : theme.colors.red.primary};
-                  `}
-                >
-                  {side === BID ? "BID" : "ASK"}
-                </td>
-                <td>
-                  {toDecimalSize({
-                    size,
-                    lotSize: market.lotSize,
-                    baseCoinDecimals: baseCoin.data.decimals,
-                  }).toNumber()}
-                </td>
-                <td>
-                  {toDecimalPrice({
-                    price,
-                    lotSize: market.lotSize,
-                    tickSize: market.tickSize,
-                    baseCoinDecimals: baseCoin.data.decimals,
-                    quoteCoinDecimals: quoteCoin.data.decimals,
-                  }).toNumber()}
-                </td>
-                <td>
-                  <TxLink
-                    css={(theme) =>
-                      css`
-                        color: ${theme.colors.grey[600]};
-                      `
-                    }
-                    txId={version}
-                  />
-                </td>
-              </tr>
-            ))}
+            .map(({ price, size, side, version }, i) => {
+              if (!baseCoin.data || !quoteCoin.data) return null;
+              return (
+                <tr key={i}>
+                  <td
+                    css={(theme) => css`
+                      text-align: left;
+                      color: ${side === BID
+                        ? theme.colors.green.primary
+                        : theme.colors.red.primary};
+                    `}
+                  >
+                    {side === BID ? "BID" : "ASK"}
+                  </td>
+                  <td>
+                    {toDecimalSize({
+                      size,
+                      lotSize: market.lotSize,
+                      baseCoinDecimals: baseCoin.data.decimals,
+                    }).toNumber()}
+                  </td>
+                  <td>
+                    {toDecimalPrice({
+                      price,
+                      lotSize: market.lotSize,
+                      tickSize: market.tickSize,
+                      baseCoinDecimals: baseCoin.data.decimals,
+                      quoteCoinDecimals: quoteCoin.data.decimals,
+                    }).toNumber()}
+                  </td>
+                  <td>
+                    <TxLink
+                      css={(theme) =>
+                        css`
+                          color: ${theme.colors.grey[600]};
+                        `
+                      }
+                      txId={version}
+                    />
+                  </td>
+                </tr>
+              );
+            })}
         </tbody>
       </table>
     </DefaultWrapper>

@@ -94,7 +94,7 @@ export const AptosContextProvider: React.FC<PropsWithChildren> = (props) => {
             // TODO: Dynamic by network
             return `https://explorer.aptoslabs.com/txn/${txId}?network=testnet`;
           },
-          sendTx,
+          sendTx: sendTx as any, // TODO: No any
           coinListClient,
         }}
       >

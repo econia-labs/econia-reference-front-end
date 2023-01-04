@@ -149,7 +149,8 @@ export const MarketOrderForm: React.FC<{ market: RegisteredMarket }> = ({
       </div>
       <TxButton
         onClick={async () => {
-          if (!expectedPrice) return;
+          if (!expectedPrice || !baseCoinInfo.data || !quoteCoinInfo.data)
+            return;
           const size = u64(
             fromDecimalSize({
               size: expectedPrice!.sizeFillable,

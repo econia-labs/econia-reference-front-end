@@ -72,34 +72,37 @@ export const BookTable: React.FC<{
         <tbody>
           {Array.from(asksByPrice.entries())
             .sort(([priceA], [priceB]) => priceB - priceA)
-            .map(([price, size], i) => (
-              <tr key={`ASK-${i}`}>
-                <td
-                  css={(theme) => css`
-                    text-align: left;
-                    color: ${theme.colors.red.primary};
-                  `}
-                >
-                  ASK
-                </td>
-                <td>
-                  {toDecimalSize({
-                    size,
-                    lotSize: market.lotSize,
-                    baseCoinDecimals: baseCoin.data.decimals,
-                  }).toNumber()}
-                </td>
-                <td>
-                  {toDecimalPrice({
-                    price: new BigNumber(price),
-                    lotSize: market.lotSize,
-                    tickSize: market.tickSize,
-                    baseCoinDecimals: baseCoin.data.decimals,
-                    quoteCoinDecimals: quoteCoin.data.decimals,
-                  }).toNumber()}
-                </td>
-              </tr>
-            ))}
+            .map(([price, size], i) => {
+              if (!baseCoin.data || !quoteCoin.data) return null;
+              return (
+                <tr key={`ASK-${i}`}>
+                  <td
+                    css={(theme) => css`
+                      text-align: left;
+                      color: ${theme.colors.red.primary};
+                    `}
+                  >
+                    ASK
+                  </td>
+                  <td>
+                    {toDecimalSize({
+                      size,
+                      lotSize: market.lotSize,
+                      baseCoinDecimals: baseCoin.data.decimals,
+                    }).toNumber()}
+                  </td>
+                  <td>
+                    {toDecimalPrice({
+                      price: new BigNumber(price),
+                      lotSize: market.lotSize,
+                      tickSize: market.tickSize,
+                      baseCoinDecimals: baseCoin.data.decimals,
+                      quoteCoinDecimals: quoteCoin.data.decimals,
+                    }).toNumber()}
+                  </td>
+                </tr>
+              );
+            })}
           <tr>
             <td
               css={css`
@@ -113,34 +116,37 @@ export const BookTable: React.FC<{
           </tr>
           {Array.from(bidsByPrice.entries())
             .sort(([priceA], [priceB]) => priceB - priceA)
-            .map(([price, size], i) => (
-              <tr key={`BID-${i}`}>
-                <td
-                  css={(theme) => css`
-                    text-align: left;
-                    color: ${theme.colors.green.primary};
-                  `}
-                >
-                  BID
-                </td>
-                <td>
-                  {toDecimalSize({
-                    size,
-                    lotSize: market.lotSize,
-                    baseCoinDecimals: baseCoin.data.decimals,
-                  }).toNumber()}
-                </td>
-                <td>
-                  {toDecimalPrice({
-                    price: new BigNumber(price),
-                    lotSize: market.lotSize,
-                    tickSize: market.tickSize,
-                    baseCoinDecimals: baseCoin.data.decimals,
-                    quoteCoinDecimals: quoteCoin.data.decimals,
-                  }).toNumber()}
-                </td>
-              </tr>
-            ))}
+            .map(([price, size], i) => {
+              if (!baseCoin.data || !quoteCoin.data) return null;
+              return (
+                <tr key={`BID-${i}`}>
+                  <td
+                    css={(theme) => css`
+                      text-align: left;
+                      color: ${theme.colors.green.primary};
+                    `}
+                  >
+                    BID
+                  </td>
+                  <td>
+                    {toDecimalSize({
+                      size,
+                      lotSize: market.lotSize,
+                      baseCoinDecimals: baseCoin.data.decimals,
+                    }).toNumber()}
+                  </td>
+                  <td>
+                    {toDecimalPrice({
+                      price: new BigNumber(price),
+                      lotSize: market.lotSize,
+                      tickSize: market.tickSize,
+                      baseCoinDecimals: baseCoin.data.decimals,
+                      quoteCoinDecimals: quoteCoin.data.decimals,
+                    }).toNumber()}
+                  </td>
+                </tr>
+              );
+            })}
         </tbody>
       </table>
     </DefaultWrapper>

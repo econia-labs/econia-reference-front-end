@@ -12,7 +12,8 @@ import { ConnectWalletButton } from "../../hooks/ConnectWalletButton";
 import { useAptos } from "../../hooks/useAptos";
 // import { useCancelAllOrders } from "../../hooks/useCancelAllOrders";
 import { useCancelOrder } from "../../hooks/useCancelOrder";
-import { CoinInfo, useCoinInfo } from "../../hooks/useCoinInfo";
+import { useCoinInfo } from "../../hooks/useCoinInfo";
+import { CoinInfo } from "../../hooks/useCoinInfos";
 import { useMarketAccount } from "../../hooks/useMarketAccount";
 import { RegisteredMarket } from "../../hooks/useRegisteredMarkets";
 import { toDecimalPrice, toDecimalSize } from "../../utils/units";
@@ -209,6 +210,7 @@ const OrdersTableInner: React.FC<{
               {allOrders
                 .sort((oA, oB) => oB.counter.comparedTo(oA.counter))
                 .map((order, i) => {
+                  if (!baseCoinInfo.data || !quoteCoinInfo.data) return null;
                   return (
                     <TableRow
                       key={i}
