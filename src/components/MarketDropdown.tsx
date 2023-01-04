@@ -51,6 +51,22 @@ export const MarketDropdown: React.FC<{
         `}
         show={showMarketMenu}
       >
+        <FlexRow
+          css={(theme) => css`
+            padding: 4px 8px;
+            justify-content: space-between;
+            background-color: ${theme.colors.grey[800]};
+          `}
+        >
+          <span
+            css={css`
+              font-weight: 600;
+            `}
+          >
+            Market Name
+          </span>
+          <span>lot-tick-min</span>
+        </FlexRow>
         {markets.map((market, i) => (
           <MarketMenuItem
             onClick={() => {
@@ -108,7 +124,7 @@ const MarketMenuItem: React.FC<{
   });
   const minSize = lotSize.multipliedBy(market.minSize);
   return (
-    <MenuItem onClick={onClick}>
+    <MenuItem className="menu-item" onClick={onClick}>
       <FlexRow
         css={css`
           justify-content: space-between;
@@ -136,7 +152,7 @@ const MarketSelector = styled.span`
 `;
 
 const MenuItem = styled.div`
-  width: 300px;
+  width: 400px;
   white-space: nowrap;
   :hover {
     background-color: ${({ theme }) => theme.colors.grey[600]};
