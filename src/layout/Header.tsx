@@ -7,7 +7,6 @@ import { Link, useLocation } from "react-router-dom";
 import { Theme, css } from "@emotion/react";
 import styled from "@emotion/styled";
 
-import { EconiaIcon } from "../assets/EconiaIcon";
 import { EconiaLogo } from "../assets/EconiaLogo";
 import { Button } from "../components/Button";
 import { DropdownMenu } from "../components/DropdownMenu";
@@ -105,6 +104,7 @@ export const Header: React.FC = () => {
               </Button>
               <DropdownMenu show={showDisconnectMenu}>
                 <div
+                  className="menu-item"
                   css={css`
                     text-align: center;
                     padding: 16px 0;
