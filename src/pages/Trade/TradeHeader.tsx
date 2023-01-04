@@ -60,47 +60,61 @@ const TradeHeaderInner: React.FC<{
   const quoteCoinInfo = useCoinInfo(market?.quoteType);
   const marketPrice = useMarketPrice(market);
   const takerEvents = useTakerEvents(market.marketId);
+
+  const price =
+    marketPrice.data === null ? null : marketPrice.data?.bestAskPrice;
   const totalTrades = takerEvents.data?.length;
 
   let totalBaseVolume;
   let totalQuoteVolume;
   let priceChange;
   if (baseCoinInfo.data && quoteCoinInfo.data && takerEvents.data) {
-    for (const takerEvent of takerEvents.data) {
-      if (!totalBaseVolume) totalBaseVolume = ZERO_BIGNUMBER;
-      if (!totalQuoteVolume) totalQuoteVolume = ZERO_BIGNUMBER;
-      totalBaseVolume = totalBaseVolume.plus(takerEvent.size);
-      totalQuoteVolume = totalQuoteVolume.plus(
-        takerEvent.size.multipliedBy(takerEvent.price),
-      );
-    }
-    if (totalBaseVolume) {
-      totalBaseVolume = toDecimalSize({
-        size: totalBaseVolume,
-        lotSize: market.lotSize,
-        baseCoinDecimals: baseCoinInfo.data.decimals,
-      });
-    }
-    if (totalQuoteVolume) {
-      totalQuoteVolume = toDecimalQuote({
-        ticks: totalQuoteVolume,
-        tickSize: market.tickSize,
-        quoteCoinDecimals: quoteCoinInfo.data.decimals,
-      });
-    }
-    priceChange =
-      takerEvents.data && takerEvents.data.length > 1
-        ? toDecimalPrice({
-            price: takerEvents.data[takerEvents.data.length - 1].price.minus(
-              takerEvents.data[takerEvents.data.length - 2]?.price ??
-                ZERO_BIGNUMBER,
-            ),
+    if (takerEvents.data) {
+      if (takerEvents.data.length > 0) {
+        for (const takerEvent of takerEvents.data) {
+          if (!totalBaseVolume) totalBaseVolume = ZERO_BIGNUMBER;
+          if (!totalQuoteVolume) totalQuoteVolume = ZERO_BIGNUMBER;
+          totalBaseVolume = totalBaseVolume.plus(takerEvent.size);
+          totalQuoteVolume = totalQuoteVolume.plus(
+            takerEvent.size.multipliedBy(takerEvent.price),
+          );
+        }
+        if (totalBaseVolume) {
+          totalBaseVolume = toDecimalSize({
+            size: totalBaseVolume,
             lotSize: market.lotSize,
-            tickSize: market.tickSize,
             baseCoinDecimals: baseCoinInfo.data.decimals,
+          });
+        }
+        if (totalQuoteVolume) {
+          totalQuoteVolume = toDecimalQuote({
+            ticks: totalQuoteVolume,
+            tickSize: market.tickSize,
             quoteCoinDecimals: quoteCoinInfo.data.decimals,
-          })
-        : undefined;
+          });
+        }
+      } else {
+        // We only set these to zero if there are no taker events to ensure we
+        // show the loading state
+        totalQuoteVolume = ZERO_BIGNUMBER;
+        totalBaseVolume = ZERO_BIGNUMBER;
+      }
+
+      if (takerEvents.data.length > 1) {
+        priceChange = toDecimalPrice({
+          price: takerEvents.data[takerEvents.data.length - 1].price.minus(
+            takerEvents.data[takerEvents.data.length - 2]?.price ??
+              ZERO_BIGNUMBER,
+          ),
+          lotSize: market.lotSize,
+          tickSize: market.tickSize,
+          baseCoinDecimals: baseCoinInfo.data.decimals,
+          quoteCoinDecimals: quoteCoinInfo.data.decimals,
+        });
+      } else {
+        priceChange = null;
+      }
+    }
   }
 
   return (
@@ -109,7 +123,7 @@ const TradeHeaderInner: React.FC<{
       baseSymbol={baseCoinInfo.data?.symbol}
       quoteSymbol={quoteCoinInfo.data?.symbol}
       markets={markets}
-      price={marketPrice.data?.bestAskPrice}
+      price={price}
       priceChange={priceChange}
       totalBaseVolume={totalBaseVolume}
       totalQuoteVolume={totalQuoteVolume}
@@ -124,8 +138,8 @@ const TradeHeaderView: React.FC<{
   baseSymbol?: string;
   quoteSymbol?: string;
   markets?: RegisteredMarket[];
-  price?: BigNumber;
-  priceChange?: BigNumber;
+  price?: BigNumber | null;
+  priceChange?: BigNumber | null;
   totalBaseVolume?: BigNumber;
   totalQuoteVolume?: BigNumber;
   totalTrades?: number;
@@ -144,7 +158,7 @@ const TradeHeaderView: React.FC<{
 }) => {
   return (
     <FlexRow
-    className={className}
+      className={className}
       css={css`
         display: flex;
         flex-wrap: wrap;
@@ -185,7 +199,13 @@ const TradeHeaderView: React.FC<{
             width: 120px;
           `}
         >
-          {price ? `${price.toPrecision(4)} ${quoteSymbol}` : <Loading />}
+          {price === null ? (
+            "--"
+          ) : price === undefined ? (
+            <Loading />
+          ) : (
+            `${price.toPrecision(4)} ${quoteSymbol}`
+          )}
         </div>
       </PriceWrapper>
       <PriceChangeWrapper>
@@ -195,13 +215,15 @@ const TradeHeaderView: React.FC<{
             width: 120px;
           `}
         >
-          {priceChange ? (
+          {priceChange === null ? (
+            "--"
+          ) : priceChange === undefined ? (
+            <Loading />
+          ) : (
             <ColoredValue color={priceChange.gte(0) ? "green" : "red"}>
               {priceChange.gt(0) ? "+" : ""}
               {priceChange.toPrecision(4) ?? "-"} {quoteSymbol}
             </ColoredValue>
-          ) : (
-            <Loading />
           )}
         </div>
       </PriceChangeWrapper>
@@ -213,23 +235,29 @@ const TradeHeaderView: React.FC<{
             width: 280px;
           `}
         >
-          {totalBaseVolume && totalQuoteVolume ? (
+          {
             <FlexRow
               css={css`
                 gap: 4px;
               `}
             >
               <span>
-                {totalBaseVolume.toPrecision(4)} {baseSymbol}
+                {totalBaseVolume ? (
+                  `${totalBaseVolume.toPrecision(4)} ${baseSymbol}`
+                ) : (
+                  <Loading />
+                )}
               </span>
               <span>/</span>
               <span>
-                {totalQuoteVolume.toPrecision(4)} {quoteSymbol}
+                {totalQuoteVolume ? (
+                  `${totalQuoteVolume.toPrecision(4)} ${quoteSymbol}`
+                ) : (
+                  <Loading />
+                )}
               </span>
             </FlexRow>
-          ) : (
-            <Loading />
-          )}
+          }
         </div>
       </VolumeWrapper>
       <TradesWrapper>
