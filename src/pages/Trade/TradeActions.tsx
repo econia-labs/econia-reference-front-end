@@ -34,7 +34,7 @@ export const TradeActions: React.FC<{
       <UserInfo market={market} />
       <RadioGroup
         css={(theme) => css`
-          border-bottom: 1px solid ${theme.colors.grey[600]};
+          border-top: 1px solid ${theme.colors.grey[600]};
           width: 100%;
         `}
         options={[Mode.Limit, Mode.Market]}

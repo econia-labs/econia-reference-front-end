@@ -22,6 +22,7 @@ export const Trade: React.FC = () => {
   const [market, setMarket] = useState<RegisteredMarket>();
   const [showNewMarketModal, setShowNewMarketModal] = useState(false);
   useEffect(() => {
+    if (market !== undefined) return;
     if (registeredMarkets.data !== undefined && registeredMarkets.data) {
       setMarket(registeredMarkets.data[0]);
     }

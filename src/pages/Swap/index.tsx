@@ -14,7 +14,7 @@ import { Input } from "../../components/Input";
 import { Loading } from "../../components/Loading";
 import { TxButton } from "../../components/TxButton";
 import { CoinSelectModal } from "../../components/modals/CoinSelectModal";
-import { BUY } from "../../constants";
+import { BUY, ZERO_U64 } from "../../constants";
 import { useAptos } from "../../hooks/useAptos";
 import { useCoinInfo } from "../../hooks/useCoinInfo";
 import { useCoinStore } from "../../hooks/useCoinStore";
@@ -322,18 +322,15 @@ const SwapInner: React.FC<{
         onClick={async () => {
           if (
             !market ||
+            !sizeFillable ||
             !executionPrice ||
             !baseCoinInfo.data ||
             !quoteCoinInfo.data
           )
             return;
-          const sizeDecimals =
-            direction === BUY
-              ? new BigNumber(outputAmount)
-              : new BigNumber(inputAmount);
           const size = u64(
             fromDecimalSize({
-              size: sizeDecimals,
+              size: sizeFillable,
               lotSize: market.lotSize,
               baseCoinDecimals: baseCoinInfo.data.decimals,
             }).toFixed(0),
@@ -347,23 +344,13 @@ const SwapInner: React.FC<{
               quoteCoinDecimals: quoteCoinInfo.data.decimals,
             }).toFixed(0),
           );
-          // Give an extra 0.1% to account for rounding errors.
-          // TODO: Find a better way to handle this.
-          const quote = calculate_max_quote_match_(
-            direction,
-            u64(incentiveParams.data.takerFeeDivisor.toNumber()),
-            size.mul(price),
-            undefined!,
-          )
-            .mul(u64(100_1))
-            .div(u64(100_0));
 
           await placeSwap(
             u64(market.marketId),
             direction,
             size, // min_base
-            MAX_POSSIBLE, // max_base
-            quote, // min_quote
+            MAX_POSSIBLE, // max_base // TODO: should be `size`
+            ZERO_U64, // min_quote
             MAX_POSSIBLE, // max_quote
             price,
             market.baseType,

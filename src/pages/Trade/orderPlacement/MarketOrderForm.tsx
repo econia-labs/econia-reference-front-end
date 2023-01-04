@@ -13,13 +13,18 @@ import { Label } from "../../../components/Label";
 import { Loading } from "../../../components/Loading";
 import { RadioGroup } from "../../../components/RadioGroup";
 import { TxButton } from "../../../components/TxButton";
-import { BUY, SELL, ZERO_U64 } from "../../../constants";
+import {
+  BPS_DENOMINATOR,
+  BUY,
+  DEFAULT_SLIPPAGE_BPS,
+  SELL,
+  ZERO_U64,
+} from "../../../constants";
 import { useCoinInfo } from "../../../hooks/useCoinInfo";
 import { useIncentiveParams } from "../../../hooks/useIncentiveParams";
 import { useMarketPrice } from "../../../hooks/useMarketPrice";
 import { usePlaceMarketOrder } from "../../../hooks/usePlaceMarketOrder";
 import { RegisteredMarket } from "../../../hooks/useRegisteredMarkets";
-import { calculate_max_quote_match_ } from "../../../sdk/src/econia/incentives";
 import { HI_PRICE, MAX_POSSIBLE } from "../../../sdk/src/econia/market";
 import { fromDecimalPrice, fromDecimalSize } from "../../../utils/units";
 
@@ -90,6 +95,7 @@ export const MarketOrderForm: React.FC<{ market: RegisteredMarket }> = ({
           css={css`
             width: 218px;
           `}
+          min={0}
           onChange={(e) => setAmountStr(e.target.value)}
           placeholder="0.0000"
           type="number"
@@ -167,32 +173,30 @@ export const MarketOrderForm: React.FC<{ market: RegisteredMarket }> = ({
               quoteCoinDecimals: quoteCoinInfo.data.decimals,
             }).toFixed(0),
           );
-          const quote = calculate_max_quote_match_(
-            direction,
-            u64(incentiveParams.data.takerFeeDivisor.toNumber()),
-            size.mul(price),
-            undefined!,
-          );
 
           let depositAmount;
           if (direction === BUY) {
-            // Give an extra 0.1% to account for rounding errors.
-            // TODO: Find a better way to handle this.
-            depositAmount = quote
-              .mul(u64(market.tickSize.toNumber()))
-              .mul(u64(100_1))
-              .div(u64(100_0));
+            // Give an extra 0.1% to ensure MarketAccount has enough funds to place the order.
+            const baseAmount = size
+              .mul(price)
+              .mul(u64(market.tickSize.toNumber()));
+            const feeAmount = size.div(
+              u64(incentiveParams.data.takerFeeDivisor.toNumber()),
+            );
+            depositAmount = baseAmount
+              .add(feeAmount)
+              .mul(BPS_DENOMINATOR.add(DEFAULT_SLIPPAGE_BPS))
+              .div(BPS_DENOMINATOR);
           } else {
             depositAmount = size.mul(u64(market.lotSize.toNumber()));
           }
-          // TODO: Handle slippage
           await placeMarketOrder(
             depositAmount,
             u64(market.marketId),
             direction,
             size, // min_base
-            MAX_POSSIBLE, // max_base
-            quote, // min_quote
+            MAX_POSSIBLE, // max_base TODO: should be `size
+            ZERO_U64, // min_quote
             MAX_POSSIBLE, // max_quote
             direction === BUY ? HI_PRICE : ZERO_U64, // limit_price
             market.baseType,

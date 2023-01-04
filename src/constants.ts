@@ -33,3 +33,6 @@ export const ZERO_U64 = u64(0);
 export const ZERO_BIGNUMBER = new BigNumber(0);
 
 export const MOBILE_MAX_WIDTH = 800;
+
+export const BPS_DENOMINATOR = u64(100_00); // 100%
+export const DEFAULT_SLIPPAGE_BPS = u64(10); // 1%
