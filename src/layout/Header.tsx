@@ -20,15 +20,15 @@ import { DefaultWrapper } from "./DefaultWrapper";
 
 const HEADER_ITEMS = [
   {
-    label: "Swap",
+    label: "SWAP",
     pathname: "/",
   },
   {
-    label: "Trade",
+    label: "TRADE",
     pathname: "/trade",
   },
   {
-    label: "Faucet",
+    label: "FAUCET",
     pathname: "/faucet",
   },
 ];
@@ -67,20 +67,33 @@ export const Header: React.FC = () => {
         </div>
         <NavContainer>
           {HEADER_ITEMS.map(({ label, pathname }, i) => (
-            <Link
-              key={i}
-              css={
-                location.pathname === pathname
-                  ? ActiveNavLinkStyle
-                  : NavLinkStyle
-              }
-              to={pathname}
-            >
-              {label}
-            </Link>
+            <React.Fragment key={i}>
+              <Link
+                key={i}
+                css={
+                  location.pathname === pathname
+                    ? ActiveNavLinkStyle
+                    : NavLinkStyle
+                }
+                to={pathname}
+              >
+                {label}
+              </Link>
+              <p
+                css={(theme) =>
+                  css`
+                    font-size: 20px;
+                    line-height: 22px;
+                    color: ${theme.colors.grey[600]};
+                  `
+                }
+              >
+                /
+              </p>
+            </React.Fragment>
           ))}
           <ExternalLink css={NavLinkStyle} href="https://econia.dev">
-            Docs
+            DOCS
           </ExternalLink>
         </NavContainer>
         <FlexRow
@@ -140,20 +153,25 @@ export const Header: React.FC = () => {
 const NavContainer = styled.div`
   flex: 1;
   display: flex;
+  align-items: center;
   justify-content: center;
   gap: 24px;
 `;
 
 const NavLinkStyle = (theme: Theme) => css`
-  font-size: 18px;
-  line-height: 20px;
+  font-size: 20px;
+  line-height: 22px;
+  color: ${theme.colors.grey[500]};
   :hover {
     color: ${theme.colors.purple.primary};
   }
 `;
 
 const ActiveNavLinkStyle = (theme: Theme) => css`
-  font-size: 18px;
-  line-height: 20px;
-  color: ${theme.colors.purple.primary};
+  font-size: 20px;
+  line-height: 22px;
+  color: ${theme.colors.grey[100]};
+  :hover {
+    color: ${theme.colors.purple.primary};
+  }
 `;
