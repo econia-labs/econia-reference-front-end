@@ -382,13 +382,6 @@ const SwapInner: React.FC<{
 const SwapContainer = styled(FlexCol)`
   border: 1px solid ${({ theme }) => theme.colors.purple.primary};
   padding: 50px;
-  width: 470px;
-  height: 458px;
-  align-items: center;
-  label {
-    margin-top: 16px;
-    margin-bottom: 4px;
-  }
 `;
 
 const FormContainer = styled(FlexCol)`
@@ -399,7 +392,7 @@ const FormContainer = styled(FlexCol)`
 `;
 
 const InputContainer = styled.div`
-  width: 100%;
+  width: 368px;
 `;
 
 const InputSymbolContainer = styled(FlexRow)`
