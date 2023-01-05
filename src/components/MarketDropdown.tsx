@@ -86,6 +86,7 @@ export const MarketDropdown: React.FC<{
             }}
           >
             <div
+              className="menu-item"
               css={css`
                 padding: 8px;
               `}
