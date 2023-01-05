@@ -317,7 +317,8 @@ const SwapInner: React.FC<{
             !sizeFillable ||
             !executionPrice ||
             !baseCoinInfo.data ||
-            !quoteCoinInfo.data
+            !quoteCoinInfo.data ||
+            !incentiveParams.data
           )
             return;
           const size = u64(
@@ -337,14 +338,36 @@ const SwapInner: React.FC<{
             }).toFixed(0),
           );
 
+          let minQuote;
+          let maxQuote;
+          if (direction === BUY) {
+            const baseAmount = size
+              .mul(price)
+              .mul(u64(market.tickSize.toNumber()));
+            const feeAmount = baseAmount.div(
+              u64(incentiveParams.data.takerFeeDivisor.toNumber()),
+            );
+            minQuote = ZERO_U64;
+            maxQuote = baseAmount.add(feeAmount);
+          } else {
+            const baseAmount = size
+              .mul(price)
+              .mul(u64(market.tickSize.toNumber()));
+            const feeAmount = baseAmount.div(
+              u64(incentiveParams.data.takerFeeDivisor.toNumber()),
+            );
+            minQuote = baseAmount.sub(feeAmount);
+            maxQuote = MAX_POSSIBLE;
+          }
+
           await placeSwap(
             u64(market.marketId),
             direction,
             size.mul(u64(market.lotSize.toNumber())), // min_base
             size.mul(u64(market.lotSize.toNumber())), // max_base
-            ZERO_U64, // min_quote // TODO: slippage
-            MAX_POSSIBLE, // max_quote // TODO: slippage
-            price, // limit_price
+            minQuote,
+            maxQuote,
+            price,
             market.baseType,
             market.quoteType,
           );
