@@ -3,9 +3,12 @@ import { useWallet } from "@manahippo/aptos-wallet-adapter";
 import React from "react";
 
 import { css, useTheme } from "@emotion/react";
+import styled from "@emotion/styled";
 
+import { ArrowRightIcon } from "../../assets/ArrowRightIcon";
 import { Button } from "../Button";
 import { FlexCol } from "../FlexCol";
+import { FlexRow } from "../FlexRow";
 import { BaseModal } from "./BaseModal";
 
 export const ConnectWalletModal: React.FC<{
@@ -57,32 +60,70 @@ export const ConnectWalletModal: React.FC<{
           `}
         >
           {wallets.map((wallet, i) => (
-            <Button
+            <FlexRow
               css={(theme) =>
                 css`
+                  align-items: center;
                   background: ${theme.colors.grey[800]}
                     url(${wallet.adapter.icon});
                   background-position: 12px 12px;
-                  background-size: 32px 32px;
                   background-repeat: no-repeat;
+                  background-size: 32px 32px;
+                  border: 1px solid ${theme.colors.grey[600]};
+                  font-family: "Jost", sans-serif;
+                  font-size: 24px;
+                  font-weight: 500;
+                  height: 60px;
+                  margin-bottom: 16px;
                   padding-left: 64px;
                   width: 100%;
-                  text-transform: none;
-                  font-family: "Jost", sans-serif;
+                  justify-content: space-between;
+                  cursor: pointer;
+                  :hover {
+                    border: 1px solid ${theme.colors.purple.primary};
+                    color: ${theme.colors.purple.primary};
+                    .arrow {
+                      border-left: 1px solid ${theme.colors.purple.primary};
+                      border-top: 1px solid ${theme.colors.purple.primary};
+                      background: ${theme.colors.purple.primary};
+                      svg {
+                        transform: rotate(-45deg);
+                        transition: all 0.1s;
+                      }
+                    }
+                  }
                 `
               }
-              size="sm"
-              variant="outline"
               onClick={() =>
                 connectToWallet(wallet.adapter.name).then(closeModal)
               }
               key={i}
             >
-              {wallet.adapter.name} Wallet
-            </Button>
+              <p>{wallet.adapter.name} Wallet</p>
+              <div
+                css={css`
+                  position: relative;
+                  align-self: end;
+                `}
+              >
+                <ArrowContainer className="arrow">
+                  <ArrowRightIcon />
+                </ArrowContainer>
+              </div>
+            </FlexRow>
           ))}
         </FlexCol>
       </div>
     </BaseModal>
   );
 };
+
+const ArrowContainer = styled.div`
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 36px;
+  height: 36px;
+  border-left: 1px solid ${({ theme }) => theme.colors.grey[600]};
+  border-top: 1px solid ${({ theme }) => theme.colors.grey[600]};
+`;
