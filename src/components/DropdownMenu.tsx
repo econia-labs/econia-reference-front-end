@@ -12,7 +12,8 @@ export const DropdownMenu = styled.div<{ show: boolean }>`
       border-bottom: none;
     }
     :hover {
-      background-color: ${({ theme }) => theme.colors.grey[600]};
+      color: ${({ theme }) => theme.colors.purple.primary};
+      outline: 1px solid ${({ theme }) => theme.colors.purple.primary};
     }
   }
 `;

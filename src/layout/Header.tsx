@@ -96,7 +96,7 @@ export const Header: React.FC = () => {
                   width: 200px;
                 `}
                 size="sm"
-                variant="secondary"
+                variant="outline"
                 onClick={() => setShowDisconnectMenu(!showDisconnectMenu)}
               >
                 {account?.address &&
@@ -105,10 +105,11 @@ export const Header: React.FC = () => {
               <DropdownMenu show={showDisconnectMenu}>
                 <div
                   className="menu-item"
-                  css={css`
+                  css={(theme) => css`
                     text-align: center;
                     padding: 16px 0;
                     width: 200px;
+                    outline: 1px solid ${theme.colors.grey[600]};
                   `}
                   onClick={() =>
                     disconnect().then(() => setShowDisconnectMenu(false))
