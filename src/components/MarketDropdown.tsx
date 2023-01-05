@@ -9,6 +9,7 @@ import styled from "@emotion/styled";
 
 import { useAptos } from "../hooks/useAptos";
 import { useCoinInfo } from "../hooks/useCoinInfo";
+import { useIsRecognizedMarket } from "../hooks/useIsRecognizedMarket";
 import { useOnClickawayRef } from "../hooks/useOnClickawayRef";
 import { RegisteredMarket } from "../hooks/useRegisteredMarkets";
 import { toDecimalQuote, toDecimalSize } from "../utils/units";
@@ -65,7 +66,7 @@ export const MarketDropdown: React.FC<{
           >
             Market Name
           </span>
-          <span>lot-tick-min</span>
+          <span>lot-tick-min-recognized</span>
         </FlexRow>
         {markets.map((market, i) => (
           <MarketMenuItem
@@ -104,6 +105,7 @@ const MarketMenuItem: React.FC<{
 }> = ({ market, onClick }) => {
   const baseCoinInfo = useCoinInfo(market.baseType);
   const quoteCoinInfo = useCoinInfo(market.quoteType);
+  useIsRecognizedMarket(market);
   if (
     baseCoinInfo.isLoading ||
     quoteCoinInfo.isLoading ||
@@ -135,7 +137,8 @@ const MarketMenuItem: React.FC<{
           {baseCoinInfo.data.symbol}-{quoteCoinInfo.data.symbol}
         </p>
         <p>
-          {lotSize.toNumber()}-{tickSize.toNumber()}-{minSize.toNumber()}
+          {lotSize.toNumber()}-{tickSize.toNumber()}-{minSize.toNumber()}-
+          {market.isRecognized ? "✅" : "❌"}
         </p>
       </FlexRow>
     </MenuItem>

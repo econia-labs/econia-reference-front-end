@@ -349,7 +349,7 @@ const SwapInner: React.FC<{
             u64(market.marketId),
             direction,
             size, // min_base
-            MAX_POSSIBLE, // max_base // TODO: should be `size`
+            size, // max_base // TODO: should be `size`
             ZERO_U64, // min_quote
             MAX_POSSIBLE, // max_quote
             price,

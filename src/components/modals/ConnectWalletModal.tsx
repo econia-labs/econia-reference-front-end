@@ -13,7 +13,6 @@ export const ConnectWalletModal: React.FC<{
   closeModal: () => void;
 }> = ({ showModal, closeModal }) => {
   const { connect: connectToWallet, wallets } = useWallet();
-  const theme = useTheme();
 
   return (
     <BaseModal
