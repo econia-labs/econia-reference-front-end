@@ -179,7 +179,7 @@ export const MarketOrderForm: React.FC<{ market: RegisteredMarket }> = ({
             size.mul(u64(market.lotSize.toNumber())), // max_base
             minQuote,
             maxQuote,
-            direction === BUY ? HI_PRICE : ZERO_U64, // limit_price // TODO: slippage
+            price,
             market.baseType,
             market.quoteType,
           );
