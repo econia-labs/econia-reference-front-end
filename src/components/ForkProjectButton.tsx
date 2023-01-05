@@ -10,22 +10,33 @@ import { FlexRow } from "./FlexRow";
 export const ForkProjectButton: React.FC = () => {
   return (
     <div
-      css={css`
+      css={(theme) => css`
         position: fixed;
-        bottom: 8px;
-        right: 16px;
-        font-size: 100px;
+        bottom: 24px;
+        right: 24px;
+        :hover {
+          * {
+            fill: ${theme.colors.purple.primary};
+          }
+        }
       `}
     >
       <ExternalLink href="https://github.com/econia-labs/econia-reference-front-end">
-        <Button variant="secondary" size="sm">
+        <Button variant="outline" size="sm">
           <FlexRow
             css={css`
               gap: 8px;
               align-items: center;
             `}
           >
-            <CodeIcon width={20} height={20} /> <p>Fork me on Github</p>
+            <CodeIcon width={20} height={20} />{" "}
+            <p
+              css={css`
+                font-weight: 400;
+              `}
+            >
+              Fork me on Github
+            </p>
           </FlexRow>
         </Button>
       </ExternalLink>
