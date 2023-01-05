@@ -40,7 +40,7 @@ export const ConnectWalletModal: React.FC<{
         <p
           css={css`
             font-weight: 300;
-            margin: 14px 128px 60px 128px;
+            margin: 14px 128px 52px 128px;
           `}
         >
           In order to use this site you must connect a wallet and allow the site
@@ -49,7 +49,7 @@ export const ConnectWalletModal: React.FC<{
         <FlexCol
           css={css`
             align-items: center;
-            margin: 0px 95px;
+            margin: 0px 74px;
             button {
               text-align: left;
               margin-bottom: 16px;

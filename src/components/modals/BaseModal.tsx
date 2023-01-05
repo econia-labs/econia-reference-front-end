@@ -37,6 +37,7 @@ export const BaseModal: React.FC<Modal.Props & PropsWithChildren> = ({
           transform: "translate(-50%, -50%)",
           border: `1px solid ${theme.colors.purple.primary}`,
           borderRadius: "0px",
+          padding: "0px",
           ...content,
         },
         overlay: {
