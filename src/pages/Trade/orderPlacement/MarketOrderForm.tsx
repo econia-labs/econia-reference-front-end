@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import { useMemo } from "react";
 
 import { css } from "@emotion/react";
+import styled from "@emotion/styled";
 
 import { FlexCol } from "../../../components/FlexCol";
 import { FlexRow } from "../../../components/FlexRow";
@@ -101,31 +102,15 @@ export const MarketOrderForm: React.FC<{ market: RegisteredMarket }> = ({
           type="number"
         />
       </div>
-      <div
-        css={(theme) =>
-          css`
-            background-color: ${theme.colors.grey[700]};
-            width: 228px;
-            padding: 8px;
-          `
-        }
-      >
+
+      <DetailsContainer>
         <FlexRow
           css={css`
             justify-content: space-between;
             align-items: center;
           `}
         >
-          <p
-            css={(theme) =>
-              css`
-                color: ${theme.colors.grey[400]};
-                font-size: 14px;
-              `
-            }
-          >
-            Est. Price
-          </p>
+          <p>Est. Price</p>
           <p>
             {expectedPrice?.executionPrice.toNumber() ?? "-"}{" "}
             {quoteCoinInfo.data.symbol}
@@ -137,22 +122,14 @@ export const MarketOrderForm: React.FC<{ market: RegisteredMarket }> = ({
             align-items: center;
           `}
         >
-          <p
-            css={(theme) =>
-              css`
-                color: ${theme.colors.grey[400]};
-                font-size: 14px;
-              `
-            }
-          >
-            Est. Fill
-          </p>
+          <p>Est. Fill</p>
           <p>
             {expectedPrice?.sizeFillable.toNumber() ?? "-"}{" "}
             {baseCoinInfo.data.symbol}
           </p>
         </FlexRow>
-      </div>
+      </DetailsContainer>
+
       <TxButton
         onClick={async () => {
           if (!expectedPrice || !baseCoinInfo.data || !quoteCoinInfo.data)
@@ -216,3 +193,10 @@ export const MarketOrderForm: React.FC<{ market: RegisteredMarket }> = ({
     </FlexCol>
   );
 };
+
+const DetailsContainer = styled(FlexCol)`
+  width: 100%;
+  font-size: 12px;
+  font-weight: 300;
+  gap: 8px;
+`;

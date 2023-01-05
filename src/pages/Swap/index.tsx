@@ -430,7 +430,6 @@ const Symbol = styled(FlexRow)`
 
 const SwapDetailsContainer = styled(FlexCol)`
   width: 100%;
-  margin-bottom: 16px;
   font-size: 12px;
   font-weight: 300;
   gap: 8px;
