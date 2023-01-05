@@ -146,6 +146,8 @@ export const MarketOrderForm: React.FC<{ market: RegisteredMarket }> = ({
           );
 
           let depositAmount;
+          let minQuote;
+          let maxQuote;
           if (direction === BUY) {
             // Give an extra 0.1% to ensure MarketAccount has enough funds to place the order.
             const baseAmount = size
@@ -154,18 +156,29 @@ export const MarketOrderForm: React.FC<{ market: RegisteredMarket }> = ({
             const feeAmount = baseAmount.div(
               u64(incentiveParams.data.takerFeeDivisor.toNumber()),
             );
+            minQuote = ZERO_U64;
+            maxQuote = baseAmount.add(feeAmount);
             depositAmount = baseAmount.add(feeAmount);
           } else {
+            const baseAmount = size
+              .mul(price)
+              .mul(u64(market.tickSize.toNumber()));
+            const feeAmount = baseAmount.div(
+              u64(incentiveParams.data.takerFeeDivisor.toNumber()),
+            );
+            minQuote = baseAmount.sub(feeAmount);
+            maxQuote = MAX_POSSIBLE;
             depositAmount = size.mul(u64(market.lotSize.toNumber()));
           }
+
           await placeMarketOrder(
             depositAmount,
             u64(market.marketId),
             direction,
             size.mul(u64(market.lotSize.toNumber())), // min_base
             size.mul(u64(market.lotSize.toNumber())), // max_base
-            ZERO_U64, // min_quote // TODO: slippage
-            MAX_POSSIBLE, // max_quote // TODO: slippage
+            minQuote,
+            maxQuote,
             direction === BUY ? HI_PRICE : ZERO_U64, // limit_price // TODO: slippage
             market.baseType,
             market.quoteType,
