@@ -380,6 +380,8 @@ const TestnetBanner = styled.div`
 `;
 
 const SwapContainer = styled(FlexCol)`
+  width: 370px;
+  height: 394px;
   border: 1px solid ${({ theme }) => theme.colors.purple.primary};
   padding: 50px;
 `;
