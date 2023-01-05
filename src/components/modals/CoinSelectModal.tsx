@@ -137,7 +137,9 @@ const CoinRow: React.FC<{ coin: CoinInfo; onClick: () => void }> = ({
           {coin.symbol}
         </p>
       </FlexRow>
-      {balance.data && <Balance>{balance.data.balance.toString()}</Balance>}
+      <Balance>
+        {balance.data ? balance.data.balance.toString() : "0.00"}
+      </Balance>
     </FlexRow>
   );
 };
