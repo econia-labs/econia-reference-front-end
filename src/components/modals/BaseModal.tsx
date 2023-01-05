@@ -2,6 +2,7 @@ import React, { PropsWithChildren } from "react";
 import Modal from "react-modal";
 
 import { css, useTheme } from "@emotion/react";
+import styled from "@emotion/styled";
 
 import { XIcon } from "../../assets/XIcon";
 import { FlexRow } from "../FlexRow";
@@ -52,27 +53,26 @@ export const BaseModal: React.FC<Modal.Props & PropsWithChildren> = ({
         ...restStyle,
       }}
     >
-      <FlexRow
-        css={(theme) => css`
-          position: absolute;
-          width: 71px;
-          height: 71px;
-          top: 0;
-          right: 0;
-          border-left: 1px solid ${theme.colors.purple.primary};
-          border-bottom: 1px solid ${theme.colors.purple.primary};
-          justify-content: center;
-          align-items: center;
-          cursor: pointer;
-          :hover {
-            background: ${theme.colors.purple.primary};
-          }
-        `}
-        onClick={props.onRequestClose}
-      >
+      <CloseButtonContainer onClick={props.onRequestClose}>
         <XIcon />
-      </FlexRow>
+      </CloseButtonContainer>
       {children}
     </Modal>
   );
 };
+
+const CloseButtonContainer = styled(FlexRow)`
+  position: absolute;
+  width: 71px;
+  height: 71px;
+  top: 0;
+  right: 0;
+  border-left: 1px solid ${({ theme }) => theme.colors.purple.primary};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.purple.primary};
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  :hover {
+    background: ${({ theme }) => theme.colors.purple.primary};
+  }
+`;
