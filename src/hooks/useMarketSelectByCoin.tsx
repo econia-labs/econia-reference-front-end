@@ -6,10 +6,16 @@ import { CoinInfo, useCoinInfos } from "./useCoinInfos";
 import { RegisteredMarket } from "./useRegisteredMarkets";
 
 export const useMarketSelectByCoin = (markets: RegisteredMarket[]) => {
+  // We sort by recognized first so that when matching a market based on coins,
+  // we pair with recognized ones first.
+  const sortedMarkets = markets.sort(
+    (a, b) => (b.isRecognized ? 1 : -1) - (a.isRecognized ? 1 : -1),
+  );
+  console.log(sortedMarkets);
   const uniqueCoinTypes = useMemo(() => {
     const seen: Record<string, boolean> = {};
     const res = [];
-    for (const m of markets) {
+    for (const m of sortedMarkets) {
       const baseKey = m.baseType.getFullname();
       if (!seen[baseKey]) {
         res.push(m.baseType);
@@ -22,7 +28,7 @@ export const useMarketSelectByCoin = (markets: RegisteredMarket[]) => {
       }
     }
     return res;
-  }, [markets]);
+  }, [sortedMarkets]);
   const coinInfos = useCoinInfos(uniqueCoinTypes);
   const coinTypeToInfo = useMemo(() => {
     if (!coinInfos.data) return new Map<string, CoinInfo>();
@@ -34,7 +40,7 @@ export const useMarketSelectByCoin = (markets: RegisteredMarket[]) => {
   }, [uniqueCoinTypes, coinInfos]);
   const coinToMarkets = useMemo(() => {
     const coinToMarkets = new Map<string, RegisteredMarket[]>();
-    for (const m of markets) {
+    for (const m of sortedMarkets) {
       const baseKey = m.baseType.getFullname();
       if (!coinToMarkets.has(baseKey)) {
         coinToMarkets.set(baseKey, []);
@@ -47,9 +53,13 @@ export const useMarketSelectByCoin = (markets: RegisteredMarket[]) => {
       coinToMarkets.get(quoteKey)!.push(m);
     }
     return coinToMarkets;
-  }, [markets]);
-  const [inputCoin, setInputCoin] = useState<StructTag>(markets[0].quoteType);
-  const [outputCoin, setOutputCoin] = useState<StructTag>(markets[0].baseType);
+  }, [sortedMarkets]);
+  const [inputCoin, setInputCoin] = useState<StructTag>(
+    sortedMarkets[0].quoteType,
+  );
+  const [outputCoin, setOutputCoin] = useState<StructTag>(
+    sortedMarkets[0].baseType,
+  );
   const allCoinInfos: CoinInfo[] = useMemo(() => {
     const res = [];
     for (const coinType of uniqueCoinTypes) {
@@ -77,7 +87,7 @@ export const useMarketSelectByCoin = (markets: RegisteredMarket[]) => {
       outputCoinInfos.push(mBaseCoinInfo);
     }
   }
-  const market = markets.find(
+  const market = sortedMarkets.find(
     (m) =>
       (m.baseType.getFullname() === inputCoin.getFullname() &&
         m.quoteType.getFullname() === outputCoin.getFullname()) ||
