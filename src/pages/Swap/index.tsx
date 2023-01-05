@@ -28,7 +28,6 @@ import {
 } from "../../hooks/useRegisteredMarkets";
 import { DefaultContainer } from "../../layout/DefaultContainer";
 import { DefaultWrapper } from "../../layout/DefaultWrapper";
-import { calculate_max_quote_match_ } from "../../sdk/src/econia/incentives";
 import { MAX_POSSIBLE } from "../../sdk/src/econia/market";
 import {
   fromDecimalPrice,
@@ -55,18 +54,11 @@ export const Swap: React.FC = () => {
           margin-top: 48px;
         `}
       >
-        <div
-          css={(theme) => css`
-            max-width: 600px;
-            margin-bottom: 48px;
-            border: 1px solid ${theme.colors.grey[600]};
-            padding: 8px 16px;
-          `}
-        >
+        <TestnetBanner>
           This is a testnet interface. All coins are used for testing purposes
           and have no real value. If you are connecting a wallet, make sure it
           is connected to Aptos testnet.
-        </div>
+        </TestnetBanner>
         <SwapContainer>
           {registeredMarkets.data && registeredMarkets.data.length > 0 ? (
             <SwapInner markets={registeredMarkets.data} />
@@ -378,6 +370,14 @@ const SwapInner: React.FC<{
     </>
   );
 };
+
+const TestnetBanner = styled.div`
+  text-align: center;
+  max-width: 600px;
+  margin-bottom: 48px;
+  border: 1px solid ${({ theme }) => theme.colors.grey[600]};
+  padding: 8px 16px;
+`;
 
 const SwapContainer = styled(FlexCol)`
   border: 1px solid ${({ theme }) => theme.colors.purple.primary};
