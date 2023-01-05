@@ -340,11 +340,11 @@ const SwapInner: React.FC<{
           await placeSwap(
             u64(market.marketId),
             direction,
-            size, // min_base
-            size, // max_base // TODO: should be `size`
-            ZERO_U64, // min_quote
-            MAX_POSSIBLE, // max_quote
-            price,
+            size.mul(u64(market.lotSize.toNumber())), // min_base
+            size.mul(u64(market.lotSize.toNumber())), // max_base
+            ZERO_U64, // min_quote // TODO: slippage
+            MAX_POSSIBLE, // max_quote // TODO: slippage
+            price, // limit_price
             market.baseType,
             market.quoteType,
           );

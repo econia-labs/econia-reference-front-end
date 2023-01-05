@@ -14,13 +14,7 @@ import { Label } from "../../../components/Label";
 import { Loading } from "../../../components/Loading";
 import { RadioGroup } from "../../../components/RadioGroup";
 import { TxButton } from "../../../components/TxButton";
-import {
-  BPS_DENOMINATOR,
-  BUY,
-  DEFAULT_SLIPPAGE_BPS,
-  SELL,
-  ZERO_U64,
-} from "../../../constants";
+import { BUY, SELL, ZERO_U64 } from "../../../constants";
 import { useCoinInfo } from "../../../hooks/useCoinInfo";
 import { useIncentiveParams } from "../../../hooks/useIncentiveParams";
 import { useMarketPrice } from "../../../hooks/useMarketPrice";
@@ -157,13 +151,10 @@ export const MarketOrderForm: React.FC<{ market: RegisteredMarket }> = ({
             const baseAmount = size
               .mul(price)
               .mul(u64(market.tickSize.toNumber()));
-            const feeAmount = size.div(
+            const feeAmount = baseAmount.div(
               u64(incentiveParams.data.takerFeeDivisor.toNumber()),
             );
-            depositAmount = baseAmount
-              .add(feeAmount)
-              .mul(BPS_DENOMINATOR.add(DEFAULT_SLIPPAGE_BPS))
-              .div(BPS_DENOMINATOR);
+            depositAmount = baseAmount.add(feeAmount);
           } else {
             depositAmount = size.mul(u64(market.lotSize.toNumber()));
           }
@@ -171,11 +162,11 @@ export const MarketOrderForm: React.FC<{ market: RegisteredMarket }> = ({
             depositAmount,
             u64(market.marketId),
             direction,
-            size, // min_base
-            MAX_POSSIBLE, // max_base TODO: should be `size
-            ZERO_U64, // min_quote
-            MAX_POSSIBLE, // max_quote
-            direction === BUY ? HI_PRICE : ZERO_U64, // limit_price
+            size.mul(u64(market.lotSize.toNumber())), // min_base
+            size.mul(u64(market.lotSize.toNumber())), // max_base
+            ZERO_U64, // min_quote // TODO: slippage
+            MAX_POSSIBLE, // max_quote // TODO: slippage
+            direction === BUY ? HI_PRICE : ZERO_U64, // limit_price // TODO: slippage
             market.baseType,
             market.quoteType,
           );
@@ -195,7 +186,7 @@ export const MarketOrderForm: React.FC<{ market: RegisteredMarket }> = ({
 };
 
 const DetailsContainer = styled(FlexCol)`
-  width: 100%;
+  width: 218px;
   font-size: 12px;
   font-weight: 300;
   gap: 8px;
