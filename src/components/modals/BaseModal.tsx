@@ -3,6 +3,9 @@ import Modal from "react-modal";
 
 import { css, useTheme } from "@emotion/react";
 
+import { XIcon } from "../../assets/XIcon";
+import { FlexRow } from "../FlexRow";
+
 export const BaseModal: React.FC<Modal.Props & PropsWithChildren> = ({
   style,
   children,
@@ -49,6 +52,26 @@ export const BaseModal: React.FC<Modal.Props & PropsWithChildren> = ({
         ...restStyle,
       }}
     >
+      <FlexRow
+        css={(theme) => css`
+          position: absolute;
+          width: 71px;
+          height: 71px;
+          top: 0;
+          right: 0;
+          border-left: 1px solid ${theme.colors.purple.primary};
+          border-bottom: 1px solid ${theme.colors.purple.primary};
+          justify-content: center;
+          align-items: center;
+          cursor: pointer;
+          :hover {
+            background: ${theme.colors.purple.primary};
+          }
+        `}
+        onClick={props.onRequestClose}
+      >
+        <XIcon />
+      </FlexRow>
       {children}
     </Modal>
   );
