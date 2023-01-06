@@ -8,6 +8,8 @@ import styled from "@emotion/styled";
 
 import { ChevronDownIcon } from "../../assets/ChevronDownIcon";
 import { SyncIcon } from "../../assets/SyncIcon";
+import { CoinAmount } from "../../components/CoinAmount";
+import { CoinSymbol } from "../../components/CoinSymbol";
 import { FlexCol } from "../../components/FlexCol";
 import { FlexRow } from "../../components/FlexRow";
 import { Input } from "../../components/Input";
@@ -211,11 +213,11 @@ const SwapInner: React.FC<{
               type="number"
             />
             <Symbol onClick={() => setShowInputModal(true)}>
-              <p>
-                {direction === BUY
-                  ? quoteCoinInfo.data?.symbol
-                  : baseCoinInfo.data?.symbol}
-              </p>
+              {direction === BUY ? (
+                <CoinSymbol symbol={quoteCoinInfo.data?.symbol} />
+              ) : (
+                <CoinSymbol symbol={baseCoinInfo.data?.symbol} />
+              )}
               <ChevronDownIcon />
             </Symbol>
           </InputSymbolContainer>
@@ -247,11 +249,11 @@ const SwapInner: React.FC<{
               disabled
             />
             <Symbol onClick={() => setShowOutputModal(true)}>
-              <p>
-                {direction === BUY
-                  ? baseCoinInfo.data?.symbol
-                  : quoteCoinInfo.data?.symbol}
-              </p>
+              {direction === BUY ? (
+                <CoinSymbol symbol={baseCoinInfo.data?.symbol} />
+              ) : (
+                <CoinSymbol symbol={quoteCoinInfo.data?.symbol} />
+              )}
               <ChevronDownIcon />
             </Symbol>
           </InputSymbolContainer>
@@ -265,12 +267,10 @@ const SwapInner: React.FC<{
           `}
         >
           <p>Balance</p>
-          <p>
-            {inputCoinStore.data?.balance
-              ? inputCoinStore.data?.balance.toFixed(4)
-              : "-"}{" "}
-            {quoteCoinInfo.data?.symbol ?? "-"}
-          </p>
+          <CoinAmount
+            amount={inputCoinStore.data?.balance}
+            symbol={quoteCoinInfo.data?.symbol}
+          />
         </FlexRow>
         <FlexRow
           css={css`
@@ -279,12 +279,10 @@ const SwapInner: React.FC<{
           `}
         >
           <p>Est. Price</p>
-          <p>
-            {executionPrice && !executionPrice.isNaN()
-              ? executionPrice.toFixed(4)
-              : "-"}{" "}
-            {quoteCoinInfo.data?.symbol ?? "-"}
-          </p>
+          <CoinAmount
+            amount={executionPrice}
+            symbol={quoteCoinInfo.data?.symbol}
+          />
         </FlexRow>
         <FlexRow
           css={css`
@@ -293,9 +291,10 @@ const SwapInner: React.FC<{
           `}
         >
           <p>Est. Fill</p>
-          <p>
-            {sizeFillable?.toNumber() ?? "-"} {baseCoinInfo.data?.symbol ?? "-"}
-          </p>
+          <CoinAmount
+            amount={sizeFillable}
+            symbol={baseCoinInfo.data?.symbol}
+          />
         </FlexRow>
       </SwapDetailsContainer>
 
