@@ -1,21 +1,15 @@
 import { StructTag } from "@manahippo/move-to-ts";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { CoinInfo, useCoinInfos } from "./useCoinInfos";
 import { RegisteredMarket } from "./useRegisteredMarkets";
 
-export const useMarketSelectByCoin = (markets: RegisteredMarket[]) => {
-  // We sort by recognized first so that when matching a market based on coins,
-  // we pair with recognized ones first.
-  const sortedMarkets = markets.sort(
-    (a, b) => (b.isRecognized ? 1 : -1) - (a.isRecognized ? 1 : -1),
-  );
-  console.log(sortedMarkets);
-  const uniqueCoinTypes = useMemo(() => {
+export const useMarketCoins = (markets: RegisteredMarket[]) => {
+  const coinTypes = useMemo(() => {
     const seen: Record<string, boolean> = {};
     const res = [];
-    for (const m of sortedMarkets) {
+    for (const m of markets) {
       const baseKey = m.baseType.getFullname();
       if (!seen[baseKey]) {
         res.push(m.baseType);
@@ -28,16 +22,28 @@ export const useMarketSelectByCoin = (markets: RegisteredMarket[]) => {
       }
     }
     return res;
-  }, [sortedMarkets]);
-  const coinInfos = useCoinInfos(uniqueCoinTypes);
+  }, [markets]);
+  const coinInfos = useCoinInfos(coinTypes).data ?? [];
   const coinTypeToInfo = useMemo(() => {
-    if (!coinInfos.data) return new Map<string, CoinInfo>();
+    if (coinInfos.length === 0) return new Map<string, CoinInfo>();
     const res = new Map<string, CoinInfo>();
-    for (let i = 0; i < coinInfos.data.length; i++) {
-      res.set(uniqueCoinTypes[i].getFullname(), coinInfos.data[i]);
+    for (let i = 0; i < coinInfos.length; i++) {
+      res.set(coinTypes[i].getFullname(), coinInfos[i]);
     }
     return res;
-  }, [uniqueCoinTypes, coinInfos]);
+  }, [coinTypes, coinInfos]);
+  return { coinTypes, coinInfos, coinTypeToInfo };
+};
+
+export const useMarketSelectByCoin = (markets: RegisteredMarket[]) => {
+  // We sort by recognized first so that when matching a market based on coins,
+  // we pair with recognized ones first.
+  const sortedMarkets = markets.sort(
+    (a, b) => (b.isRecognized ? 1 : -1) - (a.isRecognized ? 1 : -1),
+  );
+  const { coinTypes, coinInfos, coinTypeToInfo } =
+    useMarketCoins(sortedMarkets);
+  // Mapping of coin type to its corresponding markets
   const coinToMarkets = useMemo(() => {
     const coinToMarkets = new Map<string, RegisteredMarket[]>();
     for (const m of sortedMarkets) {
@@ -54,54 +60,61 @@ export const useMarketSelectByCoin = (markets: RegisteredMarket[]) => {
     }
     return coinToMarkets;
   }, [sortedMarkets]);
-  const [inputCoin, setInputCoin] = useState<StructTag>(
-    sortedMarkets[0].quoteType,
-  );
-  const [outputCoin, setOutputCoin] = useState<StructTag>(
-    sortedMarkets[0].baseType,
-  );
-  const allCoinInfos: CoinInfo[] = useMemo(() => {
-    const res = [];
-    for (const coinType of uniqueCoinTypes) {
-      const coinInfo = coinTypeToInfo.get(coinType.getFullname());
-      if (coinInfo) {
-        res.push(coinInfo);
+  const [inputCoin, setInputCoin] = useState<StructTag | null>();
+  const [outputCoin, setOutputCoin] = useState<StructTag | null>();
+  useEffect(() => {
+    if (!inputCoin && sortedMarkets.length > 0) {
+      setInputCoin(sortedMarkets[0].quoteType);
+    }
+    if (!outputCoin && sortedMarkets.length > 0) {
+      setOutputCoin(sortedMarkets[0].baseType);
+    }
+  }, [inputCoin, outputCoin, sortedMarkets]);
+
+  // Given the input coin, we find all the coins that can be used as output
+  const outputCoinInfos: CoinInfo[] = useMemo(() => {
+    if (!inputCoin) return [];
+    const res: CoinInfo[] = [];
+    const matchingMarkets = inputCoin
+      ? coinToMarkets.get(inputCoin.getFullname())!
+      : [];
+    for (const market of matchingMarkets) {
+      const mBaseCoinInfo = coinTypeToInfo.get(market.baseType.getFullname());
+      const mQuoteCoinInfo = coinTypeToInfo.get(market.quoteType.getFullname());
+      if (
+        mQuoteCoinInfo &&
+        market.baseType.getFullname() === inputCoin.getFullname()
+      ) {
+        res.push(mQuoteCoinInfo);
+      } else if (
+        mBaseCoinInfo &&
+        market.quoteType.getFullname() === inputCoin.getFullname()
+      ) {
+        res.push(mBaseCoinInfo);
       }
     }
     return res;
-  }, [uniqueCoinTypes, coinTypeToInfo]);
-  const outputCoinInfos: CoinInfo[] = [];
-  const matchingMarkets = coinToMarkets.get(inputCoin.getFullname()) ?? [];
-  for (const market of matchingMarkets) {
-    const mBaseCoinInfo = coinTypeToInfo.get(market.baseType.getFullname());
-    const mQuoteCoinInfo = coinTypeToInfo.get(market.quoteType.getFullname());
-    if (
-      mQuoteCoinInfo &&
-      market.baseType.getFullname() === inputCoin.getFullname()
-    ) {
-      outputCoinInfos.push(mQuoteCoinInfo);
-    } else if (
-      mBaseCoinInfo &&
-      market.quoteType.getFullname() === inputCoin.getFullname()
-    ) {
-      outputCoinInfos.push(mBaseCoinInfo);
-    }
-  }
-  const market = sortedMarkets.find(
-    (m) =>
-      (m.baseType.getFullname() === inputCoin.getFullname() &&
-        m.quoteType.getFullname() === outputCoin.getFullname()) ||
-      (m.baseType.getFullname() === outputCoin.getFullname() &&
-        m.quoteType.getFullname() === inputCoin.getFullname()),
-  );
+  }, [inputCoin, coinToMarkets, coinTypeToInfo]);
+
+  // Given the input and output coins, we find the market that matches
+  const market =
+    inputCoin && outputCoin
+      ? sortedMarkets.find(
+          (m) =>
+            (m.baseType.getFullname() === inputCoin.getFullname() &&
+              m.quoteType.getFullname() === outputCoin.getFullname()) ||
+            (m.baseType.getFullname() === outputCoin.getFullname() &&
+              m.quoteType.getFullname() === inputCoin.getFullname()),
+        ) ?? null
+      : null;
 
   return {
     inputCoin,
     setInputCoin: (coin: CoinInfo) => {
       // TODO: More efficient search
-      for (let i = 0; i < allCoinInfos.length; i++) {
-        if (allCoinInfos[i] === coin) {
-          setInputCoin(uniqueCoinTypes[i]);
+      for (let i = 0; i < coinInfos.length; i++) {
+        if (coinInfos[i] === coin) {
+          setInputCoin(coinTypes[i]);
           return;
         }
       }
@@ -109,14 +122,14 @@ export const useMarketSelectByCoin = (markets: RegisteredMarket[]) => {
     outputCoin,
     setOutputCoin: (coin: CoinInfo) => {
       // TODO: More efficient search
-      for (let i = 0; i < allCoinInfos.length; i++) {
-        if (allCoinInfos[i] === coin) {
-          setOutputCoin(uniqueCoinTypes[i]);
+      for (let i = 0; i < coinInfos.length; i++) {
+        if (coinInfos[i] === coin) {
+          setOutputCoin(coinTypes[i]);
           return;
         }
       }
     },
-    allCoinInfos,
+    coinInfos,
     outputCoinInfos,
     market,
   };

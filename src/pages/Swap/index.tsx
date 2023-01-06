@@ -60,24 +60,19 @@ export const Swap: React.FC = () => {
           is connected to Aptos testnet.
         </TestnetBanner>
         <SwapContainer>
-          {registeredMarkets.data && registeredMarkets.data.length > 0 ? (
-            <SwapInner markets={registeredMarkets.data} />
-          ) : (
-            <Loading />
-          )}
+          <SwapInner markets={registeredMarkets.data ?? []} />
         </SwapContainer>
       </DefaultContainer>
     </DefaultWrapper>
   );
 };
 
-// Precondition: markets is not empty
 const SwapInner: React.FC<{
   markets: RegisteredMarket[];
 }> = ({ markets }) => {
   const [inputAmount, setInputAmount] = useState("");
   const [direction, setDirection] = useState(BUY);
-  const { setInputCoin, setOutputCoin, allCoinInfos, outputCoinInfos, market } =
+  const { setInputCoin, setOutputCoin, coinInfos, outputCoinInfos, market } =
     useMarketSelectByCoin(markets);
   const [showInputModal, setShowInputModal] = useState(false);
   const [showOutputModal, setShowOutputModal] = useState(false);
@@ -199,9 +194,6 @@ const SwapInner: React.FC<{
   ) {
     // TODO: Better loading state
     return <Loading />;
-  } else if (!baseCoinInfo.data || !quoteCoinInfo.data) {
-    // TODO: Better error state
-    return <DefaultWrapper>Error loading coin info</DefaultWrapper>;
   }
 
   return (
@@ -277,7 +269,7 @@ const SwapInner: React.FC<{
             {inputCoinStore.data?.balance
               ? inputCoinStore.data?.balance.toFixed(4)
               : "-"}{" "}
-            {quoteCoinInfo.data.symbol}
+            {quoteCoinInfo.data?.symbol ?? "-"}
           </p>
         </FlexRow>
         <FlexRow
@@ -291,7 +283,7 @@ const SwapInner: React.FC<{
             {executionPrice && !executionPrice.isNaN()
               ? executionPrice.toFixed(4)
               : "-"}{" "}
-            {quoteCoinInfo.data.symbol}
+            {quoteCoinInfo.data?.symbol ?? "-"}
           </p>
         </FlexRow>
         <FlexRow
@@ -302,7 +294,7 @@ const SwapInner: React.FC<{
         >
           <p>Est. Fill</p>
           <p>
-            {sizeFillable?.toNumber() ?? "-"} {baseCoinInfo.data.symbol}
+            {sizeFillable?.toNumber() ?? "-"} {baseCoinInfo.data?.symbol ?? "-"}
           </p>
         </FlexRow>
       </SwapDetailsContainer>
@@ -381,7 +373,7 @@ const SwapInner: React.FC<{
       <CoinSelectModal
         showModal={showInputModal}
         closeModal={() => setShowInputModal(false)}
-        coins={allCoinInfos}
+        coins={coinInfos}
         onCoinSelected={(c) => setInputCoin(c)}
       />
       <CoinSelectModal
