@@ -194,70 +194,53 @@ const SwapInner: React.FC<{
     incentiveParams.isLoading ||
     !incentiveParams.data
   ) {
-    // TODO: Better loading state
     return <Loading />;
   }
 
   return (
     <>
       <FormContainer>
-        <InputContainer>
-          <InputSymbolContainer>
-            <Input
-              css={css`
-                width: 100%;
-              `}
-              placeholder="0.0000"
-              value={inputAmount}
-              onChange={onInputChange}
-              type="number"
-            />
-            <Symbol onClick={() => setShowInputModal(true)}>
-              {direction === BUY ? (
-                <CoinSymbol symbol={quoteCoinInfo.data?.symbol} />
-              ) : (
-                <CoinSymbol symbol={baseCoinInfo.data?.symbol} />
-              )}
-              <ChevronDownIcon />
-            </Symbol>
-          </InputSymbolContainer>
-        </InputContainer>
-        <div
-          css={(theme) => css`
-            padding: 8px 16px;
-            margin-bottom: 8px;
-            cursor: pointer;
-            :hover {
-              path {
-                fill: ${theme.colors.purple.primary};
-              }
-            }
-          `}
-          onClick={() => setDirection(!direction)}
-        >
+        <InputSymbolContainer>
+          <Input
+            css={css`
+              width: 344px;
+            `}
+            placeholder="0.0000"
+            value={inputAmount}
+            onChange={onInputChange}
+            type="number"
+          />
+          <Symbol onClick={() => setShowInputModal(true)}>
+            {direction === BUY ? (
+              <CoinSymbol symbol={quoteCoinInfo.data?.symbol} />
+            ) : (
+              <CoinSymbol symbol={baseCoinInfo.data?.symbol} />
+            )}
+            <ChevronDownIcon />
+          </Symbol>
+        </InputSymbolContainer>
+        <SwitchDirectionContainer onClick={() => setDirection(!direction)}>
           <SyncIcon />
-        </div>
-        <InputContainer>
-          <InputSymbolContainer>
-            <Input
-              css={css`
-                width: 100%;
-              `}
-              placeholder="0.0000"
-              value={outputAmount}
-              type="number"
-              disabled
-            />
-            <Symbol onClick={() => setShowOutputModal(true)}>
-              {direction === BUY ? (
-                <CoinSymbol symbol={baseCoinInfo.data?.symbol} />
-              ) : (
-                <CoinSymbol symbol={quoteCoinInfo.data?.symbol} />
-              )}
-              <ChevronDownIcon />
-            </Symbol>
-          </InputSymbolContainer>
-        </InputContainer>
+        </SwitchDirectionContainer>
+        <InputSymbolContainer>
+          <Input
+            css={css`
+              width: 344px;
+            `}
+            placeholder="0.0000"
+            value={outputAmount}
+            type="number"
+            disabled
+          />
+          <Symbol onClick={() => setShowOutputModal(true)}>
+            {direction === BUY ? (
+              <CoinSymbol symbol={baseCoinInfo.data?.symbol} />
+            ) : (
+              <CoinSymbol symbol={quoteCoinInfo.data?.symbol} />
+            )}
+            <ChevronDownIcon />
+          </Symbol>
+        </InputSymbolContainer>
       </FormContainer>
       <SwapDetailsContainer>
         <FlexRow
@@ -407,15 +390,22 @@ const FormContainer = styled(FlexCol)`
   margin-bottom: 36px;
 `;
 
-const InputContainer = styled.div`
-  width: 368px;
-`;
-
 const InputSymbolContainer = styled(FlexRow)`
   position: relative;
   width: 100%;
   align-items: baseline;
   gap: 8px;
+`;
+
+const SwitchDirectionContainer = styled.div`
+  padding: 8px 16px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  :hover {
+    path {
+      fill: ${({ theme }) => theme.colors.purple.primary};
+    }
+  }
 `;
 
 const Symbol = styled(FlexRow)`
