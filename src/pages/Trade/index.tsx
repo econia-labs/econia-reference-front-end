@@ -18,21 +18,19 @@ import { TradeHeader } from "./TradeHeader";
 import { TradeTable } from "./TradeTable";
 
 export const Trade: React.FC = () => {
-  const registeredMarkets = useRegisteredMarkets();
+  const registeredMarketsQuery = useRegisteredMarkets();
+  const registeredMarkets = registeredMarketsQuery.data || [];
   const [market, setMarket] = useState<RegisteredMarket>();
   const [showNewMarketModal, setShowNewMarketModal] = useState(false);
   useEffect(() => {
-    if (market !== undefined) return;
-    if (registeredMarkets.data !== undefined && registeredMarkets.data) {
-      setMarket(registeredMarkets.data[0]);
+    if (market) return;
+    if (registeredMarkets.length > 0) {
+      setMarket(registeredMarkets[0]);
     }
-  }, [registeredMarkets.data]);
+  }, [registeredMarkets]);
 
-  if (
-    !registeredMarkets.isLoading &&
-    registeredMarkets.data &&
-    registeredMarkets.data.length === 0
-  ) {
+  // No market view
+  if (!registeredMarketsQuery.isLoading && registeredMarkets.length === 0) {
     return (
       <DefaultWrapper
         css={css`
@@ -73,7 +71,7 @@ export const Trade: React.FC = () => {
       <TradeHeader
         market={market}
         setSelectedMarket={setMarket}
-        markets={registeredMarkets.data}
+        markets={registeredMarkets}
       />
       <div
         css={css`
