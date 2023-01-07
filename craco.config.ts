@@ -43,8 +43,8 @@ module.exports = {
         "title": "Econia",
         "fullName": "Econia",
         "description": "Econia is a protocol that lets anyone in the world trade a digital asset with anyone else in the world, at whatever price they want. More specifically, Econia is an order book, a fundamental financial tool utilized by financial institutions like stock markets, except unlike the New York Stock Exchange or the NASDAQ, Econia is decentralized, open-source, and permissionless.",
-        "url": "https://econia.dev",
-        "image": "https://econia.dev/logo.png",
+        "url": "https://econia.exchange",
+        "image": "https://econia.exchange/EconiaPreview.png",
         "imageAlt": "Econia",
         "themeColor": "#ffffff",
         "socials": {
