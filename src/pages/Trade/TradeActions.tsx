@@ -22,16 +22,7 @@ export const TradeActions: React.FC<{
   const [selectedOption, setSelectedOption] = useState(Mode.Limit);
 
   return (
-    <DefaultContainer
-      className={className}
-      css={(theme) => css`
-        width: fit-content;
-        border-left: 1px solid ${theme.colors.grey[600]};
-        border-right: 1px solid ${theme.colors.grey[600]};
-        border-bottom: 1px solid ${theme.colors.grey[600]};
-      `}
-    >
-      <UserInfo market={market} />
+    <DefaultContainer className={className}>
       <RadioGroup
         css={(theme) => css`
           border-top: 1px solid ${theme.colors.grey[600]};

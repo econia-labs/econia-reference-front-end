@@ -7,19 +7,31 @@ import { css } from "@emotion/react";
 import { CoinSymbol } from "./CoinSymbol";
 
 export const CoinAmount: React.FC<{
+  className?: string;
   amount: BigNumber | null | undefined;
-  symbol: string | null | undefined;
-}> = ({ amount, symbol }) => {
+  symbol?: string | null;
+}> = ({ className, amount, symbol }) => {
   return (
-    <span>
-      <p
+    <div>
+      <div
+        className={className}
         css={css`
-          display: inline;
+          display: inline-block;
         `}
       >
         {amount?.toNumber() ?? "-"}
-      </p>{" "}
-      <CoinSymbol symbol={symbol} />
-    </span>
+      </div>
+      {symbol && (
+        <>
+          {" "}
+          <CoinSymbol
+            css={css`
+              display: inline-block;
+            `}
+            symbol={symbol}
+          />
+        </>
+      )}
+    </div>
   );
 };

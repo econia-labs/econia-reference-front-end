@@ -1,17 +1,8 @@
 import React from "react";
 
-import { css } from "@emotion/react";
-
-export const CoinSymbol: React.FC<{ symbol: string | null | undefined }> = ({
-  symbol,
-}) => {
-  return (
-    <p
-      css={css`
-        display: inline;
-      `}
-    >
-      {symbol ? symbol : "-"}
-    </p>
-  );
+export const CoinSymbol: React.FC<{
+  className?: string;
+  symbol: string | null | undefined;
+}> = ({ className, symbol }) => {
+  return <div className={className}>{symbol ? symbol : "-"}</div>;
 };

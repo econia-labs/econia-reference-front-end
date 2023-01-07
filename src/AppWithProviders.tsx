@@ -118,6 +118,10 @@ const GlobalStyles = (theme: Theme) => css`
     line-height: 34px;
   }
 
+  td {
+    padding-bottom: 0;
+  }
+
   p {
     margin: 0;
   }

@@ -5,6 +5,8 @@ import React from "react";
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 
+import { CoinAmount } from "../../components/CoinAmount";
+import { CoinSymbol } from "../../components/CoinSymbol";
 import { Loading } from "../../components/Loading";
 import { ConnectWalletButton } from "../../hooks/ConnectWalletButton";
 import { useAptos } from "../../hooks/useAptos";
@@ -19,20 +21,8 @@ export const UserInfo: React.FC<{
   market?: RegisteredMarket;
 }> = ({ className, market }) => {
   return (
-    <UserInfoContainer
-      className={className}
-      css={css`
-        height: 200px;
-        width: 360px;
-      `}
-    >
-      <h3
-        css={css`
-          margin-top: 16px;
-        `}
-      >
-        User info
-      </h3>
+    <UserInfoContainer className={className}>
+      <h4>User info</h4>
       {market ? (
         <UserInfoInner market={market} />
       ) : (
@@ -59,7 +49,9 @@ const UserInfoInner: React.FC<{ market: RegisteredMarket }> = ({ market }) => {
             css={css`
               td {
                 vertical-align: top;
-                padding-bottom: 8px;
+              }
+              tr td:last-child {
+                width: 1%;
               }
               width: 100%;
             `}
@@ -68,12 +60,12 @@ const UserInfoInner: React.FC<{ market: RegisteredMarket }> = ({ market }) => {
               <tr>
                 <LabelTD>Wallet bal.</LabelTD>
                 <ValueTD>
-                  <div>{baseCoinStore.data.balance.toString()}</div>
-                  <div>{quoteCoinStore.data.balance.toString()}</div>
+                  <CoinAmount amount={baseCoinStore.data.balance} />
+                  <CoinAmount amount={quoteCoinStore.data.balance} />
                 </ValueTD>
                 <SymbolTD>
-                  <div>{baseCoinStore.data.symbol}</div>
-                  <div>{quoteCoinStore.data.symbol}</div>
+                  <CoinSymbol symbol={baseCoinStore.data.symbol} />
+                  <CoinSymbol symbol={quoteCoinStore.data.symbol} />
                 </SymbolTD>
               </tr>
               {marketAccount.data && (
@@ -180,8 +172,6 @@ const UserInfoInner: React.FC<{ market: RegisteredMarket }> = ({ market }) => {
 
 const UserInfoContainer = styled.div`
   text-align: center;
-  margin-bottom: 16px;
-  padding: 0px 16px;
   p {
     font-size: 14px;
   }
