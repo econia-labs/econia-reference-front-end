@@ -370,10 +370,11 @@ const SwapInner: React.FC<{
 
 const TestnetBanner = styled.div`
   text-align: center;
-  max-width: 600px;
+  width: 446px;
   margin-bottom: 48px;
+  font-size: 12px;
   border: 1px solid ${({ theme }) => theme.colors.grey[600]};
-  padding: 8px 16px;
+  padding: 12px 12px;
 `;
 
 const SwapContainer = styled(FlexCol)`
