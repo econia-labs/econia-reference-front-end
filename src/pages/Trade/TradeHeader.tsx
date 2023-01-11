@@ -10,6 +10,7 @@ import { FlexRow } from "../../components/FlexRow";
 import { Label } from "../../components/Label";
 import { Loading } from "../../components/Loading";
 import { MarketDropdown } from "../../components/MarketDropdown";
+import { MarketWizardModal } from "../../components/modals/MarketWizardModal";
 import { ZERO_BIGNUMBER } from "../../constants";
 import { useCoinInfo } from "../../hooks/useCoinInfo";
 import { useMarketPrice } from "../../hooks/useMarketPrice";
@@ -156,121 +157,141 @@ const TradeHeaderView: React.FC<{
   totalTrades,
   setSelectedMarket,
 }) => {
+  const [showMarketWizard, setShowMarketWizard] = React.useState(false);
+
   return (
-    <FlexRow
-      className={className}
-      css={css`
-        display: flex;
-        flex-wrap: wrap;
-      `}
-    >
-      <MarketWrapper>
-        <FlexRow
-          css={css`
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-          `}
-        >
-          <MarketNameWrapper>
-            <Label>Market</Label>
-            {baseSymbol && quoteSymbol ? (
-              `${baseSymbol} / ${quoteSymbol}`
+    <>
+      <FlexRow
+        className={className}
+        css={css`
+          display: flex;
+          flex-wrap: wrap;
+        `}
+      >
+        <MarketWrapper>
+          <FlexRow
+            css={css`
+              justify-content: space-between;
+              align-items: center;
+              width: 100%;
+            `}
+          >
+            <MarketNameWrapper>
+              <Label>Market</Label>
+              {baseSymbol && quoteSymbol ? (
+                `${baseSymbol} / ${quoteSymbol}`
+              ) : (
+                <Loading />
+              )}
+            </MarketNameWrapper>
+            {markets ? (
+              <div
+                css={(theme) => css`
+                  padding: 4px 8px;
+                  cursor: pointer;
+                  :hover {
+                    background-color: ${theme.colors.grey[600]};
+                  }
+                `}
+                onClick={() => setShowMarketWizard(true)}
+              >
+                All markets ▼
+              </div>
+            ) : (
+              <div />
+            )}
+          </FlexRow>
+        </MarketWrapper>
+        <PriceWrapper>
+          <Label>Price</Label>
+          <div
+            css={css`
+              width: 120px;
+            `}
+          >
+            {price === null ? (
+              "--"
+            ) : price === undefined ? (
+              <Loading />
+            ) : (
+              `${price.toPrecision(4)} ${quoteSymbol}`
+            )}
+          </div>
+        </PriceWrapper>
+        <PriceChangeWrapper>
+          <Label>Price Change</Label>
+          <div
+            css={css`
+              width: 120px;
+            `}
+          >
+            {priceChange === null ? (
+              "--"
+            ) : priceChange === undefined ? (
+              <Loading />
+            ) : (
+              <ColoredValue color={priceChange.gte(0) ? "green" : "red"}>
+                {priceChange.gt(0) ? "+" : ""}
+                {priceChange.toPrecision(4) ?? "-"} {quoteSymbol}
+              </ColoredValue>
+            )}
+          </div>
+        </PriceChangeWrapper>
+        <VolumeWrapper>
+          <Label>Total Volume</Label>
+          <div
+            css={css`
+              // May not work if the volume is too large or too small
+              width: 280px;
+            `}
+          >
+            {
+              <FlexRow
+                css={css`
+                  gap: 4px;
+                `}
+              >
+                <span>
+                  {totalBaseVolume ? (
+                    `${totalBaseVolume.toPrecision(4)} ${baseSymbol}`
+                  ) : (
+                    <Loading />
+                  )}
+                </span>
+                <span>/</span>
+                <span>
+                  {totalQuoteVolume ? (
+                    `${totalQuoteVolume.toPrecision(4)} ${quoteSymbol}`
+                  ) : (
+                    <Loading />
+                  )}
+                </span>
+              </FlexRow>
+            }
+          </div>
+        </VolumeWrapper>
+        <TradesWrapper>
+          <Label>Total Trades</Label>
+          <div
+            css={css`
+              width: 92px;
+            `}
+          >
+            {totalTrades !== undefined ? (
+              <span>{totalTrades}</span>
             ) : (
               <Loading />
             )}
-          </MarketNameWrapper>
-          {markets ? (
-            <MarketDropdown
-              markets={markets}
-              setSelectedMarket={setSelectedMarket}
-              dropdownLabel="All markets ▼"
-              allowMarketRegistration
-            />
-          ) : (
-            <div />
-          )}
-        </FlexRow>
-      </MarketWrapper>
-      <PriceWrapper>
-        <Label>Price</Label>
-        <div
-          css={css`
-            width: 120px;
-          `}
-        >
-          {price === null ? (
-            "--"
-          ) : price === undefined ? (
-            <Loading />
-          ) : (
-            `${price.toPrecision(4)} ${quoteSymbol}`
-          )}
-        </div>
-      </PriceWrapper>
-      <PriceChangeWrapper>
-        <Label>Price Change</Label>
-        <div
-          css={css`
-            width: 120px;
-          `}
-        >
-          {priceChange === null ? (
-            "--"
-          ) : priceChange === undefined ? (
-            <Loading />
-          ) : (
-            <ColoredValue color={priceChange.gte(0) ? "green" : "red"}>
-              {priceChange.gt(0) ? "+" : ""}
-              {priceChange.toPrecision(4) ?? "-"} {quoteSymbol}
-            </ColoredValue>
-          )}
-        </div>
-      </PriceChangeWrapper>
-      <VolumeWrapper>
-        <Label>Total Volume</Label>
-        <div
-          css={css`
-            // May not work if the volume is too large or too small
-            width: 280px;
-          `}
-        >
-          {
-            <FlexRow
-              css={css`
-                gap: 4px;
-              `}
-            >
-              <span>
-                {totalBaseVolume ? (
-                  `${totalBaseVolume.toPrecision(4)} ${baseSymbol}`
-                ) : (
-                  <Loading />
-                )}
-              </span>
-              <span>/</span>
-              <span>
-                {totalQuoteVolume ? (
-                  `${totalQuoteVolume.toPrecision(4)} ${quoteSymbol}`
-                ) : (
-                  <Loading />
-                )}
-              </span>
-            </FlexRow>
-          }
-        </div>
-      </VolumeWrapper>
-      <TradesWrapper>
-        <Label>Total Trades</Label>
-        <div
-          css={css`
-            width: 92px;
-          `}
-        >
-          {totalTrades !== undefined ? <span>{totalTrades}</span> : <Loading />}
-        </div>
-      </TradesWrapper>
-    </FlexRow>
+          </div>
+        </TradesWrapper>
+      </FlexRow>
+      <MarketWizardModal
+        showModal={showMarketWizard}
+        closeModal={() => setShowMarketWizard(false)}
+        markets={markets ?? []}
+        setMarket={setSelectedMarket}
+      />
+    </>
   );
 };
 
