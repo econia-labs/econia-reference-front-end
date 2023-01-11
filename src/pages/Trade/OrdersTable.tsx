@@ -68,13 +68,6 @@ const TableRow: React.FC<{
           variant="secondary"
           size="sm"
           onClick={async () => {
-            console.log(
-              order.counter.toString(),
-              order.marketOrderId.toJsNumber(),
-              order.side,
-              order.size.toString(),
-              order.price.toString(),
-            );
             await cancelOrder(u64(market.marketId), ASK, order.marketOrderId);
           }}
         >
