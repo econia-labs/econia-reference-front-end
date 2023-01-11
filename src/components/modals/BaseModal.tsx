@@ -1,7 +1,7 @@
 import React, { PropsWithChildren } from "react";
 import Modal from "react-modal";
 
-import { css, useTheme } from "@emotion/react";
+import { useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
 
 import { XIcon } from "../../assets/XIcon";
@@ -41,7 +41,7 @@ export const BaseModal: React.FC<Modal.Props & PropsWithChildren> = ({
           transform: "translate(-50%, -50%)",
           border: `1px solid ${theme.colors.purple.primary}`,
           borderRadius: "0px",
-          padding: "0px",
+          padding: "0px 72px",
           ...content,
         },
         overlay: {

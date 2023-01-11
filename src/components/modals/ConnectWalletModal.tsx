@@ -2,11 +2,10 @@ import { useWallet } from "@manahippo/aptos-wallet-adapter";
 
 import React from "react";
 
-import { css, useTheme } from "@emotion/react";
+import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 
 import { ArrowRightIcon } from "../../assets/ArrowRightIcon";
-import { Button } from "../Button";
 import { FlexCol } from "../FlexCol";
 import { FlexRow } from "../FlexRow";
 import { BaseModal } from "./BaseModal";
@@ -23,8 +22,7 @@ export const ConnectWalletModal: React.FC<{
       onRequestClose={closeModal}
       style={{
         content: {
-          width: "815px",
-          height: "743px",
+          height: "fit-content",
         },
       }}
     >
@@ -43,7 +41,7 @@ export const ConnectWalletModal: React.FC<{
         <p
           css={css`
             font-weight: 300;
-            margin: 14px 128px 52px 128px;
+            margin: 14px 0px 52px 0px;
           `}
         >
           In order to use this site you must connect a wallet and allow the site
@@ -52,7 +50,7 @@ export const ConnectWalletModal: React.FC<{
         <FlexCol
           css={css`
             align-items: center;
-            margin: 0px 74px;
+            margin-bottom: 52px;
             button {
               text-align: left;
               margin-bottom: 16px;
@@ -64,21 +62,16 @@ export const ConnectWalletModal: React.FC<{
               css={(theme) =>
                 css`
                   align-items: center;
-                  background: ${theme.colors.grey[800]}
-                    url(${wallet.adapter.icon});
-                  background-position: 12px 12px;
-                  background-repeat: no-repeat;
-                  background-size: 32px 32px;
                   border: 1px solid ${theme.colors.grey[600]};
                   font-family: "Jost", sans-serif;
                   font-size: 24px;
                   font-weight: 500;
-                  height: 60px;
                   margin-bottom: 16px;
-                  padding-left: 64px;
+                  padding: 12px 0px;
                   width: 100%;
                   justify-content: space-between;
                   cursor: pointer;
+                  transition: all 300ms;
                   :hover {
                     border: 1px solid ${theme.colors.purple.primary};
                     color: ${theme.colors.purple.primary};
@@ -88,7 +81,6 @@ export const ConnectWalletModal: React.FC<{
                       background: ${theme.colors.purple.primary};
                       svg {
                         transform: rotate(-45deg);
-                        transition: all 0.1s;
                       }
                     }
                   }
@@ -99,7 +91,21 @@ export const ConnectWalletModal: React.FC<{
               }
               key={i}
             >
-              <p>{wallet.adapter.name} Wallet</p>
+              <FlexRow
+                css={css`
+                  gap: 16px;
+                  margin-left: 16px;
+                `}
+              >
+                <img
+                  css={css`
+                    height: 36px;
+                    width: 36px;
+                  `}
+                  src={wallet.adapter.icon}
+                />
+                <p>{wallet.adapter.name} Wallet</p>
+              </FlexRow>
               <div
                 css={css`
                   position: relative;
@@ -120,10 +126,13 @@ export const ConnectWalletModal: React.FC<{
 
 const ArrowContainer = styled.div`
   position: absolute;
-  bottom: 0;
+  bottom: -12px;
   right: 0;
   width: 36px;
   height: 36px;
   border-left: 1px solid ${({ theme }) => theme.colors.grey[600]};
   border-top: 1px solid ${({ theme }) => theme.colors.grey[600]};
+  svg {
+    transition: all 300ms;
+  }
 `;
