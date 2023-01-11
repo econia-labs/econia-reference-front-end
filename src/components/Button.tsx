@@ -27,18 +27,10 @@ export const Button = styled.button<{
   outline: ${({ variant, theme }) =>
     variant === "outline" ? `1px solid ${theme.colors.grey[600]}` : "none"};
   cursor: pointer;
+  transition: background-color 300ms ease, transform 300ms ease,
+    color 300ms ease, -webkit-transform 300ms ease;
   :hover {
-    background-color: ${({ variant, theme }) =>
-      variant === "primary"
-        ? theme.colors.grey[400]
-        : variant === "secondary"
-        ? theme.colors.grey[600]
-        : theme.colors.grey[800]}; // outline
-    color: ${({ variant, theme }) =>
-      variant === "outline"
-        ? theme.colors.purple.primary
-        : theme.colors.grey[100]};
-    border: none;
+    transform: translate3d(0px, -3px, 0.01px);
     outline: ${({ variant, theme }) =>
       variant === "outline"
         ? `1px solid ${theme.colors.purple.primary}`
