@@ -13,7 +13,6 @@ import { DropdownMenu } from "../components/DropdownMenu";
 import { ExternalLink } from "../components/ExternalLink";
 import { FlexRow } from "../components/FlexRow";
 import { ConnectWalletButton } from "../hooks/ConnectWalletButton";
-import { useAptos } from "../hooks/useAptos";
 import { useOnClickawayRef } from "../hooks/useOnClickawayRef";
 import { shortenAddress } from "../utils/address";
 import { DefaultContainer } from "./DefaultContainer";
@@ -36,18 +35,13 @@ const HEADER_ITEMS = [
 
 export const Header: React.FC = () => {
   const { connected, account, disconnect } = useWallet();
-  const { connect } = useAptos();
   const [showDisconnectMenu, setShowDisconnectMenu] = React.useState(false);
   const disconnectMenuClickawayRef = useOnClickawayRef(() =>
     setShowDisconnectMenu(false),
   );
   const location = useLocation();
   return (
-    <DefaultWrapper
-      css={(theme) => css`
-        border-bottom: 1px solid ${theme.colors.grey[600]};
-      `}
-    >
+    <DefaultWrapper>
       <DefaultContainer
         css={css`
           display: flex;
