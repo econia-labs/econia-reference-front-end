@@ -19,7 +19,7 @@ export const TxButton: React.FC<
       <ConnectWalletButton
         className={rest.className}
         size={rest.size}
-        variant="outline"
+        variant="primary"
       />
     );
   }

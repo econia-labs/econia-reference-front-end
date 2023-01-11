@@ -162,7 +162,7 @@ const UserInfoInner: React.FC<{ market: RegisteredMarket }> = ({ market }) => {
               margin-bottom: 16px;
             `}
             size="sm"
-            variant="outline"
+            variant="primary"
           />
         </div>
       )}

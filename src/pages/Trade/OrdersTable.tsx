@@ -129,7 +129,7 @@ const OrdersTableInner: React.FC<{
         >
           Connect your Aptos wallet to view your open orders.
         </p>
-        <ConnectWalletButton variant="outline" size="sm" />
+        <ConnectWalletButton variant="primary" size="sm" />
       </>
     );
   if (marketAccount.isLoading) return <div>Loading orders...</div>;

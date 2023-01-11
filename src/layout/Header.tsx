@@ -12,6 +12,7 @@ import { Button } from "../components/Button";
 import { DropdownMenu } from "../components/DropdownMenu";
 import { ExternalLink } from "../components/ExternalLink";
 import { FlexRow } from "../components/FlexRow";
+import { ConnectWalletButton } from "../hooks/ConnectWalletButton";
 import { useAptos } from "../hooks/useAptos";
 import { useOnClickawayRef } from "../hooks/useOnClickawayRef";
 import { shortenAddress } from "../utils/address";
@@ -133,16 +134,13 @@ export const Header: React.FC = () => {
               </DropdownMenu>
             </div>
           ) : (
-            <Button
+            <ConnectWalletButton
               css={css`
                 width: 200px;
               `}
               size="sm"
-              variant="outline"
-              onClick={() => connect()}
-            >
-              Connect Wallet
-            </Button>
+              variant="primary"
+            />
           )}
         </FlexRow>
       </DefaultContainer>
