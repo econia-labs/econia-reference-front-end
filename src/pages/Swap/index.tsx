@@ -346,7 +346,7 @@ const SwapInner: React.FC<{
             market.quoteType,
           );
         }}
-        variant="outline"
+        variant="primary"
         size="sm"
         disabled={!!disabledReason}
       >
