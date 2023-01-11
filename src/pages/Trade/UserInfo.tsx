@@ -53,6 +53,7 @@ const UserInfoInner: React.FC<{ market: RegisteredMarket }> = ({ market }) => {
               tr td:last-child {
                 width: 1%;
               }
+              padding: 16px;
               width: 100%;
             `}
           >
@@ -152,7 +153,7 @@ const UserInfoInner: React.FC<{ market: RegisteredMarket }> = ({ market }) => {
         <div>
           <p
             css={css`
-              margin: 8px 16px;
+              margin: 8px 0px;
             `}
           >
             Connect your Aptos wallet to view your balances.

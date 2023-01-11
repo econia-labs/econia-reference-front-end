@@ -76,15 +76,21 @@ export const Trade: React.FC = () => {
         markets={registeredMarkets}
       />
       <TradeBody>
-        <FlexCol>
+        <FlexCol
+          css={css`
+            width: 400px;
+          `}
+        >
           <UserInfo
             css={css`
-              padding: 16px 32px;
+              padding: 16px 0px;
+              width: 100%;
             `}
             market={market}
           />
           <TradeActions
             css={(theme) => css`
+              width: 100%;
               height: 100%;
               outline: 1px solid ${theme.colors.grey[600]};
             `}

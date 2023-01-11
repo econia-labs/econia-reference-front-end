@@ -18,7 +18,6 @@ export const NewMarketModal: React.FC<{
   closeModal: () => void;
 }> = ({ showModal, closeModal }) => {
   const registerMarket = useRegisterMarket();
-  const theme = useTheme();
   const baseCoinRef = React.useRef<HTMLInputElement>(null);
   const quoteCoinRef = React.useRef<HTMLInputElement>(null);
   const lotSizeRef = React.useRef<HTMLInputElement>(null);
@@ -26,17 +25,14 @@ export const NewMarketModal: React.FC<{
   const minSizeRef = React.useRef<HTMLInputElement>(null);
 
   return (
-    <BaseModal
-      isOpen={showModal}
-      onRequestClose={closeModal}
-      style={{
-        content: {
-          width: "800px",
-          height: "620px",
-        },
-      }}
-    >
-      <h4>Register Market</h4>
+    <BaseModal isOpen={showModal} onRequestClose={closeModal}>
+      <h4
+        css={css`
+          margin-top: 52px;
+        `}
+      >
+        Register Market
+      </h4>
       <p
         css={css`
           font-size: 14px;
@@ -75,6 +71,9 @@ export const NewMarketModal: React.FC<{
         <Label>Min size</Label>
         <Input ref={minSizeRef} type="number" />
         <Button
+          css={css`
+            margin-bottom: 52px;
+          `}
           variant="primary"
           size="sm"
           onClick={async () => {
