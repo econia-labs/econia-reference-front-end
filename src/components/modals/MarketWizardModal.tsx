@@ -4,7 +4,7 @@ import BigNumber from "bignumber.js";
 import React, { useMemo, useState } from "react";
 import { toast } from "react-toastify";
 
-import { css, useTheme } from "@emotion/react";
+import { css } from "@emotion/react";
 
 import { useCoinInfo } from "../../hooks/useCoinInfo";
 import { useIsRecognizedMarket } from "../../hooks/useIsRecognizedMarket";
@@ -20,23 +20,32 @@ import { Label } from "../Label";
 import { SearchInput } from "../SearchInput";
 import { BaseModal } from "./BaseModal";
 
+enum Mode {
+  SelectMarket,
+  RegisterMarket,
+}
+
 export const MarketWizardModal: React.FC<{
   showModal: boolean;
   closeModal: () => void;
   markets: RegisteredMarket[];
   setMarket: (market: RegisteredMarket) => void;
 }> = ({ showModal, closeModal, markets, setMarket }) => {
+  const [mode, setMode] = useState(Mode.SelectMarket);
   return (
     <BaseModal isOpen={showModal} onRequestClose={closeModal}>
-      <SelectMarketView
-        markets={markets}
-        setMarket={(market) => {
-          console.log("HERE");
-          setMarket(market);
-          closeModal();
-        }}
-      />
-      {/* <RegisterMarketView /> */}
+      {mode === Mode.SelectMarket ? (
+        <SelectMarketView
+          markets={markets}
+          setMarket={(market) => {
+            setMarket(market);
+            closeModal();
+          }}
+          onRegisterMarket={() => setMode(Mode.RegisterMarket)}
+        />
+      ) : (
+        <RegisterMarketView onSelectMarket={() => setMode(Mode.SelectMarket)} />
+      )}
     </BaseModal>
   );
 };
@@ -44,7 +53,8 @@ export const MarketWizardModal: React.FC<{
 const SelectMarketView: React.FC<{
   markets: RegisteredMarket[];
   setMarket: (market: RegisteredMarket) => void;
-}> = ({ markets, setMarket }) => {
+  onRegisterMarket: () => void;
+}> = ({ markets, setMarket, onRegisterMarket }) => {
   const [search, setSearch] = useState("");
   const filteredMarkets = useMemo(
     () =>
@@ -75,7 +85,6 @@ const SelectMarketView: React.FC<{
       />
       <FlexCol
         css={css`
-          margin-bottom: 52px;
           label {
             margin-bottom: 4px;
           }
@@ -94,6 +103,28 @@ const SelectMarketView: React.FC<{
           />
         ))}
       </FlexCol>
+      <div
+        css={css`
+          text-align: center;
+          font-size: 12px;
+          margin-top: 32px;
+          margin-bottom: 52px;
+        `}
+      >
+        <span>Don&apos;t see the market you&apos;re looking for?</span>{" "}
+        <span
+          css={(theme) => css`
+            color: ${theme.colors.purple.primary};
+            cursor: pointer;
+            :hover {
+              text-decoration: underline;
+            }
+          `}
+          onClick={onRegisterMarket}
+        >
+          Register a new market
+        </span>
+      </div>
     </>
   );
 };
@@ -148,7 +179,9 @@ const MarketMenuItem: React.FC<{
   );
 };
 
-const RegisterMarketView: React.FC = () => {
+const RegisterMarketView: React.FC<{ onSelectMarket: () => void }> = ({
+  onSelectMarket,
+}) => {
   const registerMarket = useRegisterMarket();
   const baseCoinRef = React.useRef<HTMLInputElement>(null);
   const quoteCoinRef = React.useRef<HTMLInputElement>(null);
@@ -158,13 +191,24 @@ const RegisterMarketView: React.FC = () => {
 
   return (
     <>
-      <h4
-        css={css`
+      <div
+        css={(theme) => css`
+          width: fit-content;
           margin-top: 52px;
+          font-size: 12px;
+          margin-bottom: 16px;
+          cursor: pointer;
+          padding: 4px 0px;
+          padding-right: 4px;
+          :hover {
+            color: ${theme.colors.purple.primary};
+          }
         `}
+        onClick={onSelectMarket}
       >
-        Register Market
-      </h4>
+        {"<<"} BACK
+      </div>
+      <h4 css={css``}>Register Market</h4>
       <p
         css={css`
           font-size: 14px;
