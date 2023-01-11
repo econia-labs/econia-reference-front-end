@@ -17,15 +17,7 @@ export const ConnectWalletModal: React.FC<{
   const { connect: connectToWallet, wallets } = useWallet();
 
   return (
-    <BaseModal
-      isOpen={showModal}
-      onRequestClose={closeModal}
-      style={{
-        content: {
-          height: "fit-content",
-        },
-      }}
-    >
+    <BaseModal isOpen={showModal} onRequestClose={closeModal}>
       <div
         css={css`
           text-align: center;

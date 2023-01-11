@@ -42,6 +42,7 @@ export const BaseModal: React.FC<Modal.Props & PropsWithChildren> = ({
           border: `1px solid ${theme.colors.purple.primary}`,
           borderRadius: "0px",
           padding: "0px 72px",
+          height: "fit-content",
           ...content,
         },
         overlay: {

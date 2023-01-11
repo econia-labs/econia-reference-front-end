@@ -18,7 +18,6 @@ export const CoinSelectModal: React.FC<{
   coins: CoinInfo[];
   onCoinSelected: (c: CoinInfo) => void;
 }> = ({ showModal, closeModal, coins, onCoinSelected }) => {
-  const theme = useTheme();
   const [search, setSearch] = useState("");
   const filteredCoins = useMemo(
     () =>
@@ -26,16 +25,7 @@ export const CoinSelectModal: React.FC<{
     [coins, search],
   );
   return (
-    <BaseModal
-      isOpen={showModal}
-      onRequestClose={closeModal}
-      style={{
-        content: {
-          width: "800px",
-          height: "620px",
-        },
-      }}
-    >
+    <BaseModal isOpen={showModal} onRequestClose={closeModal}>
       <FlexCol
         css={css`
           align-items: center;
@@ -51,7 +41,7 @@ export const CoinSelectModal: React.FC<{
         </h4>
         <SearchInput
           css={css`
-            width: 512px;
+            width: 100%;
             margin-bottom: 48px;
           `}
           value={search}
@@ -60,8 +50,8 @@ export const CoinSelectModal: React.FC<{
         <FlexCol
           css={css`
             align-items: center;
-            margin: 0px 95px;
-            width: 512px;
+            margin-bottom: 52px;
+            width: 100%;
             button {
               text-align: left;
               margin-bottom: 16px;
