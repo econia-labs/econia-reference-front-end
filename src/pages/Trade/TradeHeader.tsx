@@ -275,9 +275,7 @@ const TradeHeaderView: React.FC<{
 };
 
 const HeaderItemWrapper = styled.div`
-  border-bottom: 1px solid ${({ theme }) => theme.colors.grey[600]};
-  border-left: 1px solid ${({ theme }) => theme.colors.grey[600]};
-  border-right: 1px solid ${({ theme }) => theme.colors.grey[600]};
+  border: 1px solid ${({ theme }) => theme.colors.grey[600]};
   padding: 8px 32px;
 `;
 
