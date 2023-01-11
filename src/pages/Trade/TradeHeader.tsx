@@ -275,13 +275,15 @@ const TradeHeaderView: React.FC<{
 };
 
 const HeaderItemWrapper = styled.div`
-  border: 1px solid ${({ theme }) => theme.colors.grey[600]};
+  border-top: 1px solid ${({ theme }) => theme.colors.grey[600]};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.grey[600]};
   padding: 8px 32px;
 `;
 
 const MarketWrapper = styled(HeaderItemWrapper)`
   flex-grow: 1;
   display: flex;
+  border-right: 1px solid ${({ theme }) => theme.colors.grey[600]};
 `;
 
 const MarketNameWrapper = styled(FlexCol)`
@@ -293,16 +295,19 @@ const MarketNameWrapper = styled(FlexCol)`
 const PriceWrapper = styled(HeaderItemWrapper)`
   display: flex;
   flex-direction: column;
+  border-right: 1px solid ${({ theme }) => theme.colors.grey[600]};
 `;
 
 const PriceChangeWrapper = styled(HeaderItemWrapper)`
   display: flex;
   flex-direction: column;
+  border-right: 1px solid ${({ theme }) => theme.colors.grey[600]};
 `;
 
 const VolumeWrapper = styled(HeaderItemWrapper)`
   display: flex;
   flex-direction: column;
+  border-right: 1px solid ${({ theme }) => theme.colors.grey[600]};
 `;
 
 const TradesWrapper = styled(HeaderItemWrapper)`
