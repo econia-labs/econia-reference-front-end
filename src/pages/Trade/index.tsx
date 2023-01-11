@@ -85,7 +85,6 @@ export const Trade: React.FC = () => {
           />
           <TradeActions
             css={(theme) => css`
-              width: 392px;
               height: 100%;
               outline: 1px solid ${theme.colors.grey[600]};
             `}
