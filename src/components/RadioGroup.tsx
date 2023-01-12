@@ -20,32 +20,39 @@ export const RadioGroup: React.FC<{
       className={className}
     >
       {options.map((option, i) => (
-        <RadioButton
-          selected={option === value}
+        <div
+          css={css`
+            flex-grow: 1;
+            padding: 4px;
+          `}
           key={i}
-          onClick={() => onChange(option)}
-          size="sm"
-          variant="secondary"
         >
-          {option}
-        </RadioButton>
+          <RadioButton
+            selected={option === value}
+            onClick={() => onChange(option)}
+            size="sm"
+            variant="secondary"
+          >
+            {option}
+          </RadioButton>
+        </div>
       ))}
     </FlexRow>
   );
 };
 
 const RadioButton = styled(Button)<{ selected: boolean }>`
-  flex-grow: 1;
-  border-right: 1px solid ${({ theme }) => theme.colors.grey[700]};
-  :last-of-type {
-    border-right: none;
-  }
+  width: 100%;
   background-color: ${({ selected, theme }) =>
     selected ? theme.colors.grey[800] : theme.colors.grey[700]};
   color: ${({ selected, theme }) =>
-    selected ? theme.colors.grey[100] : theme.colors.grey[600]};
+    selected ? theme.colors.purple.primary : theme.colors.grey[600]};
+  border: 1px solid
+    ${({ selected, theme }) =>
+      selected ? theme.colors.purple.primary : theme.colors.grey[600]};
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
   :hover {
     transform: none;
-    background-color: ${({ theme }) => theme.colors.grey[500]};
+    background-color: ${({ theme }) => theme.colors.grey[400]};
   }
 `;

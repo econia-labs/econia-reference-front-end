@@ -54,8 +54,7 @@ export const LimitOrderForm: React.FC<{ market: RegisteredMarket }> = ({
       `}
     >
       <RadioGroup
-        css={(theme) => css`
-          border: 1px solid ${theme.colors.grey[700]};
+        css={css`
           width: 240px;
         `}
         options={["Buy", "Sell"]}
