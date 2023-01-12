@@ -25,7 +25,7 @@ export const useMarketAccount = (
   const { aptosClient } = useAptos();
   const { econia } = useEconiaSDK();
 
-  return useQuery(["useMarketAccount", ownerAddr], async () => {
+  return useQuery(["useMarketAccount", marketId, ownerAddr], async () => {
     if (!ownerAddr) return null;
     const marketAccounts = await econia.user.loadMarketAccounts(
       HexString.ensure(ownerAddr),
