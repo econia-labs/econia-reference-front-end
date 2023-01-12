@@ -12,6 +12,6 @@ export const Input = styled.input`
   ::placeholder {
     font-family: "Roboto Mono", monospace;
     font-weight: 300;
-    color: ${({ theme }) => theme.colors.grey[100]};
+    color: ${({ theme }) => theme.colors.grey[600]};
   }
 `;
