@@ -224,13 +224,12 @@ const RegisterMarketView: React.FC<{ onSelectMarket: () => void }> = ({
     <>
       <div
         css={(theme) => css`
+          position: absolute;
           width: fit-content;
-          margin-top: 52px;
           font-size: 12px;
-          margin-bottom: 16px;
           cursor: pointer;
-          padding: 4px 0px;
-          padding-right: 4px;
+          padding: 4px 4px;
+          top: 52px;
           :hover {
             color: ${theme.colors.purple.primary};
           }
@@ -239,7 +238,14 @@ const RegisterMarketView: React.FC<{ onSelectMarket: () => void }> = ({
       >
         {"<<"} BACK
       </div>
-      <h4 css={css``}>Register Market</h4>
+      <h4
+        css={css`
+          margin: 52px 0px;
+          text-align: center;
+        `}
+      >
+        Register Market
+      </h4>
       <p
         css={css`
           font-size: 14px;
