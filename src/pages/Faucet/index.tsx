@@ -5,25 +5,22 @@ import React from "react";
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 
+import { FlexCol } from "../../components/FlexCol";
 import { FlexRow } from "../../components/FlexRow";
 import { TxButton } from "../../components/TxButton";
 import { useAptos } from "../../hooks/useAptos";
 import { useCoinInfo } from "../../hooks/useCoinInfo";
 import { useCoinStore } from "../../hooks/useCoinStore";
 import { useRequestFaucet } from "../../hooks/useRequestFaucet";
-import { DefaultContainer } from "../../layout/DefaultContainer";
 import { DefaultWrapper } from "../../layout/DefaultWrapper";
 import { TestETHCoin } from "../../sdk/src/aptos_faucet/test_eth";
 import { TestUSDCoin } from "../../sdk/src/aptos_faucet/test_usdc";
-import { toDecimalCoin } from "../../utils/units";
 
 export const Faucet: React.FC = () => {
   const requestFaucet = useRequestFaucet();
   const { account } = useAptos();
   const tETHCoinStore = useCoinStore(TestETHCoin.getTag(), account?.address);
-  const tETHCoinInfo = useCoinInfo(TestETHCoin.getTag());
   const tUSDCoinStore = useCoinStore(TestUSDCoin.getTag(), account?.address);
-  const tUSDCoinInfo = useCoinInfo(TestUSDCoin.getTag());
 
   return (
     <DefaultWrapper
@@ -31,25 +28,23 @@ export const Faucet: React.FC = () => {
         height: 100%;
       `}
     >
-      <DefaultContainer
+      <FlexCol
         css={css`
-          display: flex;
           height: 100%;
-          flex-direction: column;
           align-items: center;
-          margin-top: 100px;
+          justify-content: center;
         `}
       >
         <FaucetContainer>
           <FaucetCard>
             <h2>tETH</h2>
-            <p>
+            <BalanceText>
               Balance:{" "}
               {tETHCoinStore.data?.balance
                 ? tETHCoinStore.data.balance.toString()
                 : "-"}{" "}
               tETH
-            </p>
+            </BalanceText>
             <TxButton
               onClick={async () => {
                 // Give 0.1 tETH
@@ -63,13 +58,13 @@ export const Faucet: React.FC = () => {
           </FaucetCard>
           <FaucetCard>
             <h2>tUSDC</h2>
-            <p>
+            <BalanceText>
               Balance:{" "}
               {tUSDCoinStore.data?.balance
                 ? tUSDCoinStore.data.balance.toString()
                 : "-"}{" "}
               tUSDC
-            </p>
+            </BalanceText>
             <TxButton
               onClick={async () => {
                 // Give 110 tUSDC
@@ -82,28 +77,33 @@ export const Faucet: React.FC = () => {
             </TxButton>
           </FaucetCard>
         </FaucetContainer>
-      </DefaultContainer>
+      </FlexCol>
     </DefaultWrapper>
   );
 };
 
 const FaucetContainer = styled(FlexRow)`
   padding: 16px 32px;
-  width: fit-content;
+  width: 100%;
   align-items: center;
-  gap: 24px;
+  justify-content: center;
+  gap: 56px;
 `;
 
 const FaucetCard = styled.div`
-  text-align: left;
-  padding: 16px 16px;
+  text-align: center;
+  padding: 36px 56px 56px 56px;
   border: 1px solid ${({ theme }) => theme.colors.grey[600]};
-  width: 300px;
-  height: 192px;
-  p {
-    margin-bottom: 16px;
-  }
+  flex: 1 1 0px;
+  width: 0;
+  max-width: 300px;
   button {
     width: 100%;
   }
+`;
+
+const BalanceText = styled.p`
+  color: ${({ theme }) => theme.colors.grey[500]};
+  margin-bottom: 24px;
+  white-space: nowrap;
 `;
