@@ -46,13 +46,14 @@ const RadioButton = styled(Button)<{ selected: boolean }>`
   background-color: ${({ selected, theme }) =>
     selected ? theme.colors.grey[800] : theme.colors.grey[700]};
   color: ${({ selected, theme }) =>
-    selected ? theme.colors.purple.primary : theme.colors.grey[600]};
+    selected ? theme.colors.grey[100] : theme.colors.grey[600]};
   border: 1px solid
     ${({ selected, theme }) =>
-      selected ? theme.colors.purple.primary : theme.colors.grey[600]};
+      selected ? theme.colors.grey[600] : theme.colors.grey[600]};
   transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
   :hover {
     transform: none;
-    background-color: ${({ theme }) => theme.colors.grey[400]};
+    background-color: ${({ selected, theme }) =>
+      !selected && theme.colors.grey[400]};
   }
 `;
