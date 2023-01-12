@@ -115,8 +115,12 @@ export const Header: React.FC = () => {
           {connected ? (
             <div ref={disconnectMenuClickawayRef}>
               <Button
-                css={css`
+                css={(theme) => css`
                   width: 200px;
+                  :hover {
+                    transform: none;
+                    color: ${theme.colors.purple.primary};
+                  }
                 `}
                 size="sm"
                 variant="outline"
