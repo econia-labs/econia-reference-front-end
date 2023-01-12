@@ -48,6 +48,7 @@ export const BaseModal: React.FC<Modal.Props & PropsWithChildren> = ({
         overlay: {
           background: "none",
           backdropFilter: "blur(5px)",
+          WebkitBackdropFilter: "blur(5px)",
           zIndex: 3,
           ...overlay,
         },
