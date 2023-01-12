@@ -77,6 +77,7 @@ const GlobalStyles = (theme: Theme) => css`
       overflow-x: hidden;
     }
     background-color: ${theme.colors.grey[800]};
+    background-image: url("https://global-uploads.webflow.com/62fce47e1be865a7155ff71c/633467a79910d8300a274060_bg-noise.png");
   }
 
   a {
