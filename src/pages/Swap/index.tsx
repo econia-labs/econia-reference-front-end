@@ -375,12 +375,13 @@ const TestnetBanner = styled.div`
   font-size: 12px;
   border: 1px solid ${({ theme }) => theme.colors.grey[600]};
   padding: 12px 12px;
+  color: ${({ theme }) => theme.colors.grey[400]};
 `;
 
 const SwapContainer = styled(FlexCol)`
   width: 370px;
   height: 394px;
-  border: 1px solid ${({ theme }) => theme.colors.purple.primary};
+  border: 1px solid ${({ theme }) => theme.colors.grey[600]};
   padding: 50px;
 `;
 
