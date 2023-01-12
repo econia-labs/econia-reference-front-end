@@ -5,7 +5,9 @@ import React, { useMemo, useState } from "react";
 import { toast } from "react-toastify";
 
 import { css } from "@emotion/react";
+import styled from "@emotion/styled";
 
+import { CheckIcon } from "../../assets/CheckIcon";
 import { useCoinInfo } from "../../hooks/useCoinInfo";
 import { useIsRecognizedMarket } from "../../hooks/useIsRecognizedMarket";
 import { useRegisterMarket } from "../../hooks/useRegisterMarket";
@@ -70,7 +72,8 @@ const SelectMarketView: React.FC<{
     <>
       <h4
         css={css`
-          margin-top: 52px;
+          margin: 36px 0px;
+          text-align: center;
         `}
       >
         Select a market
@@ -78,31 +81,50 @@ const SelectMarketView: React.FC<{
       <SearchInput
         css={css`
           width: 100%;
-          margin: 16px 0px;
+          margin-bottom: 24px;
         `}
         value={search}
         onChange={(e) => setSearch(e.currentTarget.value)}
       />
-      <FlexCol
-        css={css`
-          label {
-            margin-bottom: 4px;
-          }
-          input {
-            margin-bottom: 16px;
+      <table
+        css={(theme) => css`
+          width: 100%;
+          text-align: center;
+          th {
+            font-size: 12px;
+            color: ${theme.colors.grey[500]};
+            font-weight: 400;
+            padding-bottom: 8px;
           }
         `}
       >
-        {filteredMarkets.map((market, i) => (
-          <MarketMenuItem
-            onClick={() => {
-              setMarket(market);
-            }}
-            market={market}
-            key={i}
-          />
-        ))}
-      </FlexCol>
+        <thead>
+          <tr>
+            <th
+              css={css`
+                text-align: left;
+              `}
+            >
+              MARKET
+            </th>
+            <th>LOT SIZE</th>
+            <th>TICK SIZE</th>
+            <th>MIN SIZE</th>
+            <th>RECOGNIZED</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredMarkets.map((market, i) => (
+            <MarketRow
+              onClick={() => {
+                setMarket(market);
+              }}
+              market={market}
+              key={i}
+            />
+          ))}
+        </tbody>
+      </table>
       <div
         css={css`
           text-align: center;
@@ -129,7 +151,7 @@ const SelectMarketView: React.FC<{
   );
 };
 
-const MarketMenuItem: React.FC<{
+const MarketRow: React.FC<{
   market: RegisteredMarket;
   onClick: () => void;
 }> = ({ market, onClick }) => {
@@ -156,26 +178,35 @@ const MarketMenuItem: React.FC<{
   });
   const minSize = lotSize.multipliedBy(market.minSize);
   return (
-    <FlexRow
+    <tr
       onClick={onClick}
       css={(theme) => css`
         cursor: pointer;
-        padding: 8px 16px;
-        justify-content: space-between;
-        align-items: center;
+        td {
+          padding: 8px 0px;
+        }
+        td:first-child {
+          padding-left: 16px;
+        }
         :hover {
           outline: 1px solid ${theme.colors.purple.primary};
         }
       `}
     >
-      <p>
+      <td
+        css={css`
+          text-align: left;
+          font-weight: 500;
+          font-size: 20px; ;
+        `}
+      >
         {baseCoinInfo.data.symbol}-{quoteCoinInfo.data.symbol}
-      </p>
-      <p>
-        {lotSize.toNumber()}-{tickSize.toNumber()}-{minSize.toNumber()}-
-        {market.isRecognized ? "✅" : "❌"}
-      </p>
-    </FlexRow>
+      </td>
+      <NumberTd>{lotSize.toNumber()}</NumberTd>
+      <NumberTd>{tickSize.toNumber()} </NumberTd>
+      <NumberTd>{minSize.toNumber()} </NumberTd>
+      <td>{market.isRecognized && <CheckIcon />}</td>
+    </tr>
   );
 };
 
@@ -272,3 +303,8 @@ const RegisterMarketView: React.FC<{ onSelectMarket: () => void }> = ({
     </>
   );
 };
+
+const NumberTd = styled.td`
+  font-weight: 300;
+  font-size: 16px;
+`;
