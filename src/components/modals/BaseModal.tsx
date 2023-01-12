@@ -39,7 +39,7 @@ export const BaseModal: React.FC<Modal.Props & PropsWithChildren> = ({
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          border: `1px solid ${theme.colors.purple.primary}`,
+          border: `1px solid ${theme.colors.grey[600]}`,
           borderRadius: "0px",
           padding: "0px 72px",
           height: "fit-content",
@@ -69,11 +69,13 @@ const CloseButtonContainer = styled(FlexRow)`
   height: 71px;
   top: 0;
   right: 0;
-  border-left: 1px solid ${({ theme }) => theme.colors.purple.primary};
-  border-bottom: 1px solid ${({ theme }) => theme.colors.purple.primary};
+  border-left: 1px solid ${({ theme }) => theme.colors.grey[600]};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.grey[600]};
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  transition: background-color 300ms ease, transform 300ms ease,
+    color 300ms ease, -webkit-transform 300ms ease;
   :hover {
     background: ${({ theme }) => theme.colors.purple.primary};
   }
