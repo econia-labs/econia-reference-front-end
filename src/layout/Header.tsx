@@ -7,6 +7,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Theme, css } from "@emotion/react";
 import styled from "@emotion/styled";
 
+import { ArrowRightIcon } from "../assets/ArrowRightIcon";
 import { EconiaLogo } from "../assets/EconiaLogo";
 import { Button } from "../components/Button";
 import { DropdownMenu } from "../components/DropdownMenu";
@@ -88,7 +89,21 @@ export const Header: React.FC = () => {
             </React.Fragment>
           ))}
           <ExternalLink css={NavLinkStyle} href="https://econia.dev">
-            DOCS
+            <FlexRow
+              css={css`
+                gap: 4px;
+              `}
+            >
+              <span>DOCS</span>
+              <ArrowRightIcon
+                css={(theme) => css`
+                  margin-top: 2px;
+                  transform: rotate(-45deg);
+                `}
+                width={8}
+                height={8}
+              />
+            </FlexRow>
           </ExternalLink>
         </NavContainer>
         <FlexRow
@@ -152,17 +167,28 @@ const NavContainer = styled.div`
 
 const NavLinkStyle = (theme: Theme) => css`
   font-size: 20px;
+  font-weight: 500;
   line-height: 22px;
   color: ${theme.colors.grey[500]};
+  transition: all 300ms;
+  path {
+    transition: all 300ms;
+    stroke: ${theme.colors.grey[500]};
+  }
   :hover {
     color: ${theme.colors.purple.primary};
+    path {
+      stroke: ${theme.colors.purple.primary};
+    }
   }
 `;
 
 const ActiveNavLinkStyle = (theme: Theme) => css`
   font-size: 20px;
+  font-weight: 500;
   line-height: 22px;
   color: ${theme.colors.grey[100]};
+  transition: all 300ms;
   :hover {
     color: ${theme.colors.purple.primary};
   }
