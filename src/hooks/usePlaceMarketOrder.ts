@@ -36,6 +36,7 @@ export const usePlaceMarketOrder = () => {
         limit_price,
         CANCEL_TAKER, // TODO: Self match behavior
         [baseCoin, quoteCoin],
+        true,
       );
       await sendTx(payload);
     },

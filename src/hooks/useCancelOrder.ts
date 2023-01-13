@@ -13,6 +13,7 @@ export const useCancelOrder = () => {
         marketId,
         side,
         orderId,
+        true,
       );
       await sendTx(buyPayload);
     },

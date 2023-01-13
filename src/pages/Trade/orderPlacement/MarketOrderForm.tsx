@@ -21,6 +21,7 @@ import { useMarketPrice } from "../../../hooks/useMarketPrice";
 import { usePlaceMarketOrder } from "../../../hooks/usePlaceMarketOrder";
 import { RegisteredMarket } from "../../../hooks/useRegisteredMarkets";
 import { HI_PRICE, MAX_POSSIBLE } from "../../../sdk/src/econia/market";
+import { debugLog } from "../../../utils/debug";
 import { fromDecimalPrice, fromDecimalSize } from "../../../utils/units";
 
 export const MarketOrderForm: React.FC<{ market: RegisteredMarket }> = ({
@@ -178,7 +179,7 @@ export const MarketOrderForm: React.FC<{ market: RegisteredMarket }> = ({
             size.mul(u64(market.lotSize.toNumber())), // max_base
             minQuote,
             maxQuote,
-            price,
+            direction === BUY ? HI_PRICE : u64(0), // TODO: Manage slippage on price
             market.baseType,
             market.quoteType,
           );
