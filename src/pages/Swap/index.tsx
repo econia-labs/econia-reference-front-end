@@ -31,6 +31,8 @@ import {
 import { DefaultContainer } from "../../layout/DefaultContainer";
 import { DefaultWrapper } from "../../layout/DefaultWrapper";
 import { MAX_POSSIBLE } from "../../sdk/src/econia/market";
+import { HI_PRICE } from "../../sdk/src/econia/user";
+import { debugLog } from "../../utils/debug";
 import {
   fromDecimalPrice,
   fromDecimalQuote,
@@ -341,7 +343,7 @@ const SwapInner: React.FC<{
             size.mul(u64(market.lotSize.toNumber())), // max_base
             minQuote,
             maxQuote,
-            price,
+            direction === BUY ? HI_PRICE : u64(0), // TODO: Manage slippage
             market.baseType,
             market.quoteType,
           );

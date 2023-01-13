@@ -19,7 +19,7 @@ export const fromDecimalPrice = ({
     .multipliedBy(TEN.exponentiatedBy(quoteCoinDecimals))
     .div(tickSize);
   const lotsPerUnit = TEN.exponentiatedBy(baseCoinDecimals).div(lotSize);
-  return new BigNumber(Math.floor(ticksPerUnit.div(lotsPerUnit).toNumber()));
+  return ticksPerUnit.div(lotsPerUnit).decimalPlaces(0, BigNumber.ROUND_UP);
 };
 
 export const toDecimalPrice = ({
