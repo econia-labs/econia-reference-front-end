@@ -17,6 +17,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { Global, Theme, ThemeProvider, css } from "@emotion/react";
 
 import { App } from "./App";
+import { XIcon } from "./assets/XIcon";
 import { ForkProjectButton } from "./components/ForkProjectButton";
 import { TestnetModal } from "./components/modals/TestnetModal";
 import { AptosContextProvider } from "./hooks/useAptos";
@@ -48,7 +49,14 @@ export const AppWithProviders: React.FC = () => {
               <AptosContextProvider>
                 <EconiaSDKContextProvider>
                   <App />
-                  <ToastContainer theme="dark" />
+                  <ToastContainer
+                    theme="dark"
+                    closeButton={({ closeToast }) => (
+                      <span onClick={closeToast}>
+                        <XIcon width={18} height={18} />
+                      </span>
+                    )}
+                  />
                   <ForkProjectButton />
                   <TestnetModal />
                 </EconiaSDKContextProvider>
@@ -156,5 +164,11 @@ const GlobalStyles = (theme: Theme) => css`
     --toastify-icon-color-warning: ${theme.colors.yellow.primary};
 
     --toastify-font-family: Roboto Mono, sans-serif;
+    --toastify-color-dark: ${theme.colors.grey[800]};
+    --toastify-toast-background: ${theme.colors.grey[800]};
+  }
+  .Toastify__toast {
+    border: 1px solid ${theme.colors.grey[600]};
+    border-radius: 0px;
   }
 `;
