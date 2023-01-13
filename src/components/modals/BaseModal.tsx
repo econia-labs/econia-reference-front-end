@@ -35,7 +35,9 @@ export const BaseModal: React.FC<Modal.Props & PropsWithChildren> = ({
       {...props}
       style={{
         content: {
-          background: theme.colors.grey[800],
+          backgroundColor: theme.colors.grey[800],
+          background:
+            "url(https://global-uploads.webflow.com/62fce47e1be865a7155ff71c/633467a79910d8300a274060_bg-noise.png)",
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
