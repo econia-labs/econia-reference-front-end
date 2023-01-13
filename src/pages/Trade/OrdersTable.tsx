@@ -68,7 +68,11 @@ const TableRow: React.FC<{
           variant="secondary"
           size="sm"
           onClick={async () => {
-            await cancelOrder(u64(market.marketId), ASK, order.marketOrderId);
+            await cancelOrder(
+              u64(market.marketId),
+              order.side,
+              order.marketOrderId,
+            );
           }}
         >
           Cancel
