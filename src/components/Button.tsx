@@ -14,7 +14,7 @@ export const Button = styled.button<{
     variant === "primary" ? theme.colors.grey[700] : theme.colors.grey[100]};
   padding: ${({ size }) =>
     size === "sm"
-      ? "18px 24px 16px"
+      ? "12px 16px"
       : size === "md"
       ? "26px 38px 24px"
       : "28px 56px 26px"};

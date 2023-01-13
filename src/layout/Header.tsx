@@ -153,7 +153,7 @@ export const Header: React.FC = () => {
           ) : (
             <ConnectWalletButton
               css={css`
-                width: 200px;
+                width: 180px;
               `}
               size="sm"
               variant="primary"
