@@ -18,6 +18,7 @@ import { Global, Theme, ThemeProvider, css } from "@emotion/react";
 
 import { App } from "./App";
 import { ForkProjectButton } from "./components/ForkProjectButton";
+import { TestnetModal } from "./components/modals/TestnetModal";
 import { AptosContextProvider } from "./hooks/useAptos";
 import { EconiaSDKContextProvider } from "./hooks/useEconiaSDK";
 import { IsMobileContextProvider } from "./hooks/useIsMobile";
@@ -49,6 +50,7 @@ export const AppWithProviders: React.FC = () => {
                   <App />
                   <ToastContainer theme="dark" />
                   <ForkProjectButton />
+                  <TestnetModal />
                 </EconiaSDKContextProvider>
               </AptosContextProvider>
             </WalletProvider>

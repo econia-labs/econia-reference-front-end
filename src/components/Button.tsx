@@ -16,7 +16,7 @@ export const Button = styled.button<{
     size === "sm"
       ? "12px 16px"
       : size === "md"
-      ? "26px 38px 24px"
+      ? "20px 28px 18px"
       : "28px 56px 26px"};
   font-size: ${({ size }) =>
     size === "sm" ? "16px" : size === "md" ? "18px" : "20px"};
