@@ -60,6 +60,7 @@ export const PriceChart: React.FC<{
     <Line
       options={{
         responsive: true,
+        maintainAspectRatio: false,
         interaction: {
           intersect: false,
         },

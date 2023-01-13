@@ -56,7 +56,7 @@ const TradeChartInner: React.FC<{
     <>
       <div
         css={css`
-          width: 688px;
+          width: 100%;
           height: 320px;
         `}
       >

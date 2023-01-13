@@ -3,7 +3,7 @@ import BigNumber from "bignumber.js";
 import React, { useMemo } from "react";
 import { Line } from "react-chartjs-2";
 
-import { useTheme } from "@emotion/react";
+import { css, useTheme } from "@emotion/react";
 
 import { ZERO_BIGNUMBER } from "../../../constants";
 import { CoinInfo } from "../../../hooks/useCoinInfos";
@@ -131,6 +131,7 @@ export const DepthChart: React.FC<{
     <Line
       options={{
         responsive: true,
+        maintainAspectRatio: false,
         interaction: {
           intersect: false,
         },
