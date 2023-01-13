@@ -80,5 +80,7 @@ const CloseButtonContainer = styled(FlexRow)`
     color 300ms ease, -webkit-transform 300ms ease;
   :hover {
     background: ${({ theme }) => theme.colors.purple.primary};
+    border-left: 1px solid ${({ theme }) => theme.colors.purple.primary};
+    border-bottom: 1px solid ${({ theme }) => theme.colors.purple.primary};
   }
 `;
