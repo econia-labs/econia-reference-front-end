@@ -42,7 +42,11 @@ export const Header: React.FC = () => {
   );
   const location = useLocation();
   return (
-    <DefaultWrapper>
+    <DefaultWrapper
+      css={css`
+        padding: 30px 124px;
+      `}
+    >
       <DefaultContainer
         css={css`
           display: flex;
@@ -170,7 +174,7 @@ const NavContainer = styled.div`
 `;
 
 const NavLinkStyle = (theme: Theme) => css`
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 500;
   line-height: 22px;
   color: ${theme.colors.grey[500]};
@@ -188,7 +192,7 @@ const NavLinkStyle = (theme: Theme) => css`
 `;
 
 const ActiveNavLinkStyle = (theme: Theme) => css`
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 500;
   line-height: 22px;
   color: ${theme.colors.grey[100]};
