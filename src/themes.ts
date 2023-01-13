@@ -3,7 +3,7 @@ import { Theme } from "@emotion/react";
 export const theme: Theme = {
 	colors: {
 		red: {
-			primary: "##D56E6E",
+			primary: "#D56E6E",
 		},
 		purple: {
 			primary: "#8C3DD8"
