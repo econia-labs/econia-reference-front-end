@@ -120,7 +120,7 @@ export const Header: React.FC = () => {
             <div ref={disconnectMenuClickawayRef}>
               <Button
                 css={(theme) => css`
-                  width: 200px;
+                  width: 156px;
                   :hover {
                     transform: none;
                     color: ${theme.colors.purple.primary};
@@ -139,7 +139,7 @@ export const Header: React.FC = () => {
                   css={(theme) => css`
                     text-align: center;
                     padding: 16px 0;
-                    width: 200px;
+                    width: 156px;
                     outline: 1px solid ${theme.colors.grey[600]};
                   `}
                   onClick={() =>
@@ -153,7 +153,8 @@ export const Header: React.FC = () => {
           ) : (
             <ConnectWalletButton
               css={css`
-                width: 180px;
+                width: 156px;
+                font-size: 14px;
               `}
               size="sm"
               variant="primary"
