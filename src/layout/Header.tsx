@@ -125,6 +125,7 @@ export const Header: React.FC = () => {
                     transform: none;
                     color: ${theme.colors.purple.primary};
                   }
+                  font-size: 14px;
                 `}
                 size="sm"
                 variant="outline"
@@ -141,6 +142,7 @@ export const Header: React.FC = () => {
                     padding: 12px 0;
                     width: 156px;
                     outline: 1px solid ${theme.colors.grey[600]};
+                    font-size: 14px;
                   `}
                   onClick={() =>
                     disconnect().then(() => setShowDisconnectMenu(false))
