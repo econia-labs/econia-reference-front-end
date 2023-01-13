@@ -3,6 +3,7 @@ import React, { useMemo, useState } from "react";
 import { css, useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
 
+import { UnknownCoinIcon } from "../../assets/UnknownCoinIcon";
 import { useAptos } from "../../hooks/useAptos";
 import { CoinInfo } from "../../hooks/useCoinInfos";
 import { useCoinStore } from "../../hooks/useCoinStore";
@@ -112,12 +113,7 @@ const CoinRow: React.FC<{ coin: CoinInfo; onClick: () => void }> = ({
             src={hippoCoinInfo.logo_url}
           />
         ) : (
-          <div
-            css={css`
-              width: 32px;
-              height: 32px;
-            `}
-          />
+          <UnknownCoinIcon />
         )}
         <p
           css={css`
