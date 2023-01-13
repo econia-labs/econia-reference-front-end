@@ -33,3 +33,5 @@ export const ZERO_U64 = u64(0);
 export const ZERO_BIGNUMBER = new BigNumber(0);
 
 export const MOBILE_MAX_WIDTH = 800;
+
+export const DEFAULT_MARKET_ID = 4;

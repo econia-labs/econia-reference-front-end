@@ -7,6 +7,7 @@ import { Button } from "../../components/Button";
 import { FlexCol } from "../../components/FlexCol";
 import { FlexRow } from "../../components/FlexRow";
 import { NewMarketModal } from "../../components/modals/NewMarketModal";
+import { DEFAULT_MARKET_ID } from "../../constants";
 import {
   RegisteredMarket,
   useRegisteredMarkets,
@@ -27,7 +28,11 @@ export const Trade: React.FC = () => {
   useEffect(() => {
     if (market) return;
     if (registeredMarkets.length > 0) {
-      setMarket(registeredMarkets[0]);
+      const defaultMarket = registeredMarkets.find(
+        (m) => m.marketId === DEFAULT_MARKET_ID,
+      );
+      if (defaultMarket) setMarket(defaultMarket);
+      else setMarket(registeredMarkets[0]);
     }
   }, [registeredMarkets]);
 

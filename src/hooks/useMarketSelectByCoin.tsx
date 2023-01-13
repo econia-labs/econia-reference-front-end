@@ -2,6 +2,7 @@ import { StructTag } from "@manahippo/move-to-ts";
 
 import { useEffect, useMemo, useState } from "react";
 
+import { DEFAULT_MARKET_ID } from "../constants";
 import { CoinInfo, useCoinInfos } from "./useCoinInfos";
 import { RegisteredMarket } from "./useRegisteredMarkets";
 
@@ -64,10 +65,18 @@ export const useMarketSelectByCoin = (markets: RegisteredMarket[]) => {
   const [outputCoin, setOutputCoin] = useState<StructTag | null>();
   useEffect(() => {
     if (!inputCoin && sortedMarkets.length > 0) {
-      setInputCoin(sortedMarkets[0].quoteType);
+      const defaultMarket = sortedMarkets.find(
+        (m) => m.marketId === DEFAULT_MARKET_ID,
+      );
+      if (defaultMarket) setInputCoin(defaultMarket.quoteType);
+      else setInputCoin(sortedMarkets[0].quoteType);
     }
     if (!outputCoin && sortedMarkets.length > 0) {
-      setOutputCoin(sortedMarkets[0].baseType);
+      const defaultMarket = sortedMarkets.find(
+        (m) => m.marketId === DEFAULT_MARKET_ID,
+      );
+      if (defaultMarket) setOutputCoin(defaultMarket.baseType);
+      else setOutputCoin(sortedMarkets[0].baseType);
     }
   }, [inputCoin, outputCoin, sortedMarkets]);
 
