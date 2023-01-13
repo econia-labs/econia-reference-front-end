@@ -138,7 +138,7 @@ export const Header: React.FC = () => {
                   className="menu-item"
                   css={(theme) => css`
                     text-align: center;
-                    padding: 16px 0;
+                    padding: 12px 0;
                     width: 156px;
                     outline: 1px solid ${theme.colors.grey[600]};
                   `}
