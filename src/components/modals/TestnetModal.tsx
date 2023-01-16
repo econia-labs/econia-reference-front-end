@@ -40,9 +40,6 @@ export const TestnetModal: React.FC = () => {
           slows down, then you may have gotten rate limited by the Aptos node
           API. If this happens, give it 5 minutes or so before trying again.
         </p>
-        <Button variant="primary" size="sm" onClick={dismiss}>
-          Confirm
-        </Button>
       </FlexCol>
     </BaseModal>
   );
