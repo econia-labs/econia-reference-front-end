@@ -1,5 +1,7 @@
 import React from "react";
 
+import { css } from "@emotion/react";
+
 import { Button } from "../components/Button";
 import { useAptos } from "./useAptos";
 
@@ -11,6 +13,10 @@ export const ConnectWalletButton: React.FC<{
   const { connect } = useAptos();
   return (
     <Button
+      css={css`
+        width: 156px;
+        font-size: 14px;
+      `}
       size={size}
       variant={variant}
       onClick={connect}

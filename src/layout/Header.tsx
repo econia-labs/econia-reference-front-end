@@ -153,14 +153,7 @@ export const Header: React.FC = () => {
               </DropdownMenu>
             </div>
           ) : (
-            <ConnectWalletButton
-              css={css`
-                width: 156px;
-                font-size: 14px;
-              `}
-              size="sm"
-              variant="primary"
-            />
+            <ConnectWalletButton size="sm" variant="primary" />
           )}
         </FlexRow>
       </DefaultContainer>

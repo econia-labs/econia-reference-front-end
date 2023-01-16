@@ -123,7 +123,6 @@ export const LimitOrderForm: React.FC<{ market: RegisteredMarket }> = ({
         }}
         css={css`
           margin-top: 32px;
-          width: 200px;
         `}
         variant="primary"
         size="sm"
