@@ -34,6 +34,7 @@ export const TestnetModal: React.FC = () => {
         <p
           css={css`
             margin-bottom: 42px;
+            text-align: center;
           `}
         >
           This site is a work in progress for the Aptos testnet. If loading
