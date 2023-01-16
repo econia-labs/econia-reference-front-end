@@ -415,7 +415,7 @@ const SwitchDirectionContainer = styled.div`
 const Symbol = styled(FlexRow)`
   position: absolute;
   bottom: 12px;
-  right: 16px;
+  right: 14px;
   cursor: pointer;
   padding: 4px 8px;
   border: 1px solid ${({ theme }) => theme.colors.grey[600]};
