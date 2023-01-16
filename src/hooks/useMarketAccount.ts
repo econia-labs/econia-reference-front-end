@@ -27,17 +27,17 @@ export const useMarketAccount = (
 
   return useQuery(["useMarketAccount", marketId, ownerAddr], async () => {
     if (!ownerAddr) return null;
-    const marketAccounts = await econia.user.loadMarketAccounts(
-      HexString.ensure(ownerAddr),
-      false,
-    );
-    const marketAccountId = get_market_account_id_(
-      u64(marketId),
-      NO_CUSTODIAN,
-      undefined!,
-    );
 
     try {
+      const marketAccounts = await econia.user.loadMarketAccounts(
+        HexString.ensure(ownerAddr),
+        false,
+      );
+      const marketAccountId = get_market_account_id_(
+        u64(marketId),
+        NO_CUSTODIAN,
+        undefined!,
+      );
       const marketAccount = await aptosClient.getTableItem(
         marketAccounts.map.handle.toString(),
         {
