@@ -182,6 +182,8 @@ const MarketRow: React.FC<{
       onClick={onClick}
       css={(theme) => css`
         cursor: pointer;
+        // Fixes a Safari bug where outline gets cropped on sides
+        outline: 1px solid transparent;
         td {
           padding: 8px 0px;
         }
