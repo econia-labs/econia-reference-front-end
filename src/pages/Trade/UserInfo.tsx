@@ -10,6 +10,7 @@ import { CoinSymbol } from "../../components/CoinSymbol";
 import { Loading } from "../../components/Loading";
 import { ConnectWalletButton } from "../../hooks/ConnectWalletButton";
 import { useAptos } from "../../hooks/useAptos";
+import { useCoinInfo } from "../../hooks/useCoinInfo";
 import { useCoinStore } from "../../hooks/useCoinStore";
 import { useMarketAccount } from "../../hooks/useMarketAccount";
 import { RegisteredMarket } from "../../hooks/useRegisteredMarkets";
@@ -36,15 +37,19 @@ export const UserInfo: React.FC<{
 
 const UserInfoInner: React.FC<{ market: RegisteredMarket }> = ({ market }) => {
   const { account, connected } = useAptos();
+  const baseCoinInfo = useCoinInfo(market.baseType);
+  const quoteCoinInfo = useCoinInfo(market.quoteType);
   const baseCoinStore = useCoinStore(market.baseType, account?.address);
   const quoteCoinStore = useCoinStore(market.quoteType, account?.address);
   const marketAccount = useMarketAccount(market.marketId, account?.address);
   const withdrawFromMarketAccount = useWithdrawFromMarketAccount();
+  console.log(baseCoinStore.data);
 
   return (
     <>
       {connected ? (
-        baseCoinStore.data && quoteCoinStore.data ? (
+        baseCoinStore.data !== undefined &&
+        quoteCoinStore.data !== undefined ? (
           <table
             css={css`
               td {
@@ -61,12 +66,12 @@ const UserInfoInner: React.FC<{ market: RegisteredMarket }> = ({ market }) => {
               <tr>
                 <LabelTD>Wallet bal.</LabelTD>
                 <ValueTD>
-                  <CoinAmount amount={baseCoinStore.data.balance} />
-                  <CoinAmount amount={quoteCoinStore.data.balance} />
+                  <CoinAmount amount={baseCoinStore.data?.balance} />
+                  <CoinAmount amount={quoteCoinStore.data?.balance} />
                 </ValueTD>
                 <SymbolTD>
-                  <CoinSymbol symbol={baseCoinStore.data.symbol} />
-                  <CoinSymbol symbol={quoteCoinStore.data.symbol} />
+                  <CoinSymbol symbol={baseCoinInfo.data?.symbol} />
+                  <CoinSymbol symbol={quoteCoinInfo.data?.symbol} />
                 </SymbolTD>
               </tr>
               {marketAccount.data && (
