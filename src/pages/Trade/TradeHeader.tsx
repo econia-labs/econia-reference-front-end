@@ -5,6 +5,7 @@ import React from "react";
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 
+import { ChevronDownIcon } from "../../assets/ChevronDownIcon";
 import { FlexCol } from "../../components/FlexCol";
 import { FlexRow } from "../../components/FlexRow";
 import { Label } from "../../components/Label";
@@ -185,18 +186,34 @@ const TradeHeaderView: React.FC<{
               )}
             </MarketNameWrapper>
             {markets ? (
-              <div
+              <FlexRow
                 css={(theme) => css`
                   padding: 4px 8px;
                   cursor: pointer;
+                  border: 1px solid ${theme.colors.grey[600]};
+                  align-items: center;
+                  gap: 8px;
+                  transition: all 300ms;
+                  path {
+                    transition: all 300ms;
+                  }
                   :hover {
-                    background-color: ${theme.colors.grey[600]};
+                    border: 1px solid ${theme.colors.purple.primary};
+                    color: ${theme.colors.purple.primary};
+                    path {
+                      stroke: ${theme.colors.purple.primary};
+                    }
                   }
                 `}
                 onClick={() => setShowMarketWizard(true)}
               >
-                All markets ▼
-              </div>
+                <p>All markets</p>
+                <ChevronDownIcon
+                  css={css`
+                    margin-top: 2px;
+                  `}
+                />
+              </FlexRow>
             ) : (
               <div />
             )}

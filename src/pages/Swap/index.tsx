@@ -423,8 +423,13 @@ const Symbol = styled(FlexRow)`
   gap: 8px;
   font-weight: 300;
   font-size: 12px;
+  transition: all 300ms;
+  path {
+    transition: all 300ms;
+  }
   :hover {
     border: 1px solid ${({ theme }) => theme.colors.purple.primary};
+    color: ${({ theme }) => theme.colors.purple.primary};
     path {
       stroke: ${({ theme }) => theme.colors.purple.primary};
     }
