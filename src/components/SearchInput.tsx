@@ -21,7 +21,7 @@ export const SearchInput: React.FC<InputHTMLAttributes<HTMLInputElement>> = ({
       <SearchIcon
         css={css`
           position: absolute;
-          top: 14px;
+          top: 15px;
           left: 8px;
         `}
       />
