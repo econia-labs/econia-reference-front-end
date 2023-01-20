@@ -43,7 +43,6 @@ const UserInfoInner: React.FC<{ market: RegisteredMarket }> = ({ market }) => {
   const quoteCoinStore = useCoinStore(market.quoteType, account?.address);
   const marketAccount = useMarketAccount(market.marketId, account?.address);
   const withdrawFromMarketAccount = useWithdrawFromMarketAccount();
-  console.log(baseCoinStore.data);
 
   return (
     <>
