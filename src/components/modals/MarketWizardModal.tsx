@@ -89,7 +89,7 @@ const SelectMarketView: React.FC<{
       <table
         css={(theme) => css`
           width: 100%;
-          text-align: center;
+          text-align: left;
           th {
             font-size: 12px;
             color: ${theme.colors.grey[500]};
@@ -100,17 +100,17 @@ const SelectMarketView: React.FC<{
       >
         <thead>
           <tr>
-            <th
-              css={css`
-                text-align: left;
-              `}
-            >
-              MARKET
-            </th>
+            <th>MARKET</th>
             <th>LOT SIZE</th>
             <th>TICK SIZE</th>
             <th>MIN SIZE</th>
-            <th>RECOGNIZED</th>
+            <th
+              css={css`
+                text-align: center;
+              `}
+            >
+              RECOGNIZED
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -199,7 +199,7 @@ const MarketRow: React.FC<{
         css={css`
           text-align: left;
           font-weight: 500;
-          font-size: 20px; ;
+          font-size: 20px;
         `}
       >
         {baseCoinInfo.data.symbol}-{quoteCoinInfo.data.symbol}
@@ -207,7 +207,13 @@ const MarketRow: React.FC<{
       <NumberTd>{lotSize.toNumber()}</NumberTd>
       <NumberTd>{tickSize.toNumber()} </NumberTd>
       <NumberTd>{minSize.toNumber()} </NumberTd>
-      <td>{market.isRecognized && <CheckIcon />}</td>
+      <td
+        css={css`
+          text-align: center;
+        `}
+      >
+        {market.isRecognized && <CheckIcon />}
+      </td>
     </tr>
   );
 };
@@ -313,6 +319,7 @@ const RegisterMarketView: React.FC<{ onSelectMarket: () => void }> = ({
 };
 
 const NumberTd = styled.td`
+  text-align: left;
   font-weight: 300;
   font-size: 16px;
 `;
