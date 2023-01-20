@@ -3,6 +3,7 @@ import React, { useMemo, useState } from "react";
 import { css, useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
 
+import { AptosIcon } from "../../assets/AptosIcon";
 import { UnknownCoinIcon } from "../../assets/UnknownCoinIcon";
 import { useAptos } from "../../hooks/useAptos";
 import { CoinInfo } from "../../hooks/useCoinInfos";
@@ -105,13 +106,18 @@ const CoinRow: React.FC<{ coin: CoinInfo; onClick: () => void }> = ({
         `}
       >
         {hippoCoinInfo ? (
-          <img
-            css={css`
-              width: 32px;
-              height: 32px;
-            `}
-            src={hippoCoinInfo.logo_url}
-          />
+          // Override the default Aptos icon
+          hippoCoinInfo.symbol === "APT" ? (
+            <AptosIcon width={32} height={32} />
+          ) : (
+            <img
+              css={css`
+                width: 32px;
+                height: 32px;
+              `}
+              src={hippoCoinInfo.logo_url}
+            />
+          )
         ) : (
           <UnknownCoinIcon />
         )}
