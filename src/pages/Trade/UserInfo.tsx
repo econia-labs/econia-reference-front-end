@@ -48,111 +48,112 @@ const UserInfoInner: React.FC<{ market: RegisteredMarket }> = ({ market }) => {
     <>
       {connected ? (
         baseCoinStore.data != null && quoteCoinStore.data != null ? (
-          <table
-            css={css`
-              td {
-                vertical-align: top;
-              }
-              tr td:last-child {
-                width: 1%;
-              }
-              padding: 16px;
-              width: 100%;
-            `}
-          >
-            <tbody>
-              <tr>
-                <LabelTD>Wallet bal.</LabelTD>
-                <ValueTD>
-                  <CoinAmount amount={baseCoinStore.data?.balance} />
-                  <CoinAmount amount={quoteCoinStore.data?.balance} />
-                </ValueTD>
-                <SymbolTD>
-                  <CoinSymbol symbol={baseCoinInfo.data?.symbol} />
-                  <CoinSymbol symbol={quoteCoinInfo.data?.symbol} />
-                </SymbolTD>
-              </tr>
-              {marketAccount.data && (
-                <>
-                  <tr>
-                    <LabelTD>Total market bal.</LabelTD>
-                    <ValueTD>
-                      <div>
-                        {toDecimalCoin({
-                          amount: marketAccount.data.baseTotal,
-                          decimals: baseCoinStore.data.decimals,
-                        }).toString()}
-                      </div>
-                      <div>
-                        {toDecimalCoin({
-                          amount: marketAccount.data.quoteTotal,
-                          decimals: quoteCoinStore.data.decimals,
-                        }).toString()}
-                      </div>
-                    </ValueTD>
-                    <SymbolTD>
-                      <div>{baseCoinStore.data.symbol}</div>
-                      <div>{quoteCoinStore.data.symbol}</div>
-                    </SymbolTD>
-                  </tr>
-                  <tr>
-                    <LabelTD>
-                      <div>Unused market bal.</div>
-                    </LabelTD>
-                    <ValueTD>
-                      <div>
-                        {toDecimalCoin({
-                          amount: marketAccount.data.baseAvailable,
-                          decimals: baseCoinStore.data.decimals,
-                        }).toString()}
-                      </div>
-                      <div>
-                        {toDecimalCoin({
-                          amount: marketAccount.data.quoteAvailable,
-                          decimals: quoteCoinStore.data.decimals,
-                        }).toString()}
-                      </div>
-                    </ValueTD>
-                    <SymbolTD>
-                      <div>{baseCoinStore.data.symbol}</div>
-                      <div>{quoteCoinStore.data.symbol}</div>
-                    </SymbolTD>
-                  </tr>
-                  <tr>
-                    {(marketAccount.data.baseAvailable.gt(0) ||
-                      marketAccount.data.quoteAvailable.gt(0)) && (
-                      <div
-                        css={(theme) => css`
-                          text-align: left;
-                          color: ${theme.colors.grey[500]};
-                          font-size: 14px;
-                          :hover {
-                            color: ${theme.colors.purple.primary};
-                            cursor: pointer;
-                          }
-                        `}
-                        onClick={async () => {
-                          if (!marketAccount.data) return;
-                          await withdrawFromMarketAccount(
-                            u64(market.marketId),
-                            u64(marketAccount.data.baseAvailable.toString()),
-                            market.baseType,
-                          );
-                          await withdrawFromMarketAccount(
-                            u64(market.marketId),
-                            u64(marketAccount.data.quoteAvailable.toString()),
-                            market.quoteType,
-                          );
-                        }}
-                      >
-                        WITHDRAW ALL
-                      </div>
-                    )}
-                  </tr>
-                </>
-              )}
-            </tbody>
-          </table>
+          <>
+            <table
+              css={css`
+                td {
+                  vertical-align: top;
+                }
+                tr td:last-child {
+                  width: 1%;
+                }
+                padding: 16px 16px 0px 16px;
+                width: 100%;
+              `}
+            >
+              <tbody>
+                <tr>
+                  <LabelTD>Wallet bal.</LabelTD>
+                  <ValueTD>
+                    <CoinAmount amount={baseCoinStore.data?.balance} />
+                    <CoinAmount amount={quoteCoinStore.data?.balance} />
+                  </ValueTD>
+                  <SymbolTD>
+                    <CoinSymbol symbol={baseCoinInfo.data?.symbol} />
+                    <CoinSymbol symbol={quoteCoinInfo.data?.symbol} />
+                  </SymbolTD>
+                </tr>
+                {marketAccount.data && (
+                  <>
+                    <tr>
+                      <LabelTD>Total market bal.</LabelTD>
+                      <ValueTD>
+                        <div>
+                          {toDecimalCoin({
+                            amount: marketAccount.data.baseTotal,
+                            decimals: baseCoinStore.data.decimals,
+                          }).toString()}
+                        </div>
+                        <div>
+                          {toDecimalCoin({
+                            amount: marketAccount.data.quoteTotal,
+                            decimals: quoteCoinStore.data.decimals,
+                          }).toString()}
+                        </div>
+                      </ValueTD>
+                      <SymbolTD>
+                        <div>{baseCoinStore.data.symbol}</div>
+                        <div>{quoteCoinStore.data.symbol}</div>
+                      </SymbolTD>
+                    </tr>
+                    <tr>
+                      <LabelTD>
+                        <div>Unused market bal.</div>
+                      </LabelTD>
+                      <ValueTD>
+                        <div>
+                          {toDecimalCoin({
+                            amount: marketAccount.data.baseAvailable,
+                            decimals: baseCoinStore.data.decimals,
+                          }).toString()}
+                        </div>
+                        <div>
+                          {toDecimalCoin({
+                            amount: marketAccount.data.quoteAvailable,
+                            decimals: quoteCoinStore.data.decimals,
+                          }).toString()}
+                        </div>
+                      </ValueTD>
+                      <SymbolTD>
+                        <div>{baseCoinStore.data.symbol}</div>
+                        <div>{quoteCoinStore.data.symbol}</div>
+                      </SymbolTD>
+                    </tr>
+                  </>
+                )}
+              </tbody>
+            </table>
+            {(marketAccount.data?.baseAvailable.gt(0) ||
+              marketAccount.data?.quoteAvailable.gt(0)) && (
+              <div
+                css={(theme) => css`
+                  margin-left: 16px;
+                  text-align: left;
+                  color: ${theme.colors.grey[500]};
+                  font-size: 14px;
+                  :hover {
+                    color: ${theme.colors.purple.primary};
+                    cursor: pointer;
+                  }
+                `}
+                onClick={async () => {
+                  if (!marketAccount.data) return;
+                  await withdrawFromMarketAccount(
+                    u64(market.marketId),
+                    u64(marketAccount.data.baseAvailable.toString()),
+                    market.baseType,
+                  );
+                  await withdrawFromMarketAccount(
+                    u64(market.marketId),
+                    u64(marketAccount.data.quoteAvailable.toString()),
+                    market.quoteType,
+                  );
+                }}
+              >
+                WITHDRAW ALL
+              </div>
+            )}
+          </>
         ) : (
           <Loading />
         )
