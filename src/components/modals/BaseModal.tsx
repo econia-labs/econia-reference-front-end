@@ -64,7 +64,10 @@ export const BaseModal: React.FC<Modal.Props & PropsWithChildren> = ({
       }}
     >
       <CloseButtonContainer
-        onClick={props.onRequestClose}
+        onClick={(e) => {
+          props.onRequestClose && props.onRequestClose(e);
+          setXHover(false);
+        }}
         onMouseEnter={() => setXHover(true)}
         onMouseLeave={() => setXHover(false)}
       >
