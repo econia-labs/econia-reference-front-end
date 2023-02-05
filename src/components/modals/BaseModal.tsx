@@ -13,7 +13,6 @@ export const BaseModal: React.FC<Modal.Props & PropsWithChildren> = ({
   ...props
 }) => {
   const [xHover, setXHover] = React.useState(false);
-  console.log(xHover);
 
   let content = {};
   let overlay = {};

@@ -47,8 +47,7 @@ const UserInfoInner: React.FC<{ market: RegisteredMarket }> = ({ market }) => {
   return (
     <>
       {connected ? (
-        baseCoinStore.data !== undefined &&
-        quoteCoinStore.data !== undefined ? (
+        baseCoinStore.data != null && quoteCoinStore.data != null ? (
           <table
             css={css`
               td {
@@ -76,35 +75,29 @@ const UserInfoInner: React.FC<{ market: RegisteredMarket }> = ({ market }) => {
               {marketAccount.data && (
                 <>
                   <tr>
+                    <LabelTD>Total market bal.</LabelTD>
+                    <ValueTD>
+                      <div>
+                        {toDecimalCoin({
+                          amount: marketAccount.data.baseTotal,
+                          decimals: baseCoinStore.data.decimals,
+                        }).toString()}
+                      </div>
+                      <div>
+                        {toDecimalCoin({
+                          amount: marketAccount.data.quoteTotal,
+                          decimals: quoteCoinStore.data.decimals,
+                        }).toString()}
+                      </div>
+                    </ValueTD>
+                    <SymbolTD>
+                      <div>{baseCoinStore.data.symbol}</div>
+                      <div>{quoteCoinStore.data.symbol}</div>
+                    </SymbolTD>
+                  </tr>
+                  <tr>
                     <LabelTD>
                       <div>Unused market bal.</div>
-                      {(marketAccount.data.baseAvailable.gt(0) ||
-                        marketAccount.data.quoteAvailable.gt(0)) && (
-                        <div
-                          css={(theme) => css`
-                            color: ${theme.colors.purple.primary};
-                            :hover {
-                              text-decoration: underline;
-                              cursor: pointer;
-                            }
-                          `}
-                          onClick={async () => {
-                            if (!marketAccount.data) return;
-                            await withdrawFromMarketAccount(
-                              u64(market.marketId),
-                              u64(marketAccount.data.baseAvailable.toString()),
-                              market.baseType,
-                            );
-                            await withdrawFromMarketAccount(
-                              u64(market.marketId),
-                              u64(marketAccount.data.quoteAvailable.toString()),
-                              market.quoteType,
-                            );
-                          }}
-                        >
-                          Withdraw All
-                        </div>
-                      )}
                     </LabelTD>
                     <ValueTD>
                       <div>
@@ -126,25 +119,35 @@ const UserInfoInner: React.FC<{ market: RegisteredMarket }> = ({ market }) => {
                     </SymbolTD>
                   </tr>
                   <tr>
-                    <LabelTD>Total market bal.</LabelTD>
-                    <ValueTD>
-                      <div>
-                        {toDecimalCoin({
-                          amount: marketAccount.data.baseTotal,
-                          decimals: baseCoinStore.data.decimals,
-                        }).toString()}
+                    {(marketAccount.data.baseAvailable.gt(0) ||
+                      marketAccount.data.quoteAvailable.gt(0)) && (
+                      <div
+                        css={(theme) => css`
+                          text-align: left;
+                          color: ${theme.colors.grey[500]};
+                          font-size: 14px;
+                          :hover {
+                            color: ${theme.colors.purple.primary};
+                            cursor: pointer;
+                          }
+                        `}
+                        onClick={async () => {
+                          if (!marketAccount.data) return;
+                          await withdrawFromMarketAccount(
+                            u64(market.marketId),
+                            u64(marketAccount.data.baseAvailable.toString()),
+                            market.baseType,
+                          );
+                          await withdrawFromMarketAccount(
+                            u64(market.marketId),
+                            u64(marketAccount.data.quoteAvailable.toString()),
+                            market.quoteType,
+                          );
+                        }}
+                      >
+                        WITHDRAW ALL
                       </div>
-                      <div>
-                        {toDecimalCoin({
-                          amount: marketAccount.data.quoteTotal,
-                          decimals: quoteCoinStore.data.decimals,
-                        }).toString()}
-                      </div>
-                    </ValueTD>
-                    <SymbolTD>
-                      <div>{baseCoinStore.data.symbol}</div>
-                      <div>{quoteCoinStore.data.symbol}</div>
-                    </SymbolTD>
+                    )}
                   </tr>
                 </>
               )}
