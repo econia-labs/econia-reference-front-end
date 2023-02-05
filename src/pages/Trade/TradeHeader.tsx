@@ -198,11 +198,7 @@ const TradeHeaderView: React.FC<{
                     transition: all 300ms;
                   }
                   :hover {
-                    border: 1px solid ${theme.colors.purple.primary};
-                    color: ${theme.colors.purple.primary};
-                    path {
-                      stroke: ${theme.colors.purple.primary};
-                    }
+                    background-color: ${theme.colors.grey[500]};
                   }
                 `}
                 onClick={() => setShowMarketWizard(true)}

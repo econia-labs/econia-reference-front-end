@@ -32,7 +32,6 @@ import { DefaultContainer } from "../../layout/DefaultContainer";
 import { DefaultWrapper } from "../../layout/DefaultWrapper";
 import { MAX_POSSIBLE } from "../../sdk/src/econia/market";
 import { HI_PRICE } from "../../sdk/src/econia/user";
-import { debugLog } from "../../utils/debug";
 import {
   fromDecimalPrice,
   fromDecimalQuote,
@@ -428,11 +427,7 @@ const Symbol = styled(FlexRow)`
     transition: all 300ms;
   }
   :hover {
-    border: 1px solid ${({ theme }) => theme.colors.purple.primary};
-    color: ${({ theme }) => theme.colors.purple.primary};
-    path {
-      stroke: ${({ theme }) => theme.colors.purple.primary};
-    }
+    background-color: ${({ theme }) => theme.colors.grey[500]};
   }
 `;
 
