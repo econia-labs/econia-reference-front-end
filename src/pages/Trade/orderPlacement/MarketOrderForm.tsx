@@ -15,18 +15,19 @@ import { Loading } from "../../../components/Loading";
 import { RadioGroup } from "../../../components/RadioGroup";
 import { TxButton } from "../../../components/TxButton";
 import { BUY, SELL, ZERO_U64 } from "../../../constants";
+import { useAptos } from "../../../hooks/useAptos";
 import { useCoinInfo } from "../../../hooks/useCoinInfo";
 import { useIncentiveParams } from "../../../hooks/useIncentiveParams";
 import { useMarketPrice } from "../../../hooks/useMarketPrice";
 import { usePlaceMarketOrder } from "../../../hooks/usePlaceMarketOrder";
 import { RegisteredMarket } from "../../../hooks/useRegisteredMarkets";
 import { HI_PRICE, MAX_POSSIBLE } from "../../../sdk/src/econia/market";
-import { debugLog } from "../../../utils/debug";
 import { fromDecimalPrice, fromDecimalSize } from "../../../utils/units";
 
 export const MarketOrderForm: React.FC<{ market: RegisteredMarket }> = ({
   market,
 }) => {
+  const { connected } = useAptos();
   const [direction, setDirection] = useState(BUY);
   const [amountStr, setAmountStr] = useState("");
   const baseCoinInfo = useCoinInfo(market.baseType);
@@ -125,6 +126,10 @@ export const MarketOrderForm: React.FC<{ market: RegisteredMarket }> = ({
       </DetailsContainer>
 
       <TxButton
+        css={css`
+          margin-top: 32px;
+          width: ${connected ? "243px" : "auto"};
+        `}
         onClick={async () => {
           if (!expectedPrice || !baseCoinInfo.data || !quoteCoinInfo.data)
             return;
@@ -184,10 +189,6 @@ export const MarketOrderForm: React.FC<{ market: RegisteredMarket }> = ({
             market.quoteType,
           );
         }}
-        css={css`
-          margin-top: 32px;
-          width: 200px;
-        `}
         variant="primary"
         size="sm"
         disabled={!expectedPrice || !!disabledReason}

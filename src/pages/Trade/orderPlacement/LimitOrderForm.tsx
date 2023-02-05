@@ -11,6 +11,7 @@ import { Label } from "../../../components/Label";
 import { Loading } from "../../../components/Loading";
 import { RadioGroup } from "../../../components/RadioGroup";
 import { TxButton } from "../../../components/TxButton";
+import { useAptos } from "../../../hooks/useAptos";
 import { useCoinInfo } from "../../../hooks/useCoinInfo";
 import { usePlaceLimitOrder } from "../../../hooks/usePlaceLimitOrder";
 import { RegisteredMarket } from "../../../hooks/useRegisteredMarkets";
@@ -22,6 +23,7 @@ const BID = false;
 export const LimitOrderForm: React.FC<{ market: RegisteredMarket }> = ({
   market,
 }) => {
+  const { connected } = useAptos();
   const [side, setSide] = useState(BID);
   const [amountStr, setAmountStr] = useState("");
   const [priceStr, setPriceStr] = useState("");
@@ -84,6 +86,10 @@ export const LimitOrderForm: React.FC<{ market: RegisteredMarket }> = ({
         />
       </div>
       <TxButton
+        css={css`
+          margin-top: 32px;
+          width: ${connected ? "243px" : "auto"};
+        `}
         onClick={async () => {
           if (!baseCoinInfo.data || !quoteCoinInfo.data) return;
           const size = u64(
@@ -121,9 +127,6 @@ export const LimitOrderForm: React.FC<{ market: RegisteredMarket }> = ({
             market.quoteType,
           );
         }}
-        css={css`
-          margin-top: 32px;
-        `}
         variant="primary"
         size="sm"
         disabled={!!disabledReason}
