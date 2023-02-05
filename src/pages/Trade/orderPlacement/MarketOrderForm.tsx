@@ -107,7 +107,7 @@ export const MarketOrderForm: React.FC<{ market: RegisteredMarket }> = ({
         >
           <p>Est. Price</p>
           <p>
-            {expectedPrice?.executionPrice.toNumber() ?? "-"}{" "}
+            {expectedPrice?.executionPrice.toPrecision(6) ?? "-"}{" "}
             {quoteCoinInfo.data.symbol}
           </p>
         </FlexRow>
