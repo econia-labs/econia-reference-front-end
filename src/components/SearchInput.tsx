@@ -21,7 +21,7 @@ export const SearchInput: React.FC<InputHTMLAttributes<HTMLInputElement>> = ({
       <SearchIcon
         css={css`
           position: absolute;
-          top: 15px;
+          top: 17px;
           left: 8px;
         `}
       />
@@ -31,6 +31,6 @@ export const SearchInput: React.FC<InputHTMLAttributes<HTMLInputElement>> = ({
 };
 
 const PaddedInput = styled(Input)`
-  padding-left: 32px;
+  padding: 16px 0px 16px 32px;
   width: 100%;
 `;
